@@ -18,6 +18,10 @@ const FINE = window.matchMedia('(pointer:fine)').matches;
 const $  = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 
+// true while a dedicated per-section WebGL fluid canvas (#fluid or #fluid2) is on screen —
+// lets the ambient particle field (1c) cap its own cost instead of stacking full-cost on top
+let fluidLocalActive = false;
+
 if (navigator.platform && /Win|Linux/i.test(navigator.platform)) {
   const k = $('#kbd-key'); if (k) k.textContent = 'Ctrl ';
 }
@@ -288,7 +292,11 @@ if (!RM) {
   // run only while on screen
   fields.forEach(function(f){
     const io = new IntersectionObserver(function(es){
-      es.forEach(function(e){ e.isIntersecting ? f.start() : f.stop(); });
+      es.forEach(function(e){
+        e.isIntersecting ? f.start() : f.stop();
+        f.active = e.isIntersecting;
+      });
+      fluidLocalActive = fields.some(function(ff){ return ff.active; });
     }, {threshold:0.02});
     io.observe(f.canvas);
   });
@@ -572,9 +580,12 @@ if (!RM) {
     const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic — punchy explode, settles gently
     const alphaCap = 0.4 * Math.min(1, progress / 0.3); // fades up quickly, then holds
 
-    if (alphaCap <= 0.002) return;
+    if (alphaCap <= 0.002) { requestAnimationFrame(draw); return; }
 
-    parts.forEach(function(part){
+    parts.forEach(function(part, i){
+      // cap cost while Hero/Contact's own dedicated fluid canvas is also rendering —
+      // this field is a low-key backdrop, it doesn't need full density stacked on top
+      if (fluidLocalActive && (i % 3 !== 0)) return;
       const drift = Math.sin(t * 0.00016 * part.driftSpeed + part.driftPhase) * 10 * ease;
       const r = maxR * part.dist * ease;
       const x = cx + Math.cos(part.angle) * r + drift;

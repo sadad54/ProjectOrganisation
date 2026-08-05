@@ -22,11 +22,7 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 
 ## Operating Context
 
-Two parallel implementations exist:
-- `portfolio-next/` — a Next.js app, confirmed as the **canonical** version for future design/dev work.
-- `index.html` — a static, zero-build, single-file export kept as a portable mirror (per its own README: "no build step, no dependencies, no framework"). Treat as a secondary export target, not the primary surface, unless told otherwise.
-
-The two are currently kept content-identical by hand; there is no automated sync script.
+`portfolio-next/` — a Next.js app — is now the **sole** implementation. A parallel static, zero-build, single-file mirror (`index.html`) previously existed and was kept content-identical by hand; Adnan deliberately dropped it (2026-08-06). Do not recreate or mirror future edits into an `index.html` file unless explicitly asked again.
 
 Site sections: hero (status line, headline, CTA, portrait), About (bio, timeline), Work (7 project case studies in a rail-navigated panel layout), Approach (a 4-slide horizontally-swipeable carousel of real engineering decisions, e.g. schema-repair loop, imbalanced-classification metric choice), Toolkit (skills bento grid), Other Builds (smaller projects), Contact (contact methods + visa/sponsorship note), command palette (⌘K) for quick navigation/actions.
 

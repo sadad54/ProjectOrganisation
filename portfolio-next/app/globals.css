@@ -78,16 +78,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rail button:hover .tick{background:var(--bone)}
 
 .cursor{
-  position:fixed;left:0;top:0;width:0;height:0;z-index:70;pointer-events:none;
-  opacity:0;transition:opacity .3s;
+  position:fixed;left:0;top:0;width:52px;height:52px;border-radius:50%;
+  background:var(--bone);z-index:70;pointer-events:none;
+  mix-blend-mode:difference;transform:translate(-50%,-50%);
+  clip-path:circle(4.5px at 50% 50%);
+  transition:clip-path .28s var(--ease),opacity .3s;
+  will-change:transform;opacity:0;
 }
 .cursor.on{opacity:1}
-.cursor::before{
-  content:"";position:absolute;left:0;top:0;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
-  border-radius:50%;background:var(--bone);mix-blend-mode:difference;
-  transform:scale(1);transition:transform .28s var(--ease);will-change:transform;
-}
-.cursor.big::before{transform:scale(5.778)}
+.cursor.big{clip-path:circle(26px at 50% 50%)}
 @media (pointer:coarse),(hover:none){.cursor{display:none}.rail{display:none}}
 
 /* ============================================================
@@ -181,6 +180,7 @@ body.no-webgl #fluid{
   100%{box-shadow:0 0 0 0 rgba(255,106,61,0)}
 }
 .hero-status .sep{color:var(--dimmer)}
+.hero-status abbr{text-decoration:none;cursor:help}
 
 .hero-main{
   display:flex;align-items:flex-end;justify-content:space-between;gap:clamp(20px,4vw,64px);
@@ -293,9 +293,11 @@ h1.hero-h em{
 .tl-row{
   display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:20px;
   padding:20px 0;border-bottom:1px solid var(--line);align-items:baseline;
-  transition:background .4s var(--ease),padding-left .4s var(--ease);
+  transition:background .4s var(--ease);
 }
-.tl-row:hover{background:linear-gradient(90deg,rgba(255,106,61,.055),transparent);padding-left:12px}
+.tl-row:hover{background:linear-gradient(90deg,rgba(255,106,61,.055),transparent)}
+.tl-row>*{transition:transform .4s var(--ease)}
+.tl-row:hover>*{transform:translateX(12px)}
 .tl-when{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--sodium);text-transform:uppercase}
 .tl-what b{font-weight:500;display:block}
 .tl-what span{color:var(--dim);font-size:.94rem}
@@ -514,10 +516,11 @@ h3.proj-name{
 .loop-arrow:disabled:hover{border-color:var(--line);color:var(--dim)}
 .loop-dots{display:flex;gap:8px;align-items:center}
 .loop-dot{
-  width:6px;height:6px;border-radius:100px;background:var(--line);border:0;padding:0;
-  transition:background .3s,width .3s;cursor:pointer;
+  width:20px;height:6px;border-radius:100px;background:var(--line);border:0;padding:0;
+  transform:scaleX(.3);transform-origin:0 50%;
+  transition:background .3s,transform .3s;cursor:pointer;
 }
-.loop-dot.on{background:var(--sodium);width:20px}
+.loop-dot.on{background:var(--sodium);transform:scaleX(1)}
 
 /* ============================================================
    TOOLKIT
