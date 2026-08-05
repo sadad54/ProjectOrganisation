@@ -78,14 +78,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rail button:hover .tick{background:var(--bone)}
 
 .cursor{
-  position:fixed;left:0;top:0;width:9px;height:9px;border-radius:50%;
-  background:var(--bone);z-index:70;pointer-events:none;
-  mix-blend-mode:difference;transform:translate(-50%,-50%);
-  transition:width .28s var(--ease),height .28s var(--ease),opacity .3s;
-  will-change:transform;opacity:0;
+  position:fixed;left:0;top:0;width:0;height:0;z-index:70;pointer-events:none;
+  opacity:0;transition:opacity .3s;
 }
 .cursor.on{opacity:1}
-.cursor.big{width:52px;height:52px}
+.cursor::before{
+  content:"";position:absolute;left:0;top:0;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
+  border-radius:50%;background:var(--bone);mix-blend-mode:difference;
+  transform:scale(1);transition:transform .28s var(--ease);will-change:transform;
+}
+.cursor.big::before{transform:scale(5.778)}
 @media (pointer:coarse),(hover:none){.cursor{display:none}.rail{display:none}}
 
 /* ============================================================
@@ -312,18 +314,29 @@ h1.hero-h em{
 .work-rail ol{list-style:none;margin:0;padding:0;counter-reset:p}
 .work-rail li{counter-increment:p;margin-bottom:2px}
 .work-rail button{
-  width:100%;display:flex;gap:12px;align-items:baseline;padding:10px 0;text-align:left;
+  width:100%;display:flex;gap:12px;align-items:flex-start;padding:10px 0;text-align:left;
   color:var(--dimmer);transition:color .4s var(--ease);
   border-bottom:1px solid transparent;
 }
 .work-rail button::before{
   content:counter(p,decimal-leading-zero);
   font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;opacity:.6;flex:none;
+  margin-top:.2em;
 }
-.work-rail button span{font-family:var(--body);font-size:.95rem;font-weight:500}
 .work-rail li.on button{color:var(--bone)}
 .work-rail li.on button::before{color:var(--sodium);opacity:1}
 .work-rail button:hover{color:var(--dim)}
+.wr-text{display:flex;flex-direction:column;gap:3px;min-width:0}
+.wr-name{font-family:var(--body);font-size:.95rem;font-weight:500;display:flex;align-items:center;gap:8px}
+.wr-hook{
+  font-family:var(--mono);font-size:9px;letter-spacing:.03em;color:var(--dimmer);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.work-rail li.on .wr-hook{color:var(--dim)}
+.wr-status{
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--sodium);border:1px solid rgba(255,106,61,.32);border-radius:100px;padding:1px 6px;line-height:1.5;
+}
 
 .panels{display:flex;flex-direction:column;gap:clamp(90px,14vh,180px)}
 .proj{scroll-margin-top:20vh}
@@ -369,7 +382,8 @@ h3.proj-name{
   display:inline-flex;gap:8px;align-items:center;margin-right:18px;
   transition:border-color .3s,color .3s;
 }
-.lnk:hover{color:var(--sodium);border-color:var(--sodium)}
+.lnk:not(.is-disabled):hover{color:var(--sodium);border-color:var(--sodium)}
+.lnk.is-disabled{color:var(--dimmer);border-color:var(--line-2);cursor:not-allowed}
 
 .slab{
   border:1px solid var(--line);border-radius:6px;background:
@@ -400,6 +414,7 @@ h3.proj-name{
 .shot.empty .shot-label{display:block}
 .proj-links{align-items:center}
 .lnk.demo{color:var(--sodium);border-color:rgba(255,106,61,.32)}
+.lnk.demo.is-disabled{color:var(--dimmer);border-color:var(--line-2)}
 
 /* ============================================================
    SIGNATURE — repair loop
@@ -572,15 +587,19 @@ h2.big{
 .reach{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .reach li{border-bottom:1px solid var(--line)}
 .reach a{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;
-  transition:padding .4s var(--ease),color .35s}
-.reach a:hover{padding-left:10px;color:var(--sodium)}
+  transition:color .35s}
+.reach a:hover{color:var(--sodium)}
+.reach .v{transition:transform .4s var(--ease)}
+.reach a:hover .v{transform:translateX(10px)}
 .reach .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dimmer)}
 .reach .v{font-family:var(--body);font-size:1.02rem;font-weight:500}
 .visa{
-  margin-top:26px;border:1px solid var(--line);border-radius:6px;padding:16px 18px;
-  font-size:.92rem;color:var(--dim);background:rgba(237,234,227,.02);
+  margin-top:26px;border:1px solid rgba(255,106,61,.24);border-radius:6px;padding:18px 20px;
+  background:rgba(255,106,61,.045);
 }
-.visa b{color:var(--bone);font-weight:500}
+.visa .slab-cap{margin-bottom:8px}
+.visa p:last-child{margin:0;font-size:.96rem;line-height:1.55;color:var(--bone)}
+.visa b{color:var(--sodium);font-weight:600}
 
 footer{padding:26px var(--gut);border-top:1px solid var(--line);
   display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
