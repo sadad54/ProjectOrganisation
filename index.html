@@ -1593,6 +1593,7 @@ if (!RM) {
     scene.add(group);
 
     let pulses = null, pulseData = null, neuralEdges = null, neuralNodePos = null;
+    let nodeMat = null, lineMat = null, nodeBaseOpacity = 0, lineBaseOpacity = 0;
 
     if (neural) {
       // neuron cell bodies scattered through a cortex-like ellipsoid
@@ -1611,7 +1612,8 @@ if (!RM) {
       const nodeArr = new Float32Array(nNodes * 3);
       nodePos.forEach(function(p, i){ nodeArr[i*3] = p[0]; nodeArr[i*3+1] = p[1]; nodeArr[i*3+2] = p[2]; });
       nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodeArr, 3));
-      const nodeMat = new THREE.PointsMaterial({size:0.05, color:color, transparent:true, opacity:0.85, blending:THREE.AdditiveBlending, depthWrite:false});
+      nodeMat = new THREE.PointsMaterial({size:0.05, color:color, transparent:true, opacity:0.85, blending:THREE.AdditiveBlending, depthWrite:false});
+      nodeBaseOpacity = 0.85;
       group.add(new THREE.Points(nodeGeo, nodeMat));
 
       // synapses: connect each neuron to its nearest few neighbours
@@ -1638,7 +1640,8 @@ if (!RM) {
       });
       const lineGeo = new THREE.BufferGeometry();
       lineGeo.setAttribute('position', new THREE.BufferAttribute(lineArr, 3));
-      const lineMat = new THREE.LineBasicMaterial({color:color, transparent:true, opacity:0.16, blending:THREE.AdditiveBlending});
+      lineMat = new THREE.LineBasicMaterial({color:color, transparent:true, opacity:0.16, blending:THREE.AdditiveBlending});
+      lineBaseOpacity = 0.16;
       group.add(new THREE.LineSegments(lineGeo, lineMat));
 
       // firing signals travelling along random synapses
@@ -1665,13 +1668,13 @@ if (!RM) {
         pos[i*3+2] = r * Math.cos(phi);
       }
       geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      const mat = new THREE.PointsMaterial({size:0.026, color:color, transparent:true, opacity:0.82, blending:THREE.AdditiveBlending, depthWrite:false});
-      group.add(new THREE.Points(geo, mat));
+      nodeMat = new THREE.PointsMaterial({size:0.026, color:color, transparent:true, opacity:0.82, blending:THREE.AdditiveBlending, depthWrite:false});
+      nodeBaseOpacity = 0.82;
+      group.add(new THREE.Points(geo, nodeMat));
 
-      const shell = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(radius + 0.35, 1),
-        new THREE.MeshBasicMaterial({color:0xE5484D, wireframe:true, transparent:true, opacity:0.14})
-      );
+      lineMat = new THREE.MeshBasicMaterial({color:0xE5484D, wireframe:true, transparent:true, opacity:0.14});
+      lineBaseOpacity = 0.14;
+      const shell = new THREE.Mesh(new THREE.IcosahedronGeometry(radius + 0.35, 1), lineMat);
       group.add(shell);
     }
 
@@ -1690,13 +1693,26 @@ if (!RM) {
       mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5;
     }, {passive:true});
 
-    const sceneState = {running:false, scroll:0};
+    const sceneState = {running:false, scroll:0, scrollEased:0};
     if (canvas === heroCanvas) heroSceneState = sceneState;
+
+    let autoRotY = 0;
+    const revealStart = performance.now();
 
     function tick(){
       if (!sceneState.running) return;
-      group.rotation.y += 0.0012 + mx * 0.0012;
-      group.rotation.x += (my * 0.28 - group.rotation.x) * 0.02;
+
+      const revealT = Math.min(1, (performance.now() - revealStart) / 800);
+      const reveal = 1 - Math.pow(1 - revealT, 3);
+
+      // both axes ease toward their target (mouse position / idle spin) instead of snapping
+      autoRotY += 0.0012;
+      group.rotation.y += ((autoRotY + mx * 0.9) - group.rotation.y) * 0.05;
+      group.rotation.x += (my * 0.28 - group.rotation.x) * 0.05;
+
+      if (nodeMat) nodeMat.opacity = nodeBaseOpacity * reveal;
+      if (lineMat) lineMat.opacity = lineBaseOpacity * reveal;
+
       if (pulses && pulseData){
         const arr = pulses.geometry.attributes.position.array;
         pulseData.forEach(function(p, i){
@@ -1711,11 +1727,18 @@ if (!RM) {
         });
         pulses.geometry.attributes.position.needsUpdate = true;
       }
+
+      let scale = reveal;
       if (canvas === heroCanvas){
-        group.rotation.z = sceneState.scroll * 0.55;
-        group.scale.setScalar(1 - sceneState.scroll * 0.4);
-        camera.position.z = 6.4 + sceneState.scroll * 2.4;
+        // ease the scroll progress itself (inertial, like the mouse parallax) instead
+        // of snapping the transform straight to the raw scroll value every event
+        sceneState.scrollEased += (sceneState.scroll - sceneState.scrollEased) * 0.08;
+        group.rotation.z = sceneState.scrollEased * 0.55;
+        scale *= (1 - sceneState.scrollEased * 0.4);
+        camera.position.z = 6.4 + sceneState.scrollEased * 2.4;
       }
+      group.scale.setScalar(scale);
+
       renderer.render(scene, camera);
       requestAnimationFrame(tick);
     }
@@ -1729,7 +1752,7 @@ if (!RM) {
     io.observe(canvas);
   }
 
-  if (heroCanvas) mountScene(heroCanvas, 0xFF6A3D, 110, 2.3, true);
+  if (heroCanvas) mountScene(heroCanvas, 0xFF6A3D, 110, 2.55, true);
   if (contactCanvas) mountScene(contactCanvas, 0xFF6A3D, 1500, 1.9, false);
 
   // tie the hero network's rotation/zoom/fade to scroll position
