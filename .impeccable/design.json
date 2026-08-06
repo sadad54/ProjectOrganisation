@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-06T07:45:00Z",
+  "title": "Design System: Adnan Mashrur Sadad — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "signal-orange": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "#FF6A3D",
+        "tonalRamp": ["#2B0F08", "#4A1D10", "#7A2F16", "#B24A22", "#FF6A3D", "#FF8A61", "#FFB08F", "#FFDCC9"]
+      },
+      "alert-rose": {
+        "role": "secondary",
+        "displayName": "Alert Rose",
+        "canonical": "#E5484D",
+        "tonalRamp": ["#2A0B0C", "#481316", "#7A1F23", "#B22F35", "#E5484D", "#EC6F73", "#F29A9D", "#F9C9CA"]
+      },
+      "void-black": {
+        "role": "neutral",
+        "displayName": "Void Black",
+        "canonical": "#0B0B0D",
+        "tonalRamp": ["#0B0B0D", "#131315", "#1B1B1E", "#48474A", "#8C8A87", "#B8B6B2", "#D8D6D1", "#F3F0EA"]
+      },
+      "warm-bone": {
+        "role": "neutral",
+        "displayName": "Warm Bone",
+        "canonical": "#F3F0EA"
+      }
+    },
+    "typographyMeta": {
+      "hero-display": { "displayName": "Hero Display", "purpose": "The single 'Hi, I'm Adnan.' headline only, never reused elsewhere." },
+      "contact-display": { "displayName": "Contact Display", "purpose": "The Contact section's closing headline." },
+      "display": { "displayName": "Display", "purpose": "Section titles (h2.title)." },
+      "project-name": { "displayName": "Project Name", "purpose": "Work section project headings (h3.proj-name)." },
+      "metric-value": { "displayName": "Metric Value", "purpose": "Large count-up numbers in metrics/comparison blocks." },
+      "slide-heading": { "displayName": "Slide Heading", "purpose": "Approach carousel slide headlines." },
+      "project-hook": { "displayName": "Project Hook", "purpose": "The one-line italic-weight hook under each project name." },
+      "marquee": { "displayName": "Marquee", "purpose": "Toolkit's auto-scrolling tech-stack strip text." },
+      "lede": { "displayName": "Lede", "purpose": "Section intro paragraphs (About, Contact)." },
+      "about-body": { "displayName": "About Body", "purpose": "About section prose." },
+      "hero-sub": { "displayName": "Hero Sub", "purpose": "Hero section supporting paragraph." },
+      "body": { "displayName": "Body", "purpose": "All prose copy, capped to a comfortable reading measure." },
+      "body-secondary-lg": { "displayName": "Body Secondary Large", "purpose": "'Other Builds' card titles (h5)." },
+      "body-secondary": { "displayName": "Body Secondary", "purpose": "Contact reach-list values." },
+      "body-secondary-sm": { "displayName": "Body Secondary Small", "purpose": "Work-rail button labels, notes list items, carousel slide body." },
+      "body-tertiary": { "displayName": "Body Tertiary", "purpose": "Visa disclosure body text." },
+      "body-tertiary-sm": { "displayName": "Body Tertiary Small", "purpose": "Nav mark subtitle." },
+      "body-quiet": { "displayName": "Body Quiet", "purpose": "Legacy/quiet secondary text size." },
+      "label-lg": { "displayName": "Label Large", "purpose": "Command palette search input." },
+      "label-md": { "displayName": "Label Medium", "purpose": "Code slab body text." },
+      "label": { "displayName": "Label", "purpose": "Buttons." },
+      "label-sm": { "displayName": "Label Small", "purpose": "Links, replay buttons, timeline dates." },
+      "label-eyebrow": { "displayName": "Label Eyebrow", "purpose": "Section eyebrows, hero status line, nav, kbd hint, command palette hints." },
+      "label-xs": { "displayName": "Label Extra Small", "purpose": "Tags, rail counters, portrait caption, slab captions, work-rail descriptors." },
+      "label-2xs": { "displayName": "Label 2X Small", "purpose": "Chip labels, bento cell headings." },
+      "label-3xs": { "displayName": "Label 3X Small", "purpose": "Diagram wire labels." },
+      "label-micro": { "displayName": "Label Micro", "purpose": "Diagram comparison-column labels — the smallest text in the system." }
+    },
+    "shadows": [
+      { "name": "modal-float", "value": "0 30px 90px rgba(0,0,0,0.6)", "purpose": "The one true elevated surface — the command palette modal. No other component uses box-shadow." },
+      { "name": "photo-float", "value": "drop-shadow(0 26px 40px rgba(0,0,0,0.55)) drop-shadow(0 0 26px rgba(255,106,61,0.15))", "purpose": "Applied via CSS filter (not box-shadow) to portrait photography so it reads as a floating physical object, paired with a faint accent-colored glow." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Default easing for nearly every transition in the system — buttons, cards, nav, reveals." },
+      { "name": "ease-flow", "value": "cubic-bezier(0.6, 0, 0.4, 1)", "purpose": "Used specifically for the animated diagram flow-lines (schema-repair loop, simulation diagrams) — a sharper, more mechanical ease than the standard one." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "560px" },
+      { "name": "md", "value": "820px" },
+      { "name": "lg", "value": "980px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid warm-bone button; fill wipes to signal orange on hover.",
+      "html": "<button class=\"ds-btn-primary\">See the work <span class=\"ds-arw\">&rarr;</span></button>",
+      "css": ".ds-btn-primary { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 100px; border: 1px solid #F3F0EA; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; background: #F3F0EA; color: #0B0B0D; overflow: hidden; cursor: pointer; transition: color 0.35s cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary::after { content: ''; position: absolute; inset: 0; background: #FF6A3D; z-index: -1; transform: translateY(101%); transition: transform 0.45s cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary:hover::after { transform: none; } .ds-btn-primary .ds-arw { transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary:hover .ds-arw { transform: translateX(4px); } .ds-btn-primary:focus-visible { outline: 2px solid #FF6A3D; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Transparent button with hairline border; fills to warm bone on hover.",
+      "html": "<button class=\"ds-btn-ghost\">Email me</button>",
+      "css": ".ds-btn-ghost { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 100px; border: 1px solid rgba(255,106,61,0.10); font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; background: transparent; color: #F3F0EA; overflow: hidden; cursor: pointer; transition: color 0.35s cubic-bezier(0.22,1,0.36,1), border-color 0.35s cubic-bezier(0.22,1,0.36,1); } .ds-btn-ghost::after { content: ''; position: absolute; inset: 0; background: #F3F0EA; z-index: -1; transform: translateY(101%); transition: transform 0.45s cubic-bezier(0.22,1,0.36,1); } .ds-btn-ghost:hover { color: #0B0B0D; border-color: #FF6A3D; } .ds-btn-ghost:hover::after { transform: none; } .ds-btn-ghost:focus-visible { outline: 2px solid #FF6A3D; outline-offset: 3px; }"
+    },
+    {
+      "name": "Status Tag",
+      "kind": "chip",
+      "refersTo": "tag-live",
+      "description": "Small pill label; the .live/.wip modifier is the only thing that tints it toward signal orange.",
+      "html": "<span class=\"ds-tag ds-tag-live\">Shipped</span>",
+      "css": ".ds-tag { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 9.5px; letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 10px; border-radius: 100px; border: 1px solid rgba(255,106,61,0.10); color: #8C8A87; } .ds-tag-live { color: #FF6A3D; border-color: rgba(255,106,61,0.32); }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Tech-stack chip; border and text shift to signal orange on hover.",
+      "html": "<span class=\"ds-chip\">Python</span>",
+      "css": ".ds-chip { display: inline-block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.06em; color: #8C8A87; border: 1px solid rgba(255,106,61,0.10); border-radius: 4px; padding: 5px 9px; transition: border-color 0.3s, color 0.3s; } .ds-chip:hover { border-color: #FF6A3D; color: #FF6A3D; }"
+    },
+    {
+      "name": "Slab (signature component)",
+      "kind": "custom",
+      "refersTo": "slab",
+      "description": "Terminal-style code/data block with inline syntax-highlight roles — the system's most distinctive component.",
+      "html": "<div class=\"ds-slab\"><span class=\"ds-slab-c\"># enforced on every response</span><br>{<br>&nbsp;&nbsp;<span class=\"ds-slab-k\">\"technical_accuracy\"</span>: <span class=\"ds-slab-s\">0..5</span><br>}</div>",
+      "css": ".ds-slab { border: 1px solid rgba(255,106,61,0.10); border-radius: 6px; background: linear-gradient(180deg, rgba(237,234,227,0.035), transparent 60%), #131315; padding: 20px; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11.5px; line-height: 1.85; color: #8C8A87; overflow-x: auto; } .ds-slab-c { color: #48474A; } .ds-slab-k { color: #FF6A3D; } .ds-slab-s { color: #FF6A3D; }"
+    },
+    {
+      "name": "Bento Cell",
+      "kind": "card",
+      "refersTo": "cell",
+      "description": "Toolkit/skills card; lifts and gains an accent glow on hover.",
+      "html": "<div class=\"ds-cell\"><h4>GenAI &amp; LLM systems</h4><ul><li>RAG</li><li>Agentic workflows</li></ul></div>",
+      "css": ".ds-cell { border: 1px solid rgba(255,106,61,0.10); border-radius: 6px; padding: 22px; background: #131315; position: relative; overflow: hidden; transition: border-color 0.45s cubic-bezier(0.22,1,0.36,1), transform 0.45s cubic-bezier(0.22,1,0.36,1); } .ds-cell:hover { border-color: rgba(255,106,61,0.35); transform: translateY(-3px); } .ds-cell h4 { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #FF6A3D; margin: 0 0 14px; font-weight: 500; } .ds-cell ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; } .ds-cell li { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; color: #8C8A87; border: 1px solid rgba(255,106,61,0.05); border-radius: 4px; padding: 4px 8px; background: rgba(237,234,227,0.02); }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Underline-free nav link; color-shift only on hover.",
+      "html": "<a class=\"ds-nav-link\" href=\"#work\">Work</a>",
+      "css": ".ds-nav-link { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C8A87; text-decoration: none; transition: color 0.25s; } .ds-nav-link:hover { color: #FF6A3D; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Signal in the Dark",
+    "overview": "One warm indicator light against near-total darkness. The system's own code names the accent --signal before it names it --sodium — this isn't a metaphor imposed from outside, it's what the implementation already calls itself. The base surface (--ink, #0B0B0D) sits at the very edge of black, and exactly one hue — a warm orange-red — is allowed to glow against it: a pulsing status dot in the hero, a hover state on a button, the cursor of a running process. Everything else — text, borders, secondary surfaces — stays in a narrow band of warm grays and off-white, so the signal color reads as information, not decoration.\n\nThe system is unapologetically technical without being cold. Monospace labels (Geist Mono) carry metadata, timestamps, and status the way a terminal or a build log would; a distinctive 'slab' component renders code and data with syntax-highlight-style inline color (comment / keyword / string / result), reinforcing that this is a working engineer's site, not a marketing template pretending to be one. Photography (the hero portrait, the About section photo) is the one place the system allows itself real depth — soft drop-shadow filters, not flat cards — floating those images above the flat plane everything else lives on.\n\nConfirmed rejection: generic SaaS gradient-and-glassmorphism — gradient text, frosted-glass cards, pastel palettes, rounded-everything softness. None of that belongs here; the system's restraint (one accent, flat surfaces, hairline borders) is the entire point, not a placeholder waiting to be prettied up.",
+    "keyCharacteristics": [
+      "Near-black base with exactly one warm accent color, used sparingly and functionally (status, hover, active states)",
+      "Monospace labels for all metadata/status text; a serif-free display face for headlines",
+      "Flat by default — depth comes from hairline borders and tonal surface steps, not shadows",
+      "A signature 'slab' component renders code/data with terminal-style syntax coloring",
+      "Motion is restrained and purposeful: a pulsing status dot, hover-only color shifts, WebGL ambient effects that never demand attention"
+    ],
+    "rules": [
+      { "name": "The One Signal Rule", "body": "The accent color is used on a small fraction of any given screen, and always to mean something (active, live, hovered, pulsing) — never as background fill or decoration.", "section": "colors" },
+      { "name": "The Translucency Rule", "body": "Gradients, veils, glows, and borders are built by varying the opacity of an already-documented base color, never by introducing a new hue. A different alpha value of signal-orange or void-black is still that color, just at a different translucency for a different purpose.", "section": "colors" },
+      { "name": "The Mono-Means-Metadata Rule", "body": "Monospace type is never used for prose or headlines — only for labels, timestamps, code, and anything that represents system/status information.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Nearly the entire system uses hairline borders and stepped surface colors to convey depth, not shadows — there is exactly one box-shadow in the whole system, reserved for the command palette modal.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do treat signal orange as meaningful, not decorative — reserve it for active/live/hovered/pulsing states.",
+      "Do use monospace exclusively for labels, metadata, timestamps, and code — never for prose or headlines.",
+      "Do tint structural borders and dividers with the accent hue at low opacity rather than neutral gray.",
+      "Do keep buttons and tags fully pill-shaped; keep containers and cards in the 4-10px soft-radius family.",
+      "Do reserve real box-shadow for the one genuinely floating surface (the command palette); use drop-shadow only on photographic content."
+    ],
+    "donts": [
+      "Don't introduce a second accent color competing with signal orange — alert rose is the only other hue, and only for negative/error states.",
+      "Don't use gradient text, frosted-glass/glassmorphism cards, pastel palettes, or rounded-everything softness.",
+      "Don't add box-shadow-based card elevation as a default pattern.",
+      "Don't use icon-only or underlined navigation."
+    ]
+  }
+}
