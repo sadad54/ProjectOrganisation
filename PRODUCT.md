@@ -8,13 +8,13 @@ web
 
 ## Users
 
-Primary audience is broader than pure recruiter screening: hiring managers and recruiters evaluating Adnan for AI Engineer / Data Scientist / Full Stack roles, but also collaborators, community/conference contacts, and general professional networking. Design and copy should read well both to someone actively screening candidates and to someone encountering the site in a more casual professional context (e.g. shared link, LinkedIn, conference follow-up).
+Primary audience is a general professional/technical one: collaborators, potential employers, community/conference contacts, and anyone encountering the site via a shared link, LinkedIn, or conference follow-up. The site is a showcase of Adnan's work and thinking first, not a job-search landing page — copy should read as an open, relaxed invitation to connect over shared interests, not as an active candidate pitch.
 
-Adnan Mashrur Sadad: BSc Software Engineering (MJIIT, Universiti Teknologi Malaysia, Kuala Lumpur), CGPA 3.50, Dean's List. Bangladeshi national living in Malaysia. Currently available immediately for a first full-time role.
+Adnan Mashrur Sadad: BSc Software Engineering (MJIIT, Universiti Teknologi Malaysia, Kuala Lumpur), CGPA 3.50, Dean's List. Bangladeshi national living in Malaysia. Currently researching self-correcting agentic RAG (SAFE-RAG) alongside two other papers spanning GenAI, computer vision, and human-in-the-loop agentic systems, and building FinScout on the side.
 
 ## Product Purpose
 
-A personal portfolio site that gets Adnan considered and contacted for AI Engineer / Data Scientist / Full Stack roles, and more broadly serves as his professional presence online. Success is measured by recruiter/hiring-manager engagement (résumé downloads, contact via email, follow-through to project repos/demos) and by holding up as a credible professional artifact when shared more casually.
+A personal portfolio site that showcases Adnan's work and engineering thinking as his professional presence online — a place to point people who might want to collaborate, hire, or just talk shop, without reading as a job-search pitch. Success is measured by genuine engagement (résumé downloads, contact via email, follow-through to project repos/demos) and by holding up as a credible, likeable professional artifact when shared casually (e.g. LinkedIn, conference follow-up).
 
 ## Positioning
 
@@ -24,7 +24,7 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 
 `portfolio-next/` — a Next.js app — is now the **sole** implementation. A parallel static, zero-build, single-file mirror (`index.html`) previously existed and was kept content-identical by hand; Adnan deliberately dropped it (2026-08-06). Do not recreate or mirror future edits into an `index.html` file unless explicitly asked again.
 
-Site sections: hero (status line, headline, CTA, portrait), About (bio, timeline), Work (7 project case studies in a rail-navigated panel layout), Approach (a 4-slide horizontally-swipeable carousel of real engineering decisions, e.g. schema-repair loop, imbalanced-classification metric choice), Toolkit (skills bento grid), Other Builds (smaller projects), Contact (contact methods + visa/sponsorship note), command palette (⌘K) for quick navigation/actions.
+Site sections: hero (status line, headline, CTA, portrait), About (bio, timeline), Work (7 project case studies in a rail-navigated panel layout, each with a screenshot carousel), Approach (a 4-slide horizontally-swipeable carousel of real engineering decisions, e.g. schema-repair loop, imbalanced-classification metric choice), Toolkit (skills bento grid), Other Builds (smaller projects), Contact (relaxed, invitation-style copy + contact methods, no job-seeking framing or visa/sponsorship note — deliberately removed 2026-08-06), command palette (⌘K) for quick navigation/actions.
 
 ## Capabilities and Constraints
 
@@ -33,13 +33,13 @@ Site sections: hero (status line, headline, CTA, portrait), About (bio, timeline
 - Several project cards still carry placeholder links pending real deploys/repos (tracked in the site's own README "Before you publish" checklist): a Fraud Detection repo link, and demo links for InterviewPilot, WC26 Predictor, Fraud Detection, Mindhive Chatbot, ExpenSense, and Aura. Two backing repos (`AuraFinalPF`, `chatbotZUS`) are currently private.
 - Screenshot slots exist per project (`assets/screenshots/<project>.png`) with a graceful `onerror` placeholder fallback when an image is missing; not all are filled yet.
 - FinScout (the 7th project) is in progress, not yet shipped.
-- Visa/sponsorship paragraph in Contact is a deliberate, confirmed-honest disclosure (Employment Pass sponsorship needed) — not a placeholder to remove casually.
+- The Contact section's visa/sponsorship disclosure and phone number were deliberately removed (2026-08-06) — Adnan reframed the site as a general showcase rather than an active job-search pitch, and didn't want the copy reading as needy. Do not reintroduce either without being explicitly asked again.
 
 ## Brand Commitments
 
 - Name/byline: "ADNAN M. SADAD" / "AI / Data / Full Stack".
 - Existing visual system (not yet captured in a DESIGN.md): near-black base (`--ink #0B0B0D`), warm orange accent (`--sodium`/`--signal #FF6A3D`), sparing rose (`--rose #E5484D`), monospace for labels/meta, a display face for headings — dark, moody, cinematic, with warm accent lighting throughout.
-- Contact: adnanmashrursadad@gmail.com, +60 11-3968 7435, LinkedIn (`adnan-mashrur-sadad-87a45b237`), GitHub (`sadad54`).
+- Contact: adnanmashrursadad@gmail.com, LinkedIn (`adnan-mashrur-sadad-87a45b237`), GitHub (`sadad54`). Phone number removed from the site (2026-08-06).
 
 ## Evidence on Hand
 
@@ -53,7 +53,7 @@ Site sections: hero (status line, headline, CTA, portrait), About (bio, timeline
 
 1. Every claim on the site must be backed by something real and checkable (a repo, a metric, a shipped artifact) — no invented testimonials, benchmarks, or unstated placeholders presented as final.
 2. The differentiator is the reliability engineering around AI systems (validation, repair, evals, deployment), not the model call itself — this should keep showing up as the throughline across copy and case studies, even as breadth (full-stack, ML/data) is demonstrated.
-3. Honesty over polish where they conflict: the visa/sponsorship disclosure and the placeholder-with-`onerror`-fallback pattern for missing screenshots are deliberate choices to stay truthful rather than hide gaps.
+3. Honesty over polish where they conflict: the placeholder-with-`onerror`-fallback pattern for missing screenshots is a deliberate choice to stay truthful rather than hide gaps.
 4. Motion and visual ambition (WebGL fluid, 3D neural network, scroll-driven carousel) are part of the pitch — a systems engineer who can also ship polished, technically extraordinary front-end work — but must never come at the cost of `prefers-reduced-motion` support or graceful degradation without WebGL.
 5. `portfolio-next` is the canonical implementation going forward; `index.html` is maintained as a portable static mirror, not the primary design target.
 

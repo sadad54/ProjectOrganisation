@@ -1113,7 +1113,6 @@ function toast(msg){
     {n:'Toolkit',            h:'Section', go:function(){ jump('toolkit'); }},
     {n:'Contact',            h:'Section', go:function(){ jump('contact'); }},
     {n:'Copy email address', h:'Copy',    go:function(){ copy('adnanmashrursadad@gmail.com', 'Email copied'); }},
-    {n:'Copy phone number',  h:'Copy',    go:function(){ copy('+60 11-3968 7435', 'Number copied'); }},
     {n:'Open GitHub',        h:'External',go:function(){ open('https://github.com/sadad54'); }},
     {n:'Open LinkedIn',      h:'External',go:function(){ open('https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237'); }},
     {n:'Download résumé',    h:'File',    go:function(){ open('resume.pdf'); }},
@@ -1171,6 +1170,80 @@ $$('a[href^="#"]').forEach(function(a){
     e.preventDefault();
     t.scrollIntoView({behavior: RM ? 'auto' : 'smooth'});
   });
+});
+
+/* =====================================================================
+   13. PROJECT SCREENSHOT CAROUSELS — autoplay + manual nav, crossfade
+   ===================================================================== */
+$$('.shot[data-shots]').forEach(function(shot){
+  let shots;
+  try { shots = JSON.parse(shot.dataset.shots); } catch (e) { return; }
+  if (!Array.isArray(shots) || shots.length < 2) return;
+
+  const img = shot.querySelector('img');
+  const dotsWrap = shot.querySelector('[data-shot-dots]');
+  const prevBtn = shot.querySelector('[data-shot-prev]');
+  const nextBtn = shot.querySelector('[data-shot-next]');
+  const baseAlt = img.alt;
+
+  let i = 0, transitioning = false, visible = false, hovered = false;
+  const dots = shots.map(function(_, idx){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Show screenshot ' + (idx + 1) + ' of ' + shots.length);
+    b.addEventListener('click', function(){ go(idx); });
+    dotsWrap.appendChild(b);
+    return b;
+  });
+
+  function paintDots(){
+    dots.forEach(function(d, idx){ d.classList.toggle('on', idx === i); });
+    img.alt = baseAlt + ' (' + (i + 1) + ' of ' + shots.length + ')';
+  }
+  paintDots();
+
+  function go(next){
+    if (transitioning || next === i) return;
+    transitioning = true;
+    img.classList.add('is-out');
+    setTimeout(function(){
+      i = next;
+      img.src = shots[i];
+      paintDots();
+      img.classList.remove('is-out');
+      img.classList.remove('is-in'); void img.offsetWidth;
+      img.classList.add('is-in');
+      setTimeout(function(){ img.classList.remove('is-in'); transitioning = false; }, RM ? 0 : 620);
+    }, RM ? 0 : 320);
+  }
+  function step(dir){ go((i + dir + shots.length) % shots.length); }
+
+  if (prevBtn) prevBtn.addEventListener('click', function(){ step(-1); restartAutoplay(); });
+  if (nextBtn) nextBtn.addEventListener('click', function(){ step(1); restartAutoplay(); });
+
+  let sx = 0, sy = 0;
+  shot.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive: true});
+  shot.addEventListener('touchend', function(e){
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ step(dx < 0 ? 1 : -1); restartAutoplay(); }
+  }, {passive: true});
+
+  shot.addEventListener('pointerenter', function(){ hovered = true; });
+  shot.addEventListener('pointerleave', function(){ hovered = false; });
+  shot.addEventListener('focusin', function(){ hovered = true; });
+  shot.addEventListener('focusout', function(){ hovered = false; });
+
+  let timer = null;
+  function tick(){ if (visible && !hovered && !RM) step(1); }
+  function startAutoplay(){ if (timer || RM) return; timer = setInterval(tick, 4200); }
+  function stopAutoplay(){ clearInterval(timer); timer = null; }
+  function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
+
+  const io = new IntersectionObserver(function(es){
+    visible = es[0].isIntersecting;
+    if (visible) startAutoplay(); else stopAutoplay();
+  }, {threshold: 0.35});
+  io.observe(shot);
 });
 
 }

@@ -14,90 +14,86 @@ colors:
   hairline-faint: "rgba(255,106,61,0.05)"
 typography:
   hero-display:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(3rem, 8.6vw, 8rem)"
     fontWeight: 600
     lineHeight: 0.94
     letterSpacing: "-0.042em"
   contact-display:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(2.3rem, 7vw, 5.4rem)"
     fontWeight: 600
     lineHeight: 0.96
     letterSpacing: "-0.042em"
   display:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(2rem, 4.6vw, 3.5rem)"
     fontWeight: 600
     lineHeight: 1.02
     letterSpacing: "-0.03em"
   project-name:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)"
     fontWeight: 600
     lineHeight: 1.04
     letterSpacing: "-0.03em"
   metric-value:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(1.5rem, 3vw, 2.1rem)"
     fontWeight: 600
     letterSpacing: "-0.03em"
   slide-heading:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(1.35rem, 2.6vw, 1.9rem)"
     fontWeight: 600
     lineHeight: 1.12
     letterSpacing: "-0.02em"
   project-hook:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(1.1rem, 1.9vw, 1.5rem)"
-    fontWeight: 300
+    fontWeight: 400
     lineHeight: 1.28
     letterSpacing: "-0.015em"
   marquee:
-    fontFamily: "Geist, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(1.1rem, 2.2vw, 1.7rem)"
     fontWeight: 400
     letterSpacing: "-0.02em"
   lede:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "clamp(1.02rem, 1.35vw, 1.2rem)"
     fontWeight: 400
   about-body:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "clamp(1rem, 1.25vw, 1.14rem)"
     fontWeight: 400
   hero-sub:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "clamp(0.98rem, 1.2vw, 1.1rem)"
     fontWeight: 400
   body:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "clamp(15px, 1.02vw, 17px)"
     fontWeight: 400
     lineHeight: 1.62
   body-secondary-lg:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "1.12rem"
     fontWeight: 600
   body-secondary:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "1.02rem"
     fontWeight: 500
   body-secondary-sm:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "0.99rem"
     fontWeight: 400
-  body-tertiary:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
-    fontSize: "0.96rem"
-    fontWeight: 400
   body-tertiary-sm:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "0.94rem"
     fontWeight: 400
   body-quiet:
-    fontFamily: "Geist, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Instrument Sans, Helvetica Neue, Arial, sans-serif"
     fontSize: "0.92rem"
     fontWeight: 400
   label-lg:
@@ -225,15 +221,15 @@ The palette is almost monochrome by design — a narrow range of near-black surf
 ### Named Rules
 **The One Signal Rule.** The accent color is used on a small fraction of any given screen, and always to mean something (active, live, hovered, pulsing) — never as background fill or decoration.
 
-**The Translucency Rule.** Gradients, veils, glows, and borders are built by varying the *opacity* of an already-documented base color (`--ink`/void-black for darkening veils, `--sodium`/signal-orange for glows and hairlines, `--rose`/alert-rose for error emphasis, `--bone`/warm-bone for faint highlight washes) — never by introducing a new hue. A component using `rgba(255,106,61,0.24)` instead of the documented `rgba(255,106,61,0.10)` hairline is still using signal orange, just at a different translucency for a different purpose (a stronger visa-note border vs. a quiet divider); it is not a new color.
+**The Translucency Rule.** Gradients, veils, glows, and borders are built by varying the *opacity* of an already-documented base color (`--ink`/void-black for darkening veils, `--sodium`/signal-orange for glows and hairlines, `--rose`/alert-rose for error emphasis, `--bone`/warm-bone for faint highlight washes) — never by introducing a new hue. A component using `rgba(255,106,61,0.24)` instead of the documented `rgba(255,106,61,0.10)` hairline is still using signal orange, just at a different translucency for a different purpose (a stronger emphasis border vs. a quiet divider); it is not a new color.
 
 ## Typography
 
-**Display Font:** Geist (with Helvetica Neue, sans-serif fallback)
-**Body Font:** Geist (with Helvetica Neue, Arial, sans-serif fallback)
+**Display Font:** Instrument Sans (with Helvetica Neue, sans-serif fallback)
+**Body Font:** Instrument Sans (with Helvetica Neue, Arial, sans-serif fallback)
 **Label/Mono Font:** Geist Mono (with ui-monospace, SFMono-Regular, Menlo fallback)
 
-**Character:** A single grotesque-sans family (Geist) carries both display and body duty, kept from feeling monotonous by a hard swap to Geist Mono for every label, tag, timestamp, and piece of metadata — the mono face is what signals "this is structural/technical," not a second display voice.
+**Character:** A single grotesque-sans family (Instrument Sans) carries both display and body duty, kept from feeling monotonous by a hard swap to Geist Mono for every label, tag, timestamp, and piece of metadata — the mono face is what signals "this is structural/technical," not a second display voice. Instrument Sans replaced Geist site-wide (2026-08-06) as a deliberate move toward a less saturated typographic look while keeping the exact same one-sans-family structure and pairing logic.
 
 ### Hierarchy
 - **Hero Display** (600 weight, `clamp(3rem, 8.6vw, 8rem)`, 0.94 line-height, -0.042em tracking): the single "Hi, I'm Adnan." headline only.

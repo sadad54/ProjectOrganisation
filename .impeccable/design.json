@@ -44,7 +44,6 @@
       "body-secondary-lg": { "displayName": "Body Secondary Large", "purpose": "'Other Builds' card titles (h5)." },
       "body-secondary": { "displayName": "Body Secondary", "purpose": "Contact reach-list values." },
       "body-secondary-sm": { "displayName": "Body Secondary Small", "purpose": "Work-rail button labels, notes list items, carousel slide body." },
-      "body-tertiary": { "displayName": "Body Tertiary", "purpose": "Visa disclosure body text." },
       "body-tertiary-sm": { "displayName": "Body Tertiary Small", "purpose": "Nav mark subtitle." },
       "body-quiet": { "displayName": "Body Quiet", "purpose": "Legacy/quiet secondary text size." },
       "label-lg": { "displayName": "Label Large", "purpose": "Command palette search input." },

@@ -10,6 +10,18 @@
         "value": "geist",
         "createdAt": "2026-08-05T22:27:56.142Z",
         "reason": "User confirmed geist is intentional"
+      },
+      {
+        "rule": "overused-font",
+        "value": "instrument sans",
+        "createdAt": "2026-08-06T15:00:13.944Z",
+        "reason": "User confirmed Instrument Sans as the site-wide Geist replacement after reviewing graded options"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "14px",
+        "createdAt": "2026-08-06T15:01:59.425Z",
+        "reason": "User confirmed 14px is intentional for the pre-existing .loop-arrow glyph size"
       }
     ]
   }
