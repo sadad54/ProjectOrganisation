@@ -323,7 +323,10 @@ if (!RM) {
 
   let heroSceneState = null;
 
-  async function mountScene(canvas, color, count, radius, neural){
+  async function mountScene(canvas, color, count, radius, neural, nodeOpacity, lineOpacity, ptSize){
+    nodeOpacity = (typeof nodeOpacity === 'number') ? nodeOpacity : 0.85;
+    lineOpacity = (typeof lineOpacity === 'number') ? lineOpacity : 0.16;
+    ptSize = (typeof ptSize === 'number') ? ptSize : 0.05;
     if (!canvas) return;
     let THREE;
     try { THREE = await import('three'); } catch (err) { return; }
@@ -356,8 +359,8 @@ if (!RM) {
       const nodeArr = new Float32Array(nNodes * 3);
       nodePos.forEach(function(p, i){ nodeArr[i*3] = p[0]; nodeArr[i*3+1] = p[1]; nodeArr[i*3+2] = p[2]; });
       nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodeArr, 3));
-      nodeMat = new THREE.PointsMaterial({size:0.05, color:color, transparent:true, opacity:0.85, blending:THREE.AdditiveBlending, depthWrite:false});
-      nodeBaseOpacity = 0.85;
+      nodeMat = new THREE.PointsMaterial({size:ptSize, color:color, transparent:true, opacity:nodeOpacity, blending:THREE.AdditiveBlending, depthWrite:false});
+      nodeBaseOpacity = nodeOpacity;
       group.add(new THREE.Points(nodeGeo, nodeMat));
 
       // synapses: connect each neuron to its nearest few neighbours
@@ -384,8 +387,8 @@ if (!RM) {
       });
       const lineGeo = new THREE.BufferGeometry();
       lineGeo.setAttribute('position', new THREE.BufferAttribute(lineArr, 3));
-      lineMat = new THREE.LineBasicMaterial({color:color, transparent:true, opacity:0.16, blending:THREE.AdditiveBlending});
-      lineBaseOpacity = 0.16;
+      lineMat = new THREE.LineBasicMaterial({color:color, transparent:true, opacity:lineOpacity, blending:THREE.AdditiveBlending});
+      lineBaseOpacity = lineOpacity;
       group.add(new THREE.LineSegments(lineGeo, lineMat));
 
       // firing signals travelling along random synapses
@@ -496,7 +499,9 @@ if (!RM) {
     io.observe(canvas);
   }
 
-  if (heroCanvas) mountScene(heroCanvas, 0xFF6A3D, 110, 2.55, true);
+  // hero instance runs brighter/wider than the default (0.85/0.16/0.05) — it now sits
+  // partly behind the (larger) headline, so it needs to read clearly through/around the text
+  if (heroCanvas) mountScene(heroCanvas, 0xFF6A3D, 130, 2.9, true, 0.95, 0.32, 0.065);
   if (contactCanvas) mountScene(contactCanvas, 0xFF6A3D, 1500, 1.9, false);
 
   // tie the hero network's rotation/zoom/fade to scroll position

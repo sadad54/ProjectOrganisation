@@ -187,10 +187,9 @@ body.no-webgl #fluid{
 }
 .hero-content{flex:1 1 auto;min-width:0}
 .hero-portrait-float{
-  flex:0 0 auto;width:clamp(170px,20vw,300px);align-self:flex-end;
-  perspective:900px;animation:heroFloat 5s ease-in-out infinite;
+  flex:0 0 auto;width:clamp(220px,26vw,380px);align-self:flex-end;
+  perspective:900px;
 }
-@keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 .hero-portrait{
   position:relative;width:100%;will-change:transform;transform-style:preserve-3d;
   animation:heroPortraitIn 1s var(--ease) .5s both;
@@ -200,7 +199,9 @@ body.no-webgl #fluid{
   position:absolute;inset:-22% -32% -6% -32%;z-index:0;pointer-events:none;
   background:radial-gradient(55% 55% at 50% 40%,rgba(255,106,61,.28),transparent 70%);
   filter:blur(24px);
+  animation:haloPulse 6s ease-in-out infinite;
 }
+@keyframes haloPulse{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
 .hero-portrait img{
   position:relative;z-index:1;width:100%;height:auto;display:block;
   filter:drop-shadow(0 26px 40px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(255,106,61,.15));
@@ -211,12 +212,30 @@ body.no-webgl #fluid{
   background:radial-gradient(closest-side,rgba(0,0,0,.5),transparent 75%);
   filter:blur(3px);
 }
+.hero-portrait .portrait-brackets{
+  position:absolute;inset:-10px;z-index:2;pointer-events:none;opacity:.8;
+  background-repeat:no-repeat;
+  background-image:
+    linear-gradient(var(--signal),var(--signal)),linear-gradient(var(--signal),var(--signal)),
+    linear-gradient(var(--signal),var(--signal)),linear-gradient(var(--signal),var(--signal)),
+    linear-gradient(var(--signal),var(--signal)),linear-gradient(var(--signal),var(--signal)),
+    linear-gradient(var(--signal),var(--signal)),linear-gradient(var(--signal),var(--signal));
+  background-size:16px 1px,1px 16px,16px 1px,1px 16px,16px 1px,1px 16px,16px 1px,1px 16px;
+  background-position:top left,top left,top right,top right,bottom left,bottom left,bottom right,bottom right;
+  filter:drop-shadow(0 0 8px rgba(255,106,61,.16));
+}
+.hero-portrait .portrait-tag{
+  position:absolute;left:0;bottom:-26px;z-index:2;white-space:nowrap;
+  font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.hero-portrait .portrait-tag .sep{color:var(--dimmer);margin:0 5px}
 @media (max-width:820px){
   .hero-main{flex-direction:column;align-items:center;text-align:center}
   .hero-portrait-float{order:-1;width:clamp(140px,34vw,200px);margin-bottom:8px;align-self:center}
   .hero-content{width:100%}
+  .portrait-tag{display:none}
 }
-@media (prefers-reduced-motion:reduce){.hero-portrait-float{animation:none}}
+@media (prefers-reduced-motion:reduce){.hero-portrait .halo{animation:none}}
 
 h1.hero-h{
   font-family:var(--display);font-weight:600;
