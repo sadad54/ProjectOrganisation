@@ -14,11 +14,16 @@ colors:
   hairline-faint: "rgba(255,106,61,0.05)"
 typography:
   hero-display:
-    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Archivo, Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(3rem, 8.6vw, 8rem)"
-    fontWeight: 600
+    fontWeight: 700
     lineHeight: 0.94
     letterSpacing: "-0.042em"
+  hero-display-accent:
+    fontFamily: "Abril Fatface, Georgia, serif"
+    fontSize: "clamp(3rem, 8.6vw, 8rem)"
+    fontWeight: 400
+    letterSpacing: "-0.01em"
   contact-display:
     fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
     fontSize: "clamp(2.3rem, 7vw, 5.4rem)"
@@ -229,16 +234,19 @@ The palette is almost monochrome by design — a narrow range of near-black surf
 **Body Font:** Instrument Sans (with Helvetica Neue, Arial, sans-serif fallback)
 **Label/Mono Font:** Geist Mono (with ui-monospace, SFMono-Regular, Menlo fallback)
 
-**Character:** A single grotesque-sans family (Instrument Sans) carries both display and body duty, kept from feeling monotonous by a hard swap to Geist Mono for every label, tag, timestamp, and piece of metadata — the mono face is what signals "this is structural/technical," not a second display voice. Instrument Sans replaced Geist site-wide (2026-08-06) as a deliberate move toward a less saturated typographic look while keeping the exact same one-sans-family structure and pairing logic.
+**Character:** A single grotesque-sans family (Instrument Sans) carries body and most display duty, kept from feeling monotonous by a hard swap to Geist Mono for every label, tag, timestamp, and piece of metadata — the mono face is what signals "this is structural/technical," not a second display voice. Instrument Sans replaced Geist site-wide (2026-08-06) as a deliberate move toward a less saturated typographic look while keeping the exact same one-sans-family structure and pairing logic. One deliberate exception: the hero "Hi, I'm Adnan." headline pairs **Archivo** (a structural, underused grotesque — not Instrument Sans, to give the headline its own identity distinct from body text) for "Hi, I'm" with **Abril Fatface** (a dramatic high-contrast didone display serif) for "Adnan." — a classic grotesque-for-structure / didone-for-drama editorial pairing, confirmed 2026-08-08 after comparing six candidate pairings against the site's technical identity. See **The One Headline, One Pairing Rule** below.
 
 ### Hierarchy
-- **Hero Display** (600 weight, `clamp(3rem, 8.6vw, 8rem)`, 0.94 line-height, -0.042em tracking): the single "Hi, I'm Adnan." headline only.
+- **Hero Display** (Archivo, 700 weight, `clamp(3rem, 8.6vw, 8rem)`, 0.94 line-height, -0.042em tracking): "Hi, I'm" in the hero headline only.
+- **Hero Display Accent** (Abril Fatface, 400 weight, same size as Hero Display, -0.01em tracking, signal-orange): "Adnan." in the hero headline only — the one word on the site set in a display serif.
 - **Display** (600 weight, `clamp(2rem, 4.6vw, 3.5rem)`, 1.02 line-height, -0.03em tracking): section titles (`h2.title`) and project names.
 - **Body** (400 weight, `clamp(15px, 1.02vw, 17px)`, 1.62 line-height): all prose copy; capped at a comfortable measure per paragraph (`max-width:46-62ch` depending on context).
 - **Label** (400 weight, 8-13px in a fine ~0.5-1px ramp — `label-micro` through `label-lg` in the frontmatter — 0.1-0.2em tracking, uppercase): eyebrows, tags, timestamps, nav, button text, diagram annotations — always monospace, always tracked wide, almost always uppercase. The fine step size is deliberate: each component picks the density-appropriate step (a diagram annotation and a nav link are both "labels" but at different visual weights), not an accident of arbitrary values.
 
 ### Named Rules
 **The Mono-Means-Metadata Rule.** Monospace type is never used for prose or headlines — only for labels, timestamps, code, and anything that represents system/status information.
+
+**The One Headline, One Pairing Rule.** Every other display and body role uses Instrument Sans. The Archivo/Abril Fatface pairing exists only on the single most personal line on the site — the hero name headline — as a confirmed, deliberate signature moment, not a precedent. No other headline, title, or label may adopt either face without an equally explicit decision.
 
 ## Layout
 
