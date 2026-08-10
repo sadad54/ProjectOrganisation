@@ -28,6 +28,10 @@ function imgs(dir, n) {
   return JSON.stringify(Array.from({ length: n }, (_, i) => `assets/screenshots/${dir}/${String(i + 1).padStart(2, '0')}.png`));
 }
 
+function imgsList(dir, files) {
+  return JSON.stringify(files.map((f) => `assets/screenshots/${dir}/${f}`));
+}
+
 function Shot({ dataShots, slug, alt, mobileFit }) {
   return (
     <div className={`shot${mobileFit ? ' mobile-fit' : ''}`} data-shots={dataShots}>
@@ -92,7 +96,7 @@ export default function Work() {
               id="p1"
               whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
             >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2025' }, { t: 'Full stack + LLM' }]} />
+              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Full stack + LLM' }]} />
               <h3 className="proj-name">InterviewPilot</h3>
               <p className="proj-hook">A mock interview that pushes back.</p>
               <Shot dataShots={imgs('interviewpilot', 9)} slug="interviewpilot" alt="InterviewPilot screenshot" />
@@ -132,7 +136,7 @@ export default function Work() {
               id="p2"
               whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
             >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2025' }, { t: 'ML + simulation' }]} />
+              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'ML + simulation' }]} />
               <h3 className="proj-name">WC26 Predictor</h3>
               <p className="proj-hook">Every path to the trophy, simulated ten thousand times.</p>
               <Shot dataShots={imgs('wc26-predictor', 20)} slug="wc26-predictor" alt="WC26 Predictor dashboard screenshot" />
@@ -163,7 +167,7 @@ export default function Work() {
               id="p3"
               whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
             >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2025' }, { t: 'Imbalanced classification' }]} />
+              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Imbalanced classification' }]} />
               <h3 className="proj-name">Financial Fraud Detection</h3>
               <p className="proj-hook">0.17% of transactions are fraud. Find them anyway.</p>
               <Shot dataShots={imgs('fraud-detection', 10)} slug="fraud-detection" alt="Fraud detection dashboard screenshot" />
@@ -302,6 +306,19 @@ export default function Work() {
               <div className="proj-head"><span className="tag wip">In progress</span><span className="tag">2026</span><span className="tag">Agent + evaluation</span></div>
               <h3 className="proj-name">FinScout</h3>
               <p className="proj-hook">Company research with a score attached.</p>
+              <Shot
+                dataShots={imgsList('finscout', [
+                  '01-ask-empty.png',
+                  '02-ask-market-final.png',
+                  '03-ask-risk-rag-final.png',
+                  '04-research-empty.png',
+                  '05-research-pipeline-inflight.png',
+                  '06-research-final-top.png',
+                  '07-research-final-fullpage.png',
+                ])}
+                slug="finscout"
+                alt="FinScout research agent screenshot"
+              />
               <div className="proj-body">
                 <div>
                   <ul className="notes">
@@ -310,6 +327,10 @@ export default function Work() {
                     <li>The point of the project isn&rsquo;t the agent. It&rsquo;s being able to say what changed when I changed something.</li>
                   </ul>
                   <ul className="chips"><li>Python</li><li>Agentic retrieval</li><li>Eval harness</li><li>FastAPI</li></ul>
+                  <div className="proj-links">
+                    <a className="lnk" href="https://github.com/sadad54/finscout">Repository ↗</a>
+                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
+                  </div>
                 </div>
                 <div>
                   <p className="slab-cap">Harness first</p>
