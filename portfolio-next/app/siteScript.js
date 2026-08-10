@@ -22,9 +22,7 @@ const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 // lets the ambient particle field (1c) cap its own cost instead of stacking full-cost on top
 let fluidLocalActive = false;
 
-if (navigator.platform && /Win|Linux/i.test(navigator.platform)) {
-  const k = $('#kbd-key'); if (k) k.textContent = 'Ctrl ';
-}
+// kbd-key (⌘/Ctrl) OS detection now lives in Nav.jsx (Framer Motion conversion)
 
 /* =====================================================================
    1. FLUID FIELD  —  curl-noise advected dye, ping-pong on the GPU
@@ -558,9 +556,28 @@ if (!RM) {
       driftPhase: Math.random() * Math.PI * 2
     };
   });
+  // sorted by angle so consecutive array neighbors are also spatial neighbors —
+  // lets the connecting-line pass below stay O(n) instead of O(n^2)
+  parts.sort(function(a, b){ return a.angle - b.angle; });
 
   let progress = 0; // 0 = tight cluster at hero, 1 = fully exploded — stays at 1 for the rest of the page
   const hero = $('#top');
+
+  // per-section pulse: nudges overall alpha up slightly while any tracked
+  // section is well into view, giving the backdrop a gentle sitewide "breathing"
+  // sync with scroll instead of one flat post-hero plateau
+  let pulseTarget = 1, pulse = 1;
+  const pulseSections = $$('section.band, header.hero, section.contact');
+  if (pulseSections.length){
+    const inView = new Set();
+    const pulseIO = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target);
+      });
+      pulseTarget = inView.size ? 1.12 : 1;
+    }, {threshold:0.5});
+    pulseSections.forEach(function(s){ pulseIO.observe(s); });
+  }
 
   const hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
   if (hasGSAP && hero){
@@ -578,15 +595,19 @@ if (!RM) {
     updateFallback();
   }
 
+  const MAX_LINE_DIST = 130;
+
   function draw(t){
     ctx.clearRect(0, 0, W, H);
     const cx = W / 2, cy = H * 0.42;
     const maxR = Math.min(W, H) * 0.68;
     const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic — punchy explode, settles gently
-    const alphaCap = 0.4 * Math.min(1, progress / 0.3); // fades up quickly, then holds
+    pulse += (pulseTarget - pulse) * 0.02; // slow lerp, reads as a breathing sync, not a flicker
+    const alphaCap = 0.4 * Math.min(1, progress / 0.3) * pulse; // fades up quickly, then holds
 
     if (alphaCap <= 0.002) { requestAnimationFrame(draw); return; }
 
+    const pts = [];
     parts.forEach(function(part, i){
       // cap cost while Hero/Contact's own dedicated fluid canvas is also rendering —
       // this field is a low-key backdrop, it doesn't need full density stacked on top
@@ -602,7 +623,26 @@ if (!RM) {
         ? 'rgba(255,106,61,' + alpha.toFixed(3) + ')'
         : 'rgba(255,176,136,' + alpha.toFixed(3) + ')';
       ctx.fill();
+      pts.push({x:x, y:y, alpha:alpha});
     });
+
+    // faint connecting lines between angular neighbors (parts is pre-sorted by
+    // angle) — echoes the hero neural network's web motif so the two particle
+    // systems read as one visual language instead of two unrelated effects
+    ctx.lineWidth = 1;
+    for (let i = 0; i < pts.length - 1; i++){
+      const a = pts[i], b = pts[i + 1];
+      const dx = a.x - b.x, dy = a.y - b.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d >= MAX_LINE_DIST) continue;
+      const lineAlpha = Math.min(a.alpha, b.alpha) * 0.35 * (1 - d / MAX_LINE_DIST);
+      if (lineAlpha <= 0.002) continue;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = 'rgba(255,106,61,' + lineAlpha.toFixed(3) + ')';
+      ctx.stroke();
+    }
 
     requestAnimationFrame(draw);
   }
@@ -719,49 +759,35 @@ if (RM) { $('#scramble').innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.'; }
   });
 })();
 
+// Section 6 (rail creation, IntersectionObserver active-state, nav "stuck" scroll
+// class) now lives entirely in Nav.jsx (Framer Motion conversion).
+
 /* =====================================================================
-   6. SECTION RAIL + NAV STATE
+   5b. WORK CARD SCROLL DIM  —  lighter alternative to a full sticky-stack
+   (see chat: pinning 7 content-dense cards, each with its own screenshot
+   carousel, risked breaking IntersectionObserver-driven autoplay and
+   turning the section into forced dwell time). Opacity ONLY, scrubbed to
+   scroll position, same crossfade shape as the sitewide .rv system —
+   never y/transform, since Work.jsx's .proj cards are Framer Motion
+   components with their own whileHover y-lift; touching transform here
+   would fight that on every frame both are active.
    ===================================================================== */
 (function(){
-  const map = [
-    ['top','Intro'], ['about','About'], ['work','Work'],
-    ['loop','Approach'], ['toolkit','Toolkit'], ['contact','Contact']
-  ];
-  const rail = $('#rail');
-  map.forEach(function(m){
-    const b = document.createElement('button');
-    b.innerHTML = '<span class="lbl">' + m[1] + '</span><span class="tick"></span>';
-    b.setAttribute('aria-label','Go to ' + m[1]);
-    b.addEventListener('click', function(){
-      const t = document.getElementById(m[0]);
-      if (t) t.scrollIntoView({behavior: RM ? 'auto' : 'smooth'});
-    });
-    rail.appendChild(b);
+  if (RM) return;
+  const cards = $$('.proj');
+  const hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+  if (!cards.length || !hasGSAP) return;
+  gsap.registerPlugin(ScrollTrigger);
+  cards.forEach(function(card){
+    gsap.timeline({scrollTrigger:{trigger:card, start:'top bottom', end:'bottom top', scrub:0.6}})
+      .fromTo(card, {opacity:0.5}, {opacity:1, ease:'none', duration:0.3})
+      .to(card, {opacity:1, ease:'none', duration:0.4})
+      .to(card, {opacity:0.6, ease:'none', duration:0.3});
   });
-  const btns = $$('#rail button');
-  const nav = $('#nav');
-
-  const io = new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      if (!e.isIntersecting) return;
-      const i = map.findIndex(function(m){ return m[0] === e.target.id; });
-      btns.forEach(function(b, j){ b.setAttribute('aria-current', j === i ? 'true' : 'false'); });
-    });
-  }, {rootMargin:'-45% 0px -45% 0px'});
-  map.forEach(function(m){ const el = document.getElementById(m[0]); if (el) io.observe(el); });
-
-  let ticking = false;
-  window.addEventListener('scroll', function(){
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(function(){
-      const y = window.scrollY;
-      nav.classList.toggle('stuck', y > 40);
-      rail.classList.toggle('on', y > window.innerHeight * 0.6);
-      ticking = false;
-    });
-  }, {passive:true});
 })();
+
+// 5c (Toolkit sticky-stack) was tried and reverted 2026-08-10 — the plain
+// bento grid (Toolkit.jsx) was preferred. Don't re-add without being asked.
 
 /* =====================================================================
    7. REPAIR LOOP
@@ -909,6 +935,14 @@ if (RM) { $('#scramble').innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.'; }
     track.addEventListener('pointercancel', function(){ isDown = false; });
   }
 })();
+
+// 7b2 (scroll-pinned horizontal pan for the Approach carousel) was tried and
+// reverted 2026-08-10: two rounds of fixes couldn't resolve reports of the
+// pan racing through all 4 slides before the user could read them, and
+// there was no browser access available this session to verify a fix
+// live. The manual carousel from 7b (drag/swipe/keys/dots/buttons) is the
+// carousel again, unmodified. Don't re-attempt scroll-pinning here without
+// a way to visually verify the result first.
 
 /* =====================================================================
    7c. APPROACH CAROUSEL — slides 2-4 animations (same stepper pattern
@@ -1068,102 +1102,41 @@ if (RM) { $('#scramble').innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.'; }
 })();
 
 /* =====================================================================
-   9b. HERO PORTRAIT MAGNET  —  attracts + tilts within a radius, not just on hover
+   9b. PORTRAIT MAGNET  —  attracts + tilts within a radius, not just on hover.
+   Shared by every element with the .magnet-tilt class (currently: the hero
+   portrait and the About portrait) so both use one tilt system, not two.
    ===================================================================== */
 (function(){
   if (!FINE || RM) return;
-  const wrap = $('#heroPortrait');
-  if (!wrap) return;
+  const wraps = $$('.magnet-tilt');
+  if (!wraps.length) return;
   const PAD = 150, STRENGTH = 3, TILT = 14;
   const ACTIVE = 'transform 0.3s ease-out', INACTIVE = 'transform 0.6s ease-in-out';
-  wrap.style.transition = INACTIVE;
+  wraps.forEach(function(wrap){ wrap.style.transition = INACTIVE; });
   window.addEventListener('pointermove', function(e){
-    const r = wrap.getBoundingClientRect();
-    const dx = e.clientX - (r.left + r.width / 2);
-    const dy = e.clientY - (r.top + r.height / 2);
-    const edgeDist = Math.max(Math.abs(dx) - r.width / 2, Math.abs(dy) - r.height / 2, 0);
-    if (edgeDist < PAD) {
-      wrap.style.transition = ACTIVE;
-      const nx = Math.max(-1, Math.min(1, dx / (r.width / 2 + PAD)));
-      const ny = Math.max(-1, Math.min(1, dy / (r.height / 2 + PAD)));
-      wrap.style.transform =
-        'translate3d(' + (dx / STRENGTH) + 'px,' + (dy / STRENGTH) + 'px,0) ' +
-        'rotateY(' + (nx * TILT) + 'deg) rotateX(' + (-ny * TILT) + 'deg)';
-    } else {
-      wrap.style.transition = INACTIVE;
-      wrap.style.transform = 'translate3d(0,0,0) rotateY(0) rotateX(0)';
-    }
+    wraps.forEach(function(wrap){
+      const r = wrap.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      const edgeDist = Math.max(Math.abs(dx) - r.width / 2, Math.abs(dy) - r.height / 2, 0);
+      if (edgeDist < PAD) {
+        wrap.style.transition = ACTIVE;
+        const nx = Math.max(-1, Math.min(1, dx / (r.width / 2 + PAD)));
+        const ny = Math.max(-1, Math.min(1, dy / (r.height / 2 + PAD)));
+        wrap.style.transform =
+          'translate3d(' + (dx / STRENGTH) + 'px,' + (dy / STRENGTH) + 'px,0) ' +
+          'rotateY(' + (nx * TILT) + 'deg) rotateX(' + (-ny * TILT) + 'deg)';
+      } else {
+        wrap.style.transition = INACTIVE;
+        wrap.style.transform = 'translate3d(0,0,0) rotateY(0) rotateX(0)';
+      }
+    });
   }, {passive:true});
 })();
 
-/* =====================================================================
-   10. TOAST
-   ===================================================================== */
-let toastT;
-function toast(msg){
-  const t = $('#toast');
-  t.textContent = msg; t.classList.add('on');
-  clearTimeout(toastT); toastT = setTimeout(function(){ t.classList.remove('on'); }, 1900);
-}
-
-/* =====================================================================
-   11. COMMAND PALETTE
-   ===================================================================== */
-(function(){
-  const panel = $('#cmdk'), input = $('#cmdkInput'), list = $('#cmdkList');
-  const ACTIONS = [
-    {n:'Selected work',      h:'Section', go:function(){ jump('work'); }},
-    {n:'How I build',        h:'Section', go:function(){ jump('loop'); }},
-    {n:'About me',           h:'Section', go:function(){ jump('about'); }},
-    {n:'Toolkit',            h:'Section', go:function(){ jump('toolkit'); }},
-    {n:'Contact',            h:'Section', go:function(){ jump('contact'); }},
-    {n:'Copy email address', h:'Copy',    go:function(){ copy('adnanmashrursadad@gmail.com', 'Email copied'); }},
-    {n:'Open GitHub',        h:'External',go:function(){ open('https://github.com/sadad54'); }},
-    {n:'Open LinkedIn',      h:'External',go:function(){ open('https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237'); }},
-    {n:'Download résumé',    h:'File',    go:function(){ open('resume.pdf'); }},
-    {n:'Replay the repair loop', h:'Demo',go:function(){ jump('loop'); setTimeout(function(){ $('#replay').click(); }, 700); }}
-  ];
-  let filtered = ACTIONS.slice(), sel = 0;
-
-  function jump(id){ const el = document.getElementById(id); if (el) el.scrollIntoView({behavior: RM ? 'auto' : 'smooth'}); }
-  function open(url){ window.open(url, '_blank', 'noopener'); }
-  function copy(txt, msg){
-    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast(msg); }).catch(function(){ toast(txt); });
-    else toast(txt);
-  }
-  function render(){
-    list.innerHTML = filtered.map(function(a, i){
-      return '<li class="' + (i === sel ? 'sel' : '') + '"><button data-i="' + i + '"><span class="nm">' + a.n + '</span><span class="hint">' + a.h + '</span></button></li>';
-    }).join('') || '<li><button><span class="nm" style="color:var(--dimmer)">Nothing matches that</span></button></li>';
-  }
-  function show(){
-    panel.classList.add('open'); document.body.classList.add('is-locked');
-    input.value = ''; filtered = ACTIONS.slice(); sel = 0; render();
-    setTimeout(function(){ input.focus(); }, 30);
-  }
-  function hide(){ panel.classList.remove('open'); document.body.classList.remove('is-locked'); }
-  function fire(i){ const a = filtered[i]; if (!a) return; hide(); setTimeout(a.go, 60); }
-
-  $('#cmdk-open').addEventListener('click', show);
-  panel.addEventListener('click', function(e){
-    if (e.target.hasAttribute('data-close')) hide();
-    const b = e.target.closest('button[data-i]');
-    if (b) fire(parseInt(b.dataset.i, 10));
-  });
-  input.addEventListener('input', function(){
-    const q = input.value.toLowerCase().trim();
-    filtered = ACTIONS.filter(function(a){ return (a.n + ' ' + a.h).toLowerCase().includes(q); });
-    sel = 0; render();
-  });
-  document.addEventListener('keydown', function(e){
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); panel.classList.contains('open') ? hide() : show(); return; }
-    if (!panel.classList.contains('open')) return;
-    if (e.key === 'Escape'){ hide(); }
-    else if (e.key === 'ArrowDown'){ e.preventDefault(); sel = Math.min(sel + 1, filtered.length - 1); render(); }
-    else if (e.key === 'ArrowUp'){ e.preventDefault(); sel = Math.max(sel - 1, 0); render(); }
-    else if (e.key === 'Enter'){ e.preventDefault(); fire(sel); }
-  });
-})();
+// Sections 10 (TOAST) and 11 (COMMAND PALETTE) now live in CommandPalette.jsx
+// (Framer Motion AnimatePresence conversion) — the #toast element stays static
+// markup here, driven directly by that component.
 
 /* =====================================================================
    12. SMOOTH ANCHORS

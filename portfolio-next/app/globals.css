@@ -11,6 +11,8 @@
   --dimmer:#48474A;
   --sodium:#FF6A3D;
   --signal:#FF6A3D;
+  --signal-hover:#FF8A5C;  /* brighter tint, hover only — still "one signal," now with tonal range for state */
+  --signal-press:#E0501F;  /* deeper tint, active/press only */
   --rose:#E5484D;
   --line:rgba(255,106,61,.10);
   --line-2:rgba(255,106,61,.05);
@@ -73,11 +75,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   color:var(--dimmer);opacity:0;transform:translateX(6px);
   transition:opacity .35s var(--ease),transform .35s var(--ease),color .35s var(--ease);
 }
-.rail .tick{width:20px;height:1px;background:var(--dimmer);transition:all .4s var(--ease)}
+.rail .tick{width:20px;height:1px;background:var(--dimmer)} /* scaleX + color driven by Nav.jsx (Framer Motion) */
 .rail button:hover .lbl,.rail button[aria-current="true"] .lbl{opacity:1;transform:none}
 .rail button[aria-current="true"] .lbl{color:var(--sodium)}
-.rail button[aria-current="true"] .tick{width:40px;background:var(--sodium)}
-.rail button:hover .tick{background:var(--bone)}
 
 .cursor{
   position:fixed;left:0;top:0;width:52px;height:52px;border-radius:50%;
@@ -107,14 +107,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .nav-mark b{font-weight:700;letter-spacing:.02em}
 .nav-mark span{color:var(--dimmer);font-size:10px}
 .nav-right{display:flex;align-items:center;gap:22px}
-.nav-right a{color:var(--dim);transition:color .25s}
-.nav-right a:hover{color:var(--sodium)}
+.nav-right a{color:var(--dim)} /* hover color driven by Nav.jsx (Framer Motion) */
 .kbd{
   display:inline-flex;align-items:center;gap:6px;color:var(--dim);
   border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:10px;
-  transition:border-color .25s,color .25s;
-}
-.kbd:hover{border-color:var(--sodium);color:var(--sodium)}
+} /* hover/tap state driven by Nav.jsx (Framer Motion) */
 @media (max-width:780px){.nav-right .hide-sm{display:none}}
 
 /* ============================================================
@@ -266,17 +263,18 @@ h1.hero-h em{
   will-change:transform;
 }
 .btn::after{
-  content:"";position:absolute;inset:0;background:var(--sodium);z-index:-1;
+  content:"";position:absolute;inset:0;background:var(--signal-hover);z-index:-1;
   transform:translateY(101%);transition:transform .45s var(--ease);
 }
-.btn:hover{color:var(--ink);border-color:var(--sodium)}
+.btn:active::after{background:var(--signal-press)}
+.btn:hover{color:var(--ink);border-color:var(--signal-hover)}
 .btn:hover::after{transform:none}
 .btn.ghost{border-color:var(--line)}
 .btn.ghost::after{background:var(--bone)}
 .btn .arw{transition:transform .35s var(--ease)}
 .btn:hover .arw{transform:translateX(4px)}
 .btn-solid{background:var(--bone);color:var(--ink);border-color:var(--bone)}
-.btn-solid::after{background:var(--sodium)}
+.btn-solid::after{background:var(--signal-hover)}
 .btn-solid:hover{color:var(--ink)}
 
 /* ============================================================
@@ -287,10 +285,11 @@ h1.hero-h em{
 .about-copy p{margin:0 0 20px;color:var(--dim);font-size:clamp(1rem,1.25vw,1.14rem)}
 .about-copy p b{color:var(--bone);font-weight:500}
 
-.portrait{position:relative}
+.portrait{position:relative;perspective:900px}
 .portrait-frame{
   position:relative;display:flex;justify-content:center;align-items:center;
   min-height:clamp(320px,40vw,480px);
+  will-change:transform;transform-style:preserve-3d; /* matches .hero-portrait, needed for the shared .magnet-tilt logic */
 }
 .portrait-frame .halo{
   position:absolute;inset:auto 0 6% 0;height:86%;z-index:0;pointer-events:none;
@@ -461,16 +460,19 @@ h3.proj-name{
 }
 
 .shot-arrow{
-  position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  /* top:50% + negative margin instead of transform:translateY(-50%) — Framer
+     Motion (Work.jsx) now owns `transform` for the hover/tap scale, so base
+     centering can't live on that property or the motion styles would clobber it */
+  position:absolute;top:50%;margin-top:-18px;z-index:3;
   width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   background:rgba(11,11,13,.55);border:1px solid rgba(255,106,61,.34);
   color:var(--bone);font-size:15px;line-height:1;
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  opacity:0;transition:opacity .25s var(--ease),background .2s,border-color .2s,transform .2s var(--ease);
+  opacity:0;transition:opacity .25s var(--ease),background .2s,border-color .2s;
 }
 .shot:hover .shot-arrow,.shot:focus-within .shot-arrow{opacity:1}
-.shot-arrow:hover{background:rgba(255,106,61,.22);border-color:var(--signal);transform:translateY(-50%) scale(1.08)}
+.shot-arrow:hover{background:rgba(255,106,61,.22);border-color:var(--signal-hover)}
 .shot-arrow.prev{left:12px}
 .shot-arrow.next{right:12px}
 
@@ -582,9 +584,8 @@ h3.proj-name{
 .loop-arrow{
   width:38px;height:38px;border-radius:100px;border:1px solid var(--line);background:transparent;
   display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:14px;
-  transition:border-color .3s,color .3s,opacity .3s;
-}
-.loop-arrow:hover{border-color:var(--sodium);color:var(--sodium)}
+  transition:opacity .3s;
+} /* hover/tap state driven by Approach.jsx (Framer Motion) */
 .loop-arrow:disabled{opacity:.28;cursor:default}
 .loop-arrow:disabled:hover{border-color:var(--line);color:var(--dim)}
 .loop-dots{display:flex;gap:8px;align-items:center}
@@ -602,13 +603,16 @@ h3.proj-name{
 .cell{
   grid-column:span 2;border:1px solid var(--line);border-radius:6px;padding:22px;
   background:var(--ink-1);position:relative;overflow:hidden;
-  transition:border-color .45s var(--ease),transform .45s var(--ease);
+  transition:border-color .45s var(--ease),background-color .45s var(--ease);
+  --mx:50%;--my:50%; /* set via pointermove in Toolkit.jsx; lift now driven by Framer Motion whileHover */
 }
+.cell:hover{background:var(--ink-2)} /* DESIGN.md: --ink-2 is the documented hover step for --ink-1 surfaces */
 .cell::before{
-  content:"";position:absolute;inset:0;opacity:0;transition:opacity .5s var(--ease);
-  background:radial-gradient(120% 100% at 0% 0%,rgba(255,106,61,.10),transparent 60%);
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .35s var(--ease);
+  background:radial-gradient(220px 220px at var(--mx) var(--my),rgba(255,106,61,.14),transparent 68%);
+  pointer-events:none;
 }
-.cell:hover{border-color:rgba(255,106,61,.35);transform:translateY(-3px)}
+.cell:hover{border-color:rgba(255,106,61,.35)}
 .cell:hover::before{opacity:1}
 .cell.wide{grid-column:span 3}
 .cell h4{
@@ -662,11 +666,8 @@ h2.big{
 @media (max-width:860px){.contact-grid{grid-template-columns:1fr}}
 .reach{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .reach li{border-bottom:1px solid var(--line)}
-.reach a{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0;
-  transition:color .35s}
-.reach a:hover{color:var(--sodium)}
-.reach .v{transition:transform .4s var(--ease)}
-.reach a:hover .v{transform:translateX(10px)}
+.reach a{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0}
+/* hover shift/color driven by Contact.jsx (Framer Motion) */
 .reach .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dimmer)}
 .reach .v{font-family:var(--body);font-size:1.02rem;font-weight:500}
 
@@ -682,7 +683,9 @@ footer{padding:26px var(--gut);border-top:1px solid var(--line);
 .cmdk-bg{position:absolute;inset:0;background:rgba(4,4,9,.72);backdrop-filter:blur(8px);animation:fade .25s var(--ease)}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 .cmdk-box{
-  position:relative;width:min(560px,92vw);height:max-content;background:var(--ink-1);
+  /* --ink-3 (previously unused) — a modal overlay is its own elevation tier, distinct
+     from --ink-2 which DESIGN.md already reserves as the hover state for --ink-1 cards */
+  position:relative;width:min(560px,92vw);height:max-content;background:var(--ink-3);
   border:1px solid var(--line);border-radius:10px;overflow:hidden;
   box-shadow:0 30px 90px rgba(0,0,0,.6);animation:pop .3s var(--ease);
 }

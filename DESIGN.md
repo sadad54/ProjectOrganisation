@@ -3,10 +3,13 @@ name: Adnan Mashrur Sadad — Portfolio
 description: A dark, single-signal engineering portfolio built around one warm accent glowing against near-total black.
 colors:
   signal-orange: "#FF6A3D"
+  signal-orange-hover: "#FF8A5C"
+  signal-orange-press: "#E0501F"
   alert-rose: "#E5484D"
   void-black: "#0B0B0D"
   surface-1: "#131315"
   surface-2: "#1B1B1E"
+  surface-3: "#252528"
   warm-bone: "#F3F0EA"
   shadow-gray: "#8C8A87"
   shadow-gray-deep: "#48474A"
@@ -209,7 +212,9 @@ Confirmed rejection: generic SaaS gradient-and-glassmorphism — gradient text, 
 The palette is almost monochrome by design — a narrow range of near-black surfaces and warm off-white text — so that the single accent color reads unmistakably as *the* signal, not one of several competing colors.
 
 ### Primary
-- **Signal Orange** (#FF6A3D): the system's only real color. Used for the status-pulse dot, button hover fills, active/current states (rail highlighting, active tabs), link hover, and the hero/contact ambient glow. **The One Signal Rule.** If it's orange, it means something is live, active, or being pointed at — the color is never used decoratively.
+- **Signal Orange** (#FF6A3D): the system's default accent value — the status-pulse dot, the active/current state (rail highlighting, active tabs), the hero/contact ambient glow. **The One Signal Rule.** If it's orange, it means something is live, active, or being pointed at — the color is never used decoratively.
+- **Signal Orange Hover** (#FF8A5C): a brighter tint of the same hue, used *only* on `:hover`/`whileHover` — buttons, links, carousel arrows, tags. Added 2026-08-10 to give the signal a tonal range for interaction state, without breaking the One Signal Rule: this is still one hue, gated to "something is being pointed at," never a second decorative color.
+- **Signal Orange Press** (#E0501F): a deeper tint of the same hue, used *only* on `:active`/`whileTap` — the moment of a click/tap. Same hue family, same one-signal gating, distinct from hover so a press reads as physically "pushed in."
 
 ### Secondary (sparing)
 - **Alert Rose** (#E5484D): reserved for "bad" or negative-outcome states only — a failed metric in a diagram, an error path in a flow visualization. Never used for standard UI chrome.
@@ -217,14 +222,15 @@ The palette is almost monochrome by design — a narrow range of near-black surf
 ### Neutral
 - **Void Black** (#0B0B0D): the base surface for the entire page.
 - **Surface One** (#131315): the first elevated step — code slabs, cell backgrounds.
-- **Surface Two** (#1B1B1E): hover state for surface-one elements.
+- **Surface Two** (#1B1B1E): hover state for surface-one elements (e.g. Toolkit bento cells).
+- **Surface Three** (#252528): a third elevation tier reserved for overlays/modals sitting above regular content (the command palette panel) — one step higher than anything a card can reach.
 - **Warm Bone** (#F3F0EA): primary text and the "inverted" fill color for solid buttons.
 - **Shadow Gray** (#8C8A87): secondary/body text on dark surfaces.
 - **Shadow Gray Deep** (#48474A): tertiary text, labels, and inactive states.
 - **Hairline** (rgba(255,106,61,0.10)) / **Hairline Faint** (rgba(255,106,61,0.05)): borders and dividers — tinted with the accent hue at very low opacity rather than using pure gray, so even structural lines feel like part of the same signal system.
 
 ### Named Rules
-**The One Signal Rule.** The accent color is used on a small fraction of any given screen, and always to mean something (active, live, hovered, pulsing) — never as background fill or decoration.
+**The One Signal Rule.** The accent hue is used on a small fraction of any given screen, and always to mean something (active, live, hovered, pressed, pulsing) — never as background fill or decoration. As of 2026-08-10 the signal has three tonal steps (default / hover / press) instead of one flat value, but they are three shades of the *same* hue gated to the *same* rule — this is tonal range for state, not a second accent color. Orange must never appear as a background tint, section divider, or decorative fill; if a design calls for that, it is a different brand decision, not an extension of this rule.
 
 **The Translucency Rule.** Gradients, veils, glows, and borders are built by varying the *opacity* of an already-documented base color (`--ink`/void-black for darkening veils, `--sodium`/signal-orange for glows and hairlines, `--rose`/alert-rose for error emphasis, `--bone`/warm-bone for faint highlight washes) — never by introducing a new hue. A component using `rgba(255,106,61,0.24)` instead of the documented `rgba(255,106,61,0.10)` hairline is still using signal orange, just at a different translucency for a different purpose (a stronger emphasis border vs. a quiet divider); it is not a new color.
 
