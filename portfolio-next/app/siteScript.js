@@ -497,9 +497,11 @@ if (!RM) {
     io.observe(canvas);
   }
 
-  // hero instance runs brighter/wider than the default (0.85/0.16/0.05) — it now sits
-  // partly behind the (larger) headline, so it needs to read clearly through/around the text
-  if (heroCanvas) mountScene(heroCanvas, 0xFF6A3D, 130, 2.9, true, 0.95, 0.32, 0.065);
+  // hero instance runs brighter/wider than the default (0.85/0.16/0.05) — it sits
+  // partly behind the headline and now needs to hold its own next to the
+  // rim-lit portrait photo, so opacity/size are pushed further (additive
+  // blending on both materials is already on — this just gives it more to work with)
+  if (heroCanvas) mountScene(heroCanvas, 0xFF6A3D, 130, 2.9, true, 1.0, 0.42, 0.08);
   if (contactCanvas) mountScene(contactCanvas, 0xFF6A3D, 1500, 1.9, false);
 
   // tie the hero network's rotation/zoom/fade to scroll position
@@ -1079,16 +1081,36 @@ if (RM) { $('#scramble').innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.'; }
 (function(){
   if (!FINE || RM) return;
   const c = $('#cursor');
-  let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
-  window.addEventListener('pointermove', function(e){ x = e.clientX; y = e.clientY; c.classList.add('on'); }, {passive:true});
+  const ring = $('#cursorRing');
+  let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, rx = x, ry = y;
+  let ringScaleTarget = 1, ringScale = 1;
+  window.addEventListener('pointermove', function(e){
+    x = e.clientX; y = e.clientY;
+    c.classList.add('on');
+    if (ring) ring.classList.add('on');
+  }, {passive:true});
   (function loop(){
     cx += (x - cx) * 0.22; cy += (y - cy) * 0.22;
     c.style.transform = 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%)';
+    if (ring){
+      // slower lerp than the dot — the ring trails behind it, the classic
+      // dual-cursor "lag" that reads as premium rather than a flat blob.
+      // Scale is lerped the same way (never CSS width/height — see globals.css)
+      // and composed into this same transform string every frame.
+      rx += (x - rx) * 0.11; ry += (y - ry) * 0.11;
+      ringScale += (ringScaleTarget - ringScale) * 0.18;
+      ring.style.transform =
+        'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%) scale(' + ringScale.toFixed(3) + ')';
+    }
     requestAnimationFrame(loop);
   })();
   $$('a, button').forEach(function(el){
-    el.addEventListener('pointerenter', function(){ c.classList.add('big'); });
-    el.addEventListener('pointerleave', function(){ c.classList.remove('big'); });
+    el.addEventListener('pointerenter', function(){
+      c.classList.add('big'); if (ring) { ring.classList.add('big'); ringScaleTarget = 52 / 36; }
+    });
+    el.addEventListener('pointerleave', function(){
+      c.classList.remove('big'); if (ring) { ring.classList.remove('big'); ringScaleTarget = 1; }
+    });
   });
   $$('.mag').forEach(function(el){
     el.addEventListener('pointermove', function(e){

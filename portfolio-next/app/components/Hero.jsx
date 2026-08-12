@@ -81,7 +81,7 @@ export default function Hero() {
           animate="show"
           variants={statusV}
         >
-          <span><i className="dot"></i></span>
+          <span className="status-cursor" aria-hidden="true"></span>
           <span>Open to AI Engineer / Data Science / Full Stack roles</span>
           <span className="sep">/</span>
           <span>Kuala Lumpur, MY</span>
@@ -130,14 +130,14 @@ export default function Hero() {
               <span className="halo" aria-hidden="true"></span>
               <span className="portrait-brackets" aria-hidden="true"></span>
               <img
-                src="assets/portrait-hero.webp"
-                alt="Black-and-white studio portrait of Adnan Mashrur Sadad"
-                width="920"
-                height="1150"
+                src="assets/portrait-hero-rim-light.webp"
+                alt="Black-and-white studio portrait of Adnan Mashrur Sadad with an orange rim light"
+                width="1000"
+                height="1339"
                 loading="eager"
               />
               <span className="portrait-tag" aria-hidden="true">
-                Portrait <span className="sep">/</span> B&amp;W <span className="sep">/</span> KL 2026
+                Portrait <span className="sep">/</span> Rim Light <span className="sep">/</span> KL 2026
               </span>
               <span className="contact-shadow" aria-hidden="true"></span>
             </div>

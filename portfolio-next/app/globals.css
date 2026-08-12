@@ -79,17 +79,37 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .rail button:hover .lbl,.rail button[aria-current="true"] .lbl{opacity:1;transform:none}
 .rail button[aria-current="true"] .lbl{color:var(--sodium)}
 
+/* Dual cursor: a tight precise dot (difference-blended, reads on any
+   background) plus a wider ring that trails behind on a slower lerp
+   (siteScript.js). The ring stays a neutral hairline at rest and only lights
+   up signal-orange, thickens and glows on hover of something interactive —
+   the One Signal Rule applied to the cursor itself: orange means "this is
+   live," exactly at the moment and place you're pointing at it. */
 .cursor{
-  position:fixed;left:0;top:0;width:52px;height:52px;border-radius:50%;
-  background:var(--bone);z-index:70;pointer-events:none;
+  position:fixed;left:0;top:0;width:8px;height:8px;border-radius:50%;
+  background:var(--bone);z-index:71;pointer-events:none;
   mix-blend-mode:difference;transform:translate(-50%,-50%);
-  clip-path:circle(4.5px at 50% 50%);
-  transition:clip-path .28s var(--ease),opacity .3s;
-  will-change:transform;opacity:0;
+  transition:opacity .3s;will-change:transform;opacity:0;
 }
 .cursor.on{opacity:1}
-.cursor.big{clip-path:circle(26px at 50% 50%)}
-@media (pointer:coarse),(hover:none){.cursor{display:none}.rail{display:none}}
+.cursor-ring{
+  /* fixed width/height always — the hover "grow" is a scale() term composed
+     into the same JS-driven transform string that already positions this
+     element every frame (siteScript.js), lerped there for a smooth grow.
+     Animating width/height here would both thrash layout on a hot element
+     and get silently overwritten by that per-frame inline transform anyway. */
+  position:fixed;left:0;top:0;width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(243,240,234,.3);z-index:70;pointer-events:none;
+  transform:translate(-50%,-50%);
+  transition:opacity .3s,border-color .3s var(--ease),box-shadow .35s var(--ease);
+  will-change:transform;opacity:0;
+}
+.cursor-ring.on{opacity:1}
+.cursor-ring.big{
+  border-color:var(--signal-hover);
+  box-shadow:0 0 22px rgba(255,106,61,.35),inset 0 0 12px rgba(255,106,61,.12);
+}
+@media (pointer:coarse),(hover:none){.cursor,.cursor-ring{display:none}.rail{display:none}}
 
 /* ============================================================
    NAV
@@ -171,13 +191,15 @@ body.no-webgl #fluid{
   font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
   color:var(--dim);margin-bottom:clamp(20px,3vw,30px);
 }
-.dot{width:7px;height:7px;border-radius:50%;background:var(--signal);display:inline-block;
-  box-shadow:0 0 0 0 rgba(255,106,61,.6);animation:pulse 2.6s infinite}
-@keyframes pulse{
-  0%{box-shadow:0 0 0 0 rgba(255,106,61,.5)}
-  70%{box-shadow:0 0 0 11px rgba(255,106,61,0)}
-  100%{box-shadow:0 0 0 0 rgba(255,106,61,0)}
+/* replaced the generic pulsing-dot status indicator (a well-known AI-slop
+   tell) with a hard-blink terminal cursor — a mono-font-adjacent motif that
+   reads as "actively running," not decoration, and fits an engineer's site */
+.status-cursor{
+  width:2px;height:11px;background:var(--signal);display:inline-block;
+  animation:statusBlink 1.1s steps(1) infinite;
 }
+@keyframes statusBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.status-cursor{animation:none}}
 .hero-status .sep{color:var(--dimmer)}
 .hero-status abbr{text-decoration:none;cursor:help}
 
@@ -195,15 +217,22 @@ body.no-webgl #fluid{
 }
 @keyframes heroPortraitIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 .hero-portrait .halo{
-  position:absolute;inset:-22% -32% -6% -32%;z-index:0;pointer-events:none;
-  background:radial-gradient(55% 55% at 50% 40%,rgba(255,106,61,.28),transparent 70%);
+  /* origin at left-center, upper-biased (10% 42%) — matches this portrait's
+     actual rim light: it hits the top of the hair, the ear, and the jaw
+     down to the collar, all on the LEFT edge of the frame, plus a soft glow
+     already visible in the photo's own background at roughly that position.
+     Bleed is asymmetric (-46% left vs -18% right) so the glow reaches into
+     the gap toward the hero text instead of spilling off the outer edge —
+     the two hero columns read as one lit scene, not two separate ones. */
+  position:absolute;inset:-24% -18% -8% -46%;z-index:0;pointer-events:none;
+  background:radial-gradient(58% 58% at 10% 42%,rgba(255,106,61,.24),transparent 70%);
   filter:blur(24px);
   animation:haloPulse 6s ease-in-out infinite;
 }
 @keyframes haloPulse{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
 .hero-portrait img{
   position:relative;z-index:1;width:100%;height:auto;display:block;
-  filter:drop-shadow(0 26px 40px rgba(0,0,0,.55)) drop-shadow(0 0 26px rgba(255,106,61,.15));
+  filter:drop-shadow(0 26px 40px rgba(0,0,0,.55)) drop-shadow(-6px 0 22px rgba(255,106,61,.14));
 }
 .hero-portrait .contact-shadow{
   position:absolute;left:50%;bottom:2%;width:56%;height:14px;z-index:0;pointer-events:none;
