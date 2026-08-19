@@ -17,9 +17,9 @@ const copyContainer = {
 
 const TIMELINE = [
   {
-    when: '2021-2025',
+    when: '2021-2026',
     title: 'BSc Software Engineering',
-    detail: "CGPA 3.50 / Dean's List 2022/23 / Top performer, Computational Intelligence",
+    detail: "CGPA 3.50* / Dean's List 2022/23 / Top performer, Computational Intelligence",
     where: 'MJIIT, UTM Kuala Lumpur',
   },
   {
@@ -68,8 +68,8 @@ export default function About() {
               Four years learning the theory, one internship learning what breaks.
             </motion.h2>
             <motion.p variants={rise}>
-              I finished a Bachelor of Software Engineering at <b>MJIIT, Universiti Teknologi Malaysia</b> in
-              Kuala Lumpur: CGPA 3.50, Dean&rsquo;s List, and a thesis on OCR-driven personal finance tracking
+              I&rsquo;m finishing a Bachelor of Software Engineering at <b>MJIIT, Universiti Teknologi Malaysia</b> in
+              Kuala Lumpur: CGPA 3.50*, Dean&rsquo;s List, and a thesis on OCR-driven personal finance tracking
               for income tax readiness.
             </motion.p>
             <motion.p variants={rise}>
@@ -120,6 +120,7 @@ export default function About() {
             </motion.div>
           ))}
         </motion.div>
+        <p className="timeline-note">* Final CGPA pending official publication.</p>
       </div>
     </section>
   );
