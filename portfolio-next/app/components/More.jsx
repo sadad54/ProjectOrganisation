@@ -17,11 +17,6 @@ const listContainer = {
 
 const BUILDS = [
   {
-    name: 'FitSync',
-    desc: 'AI fashion platform with a modular recommendation backend over Groq and Hugging Face, returning suggestions in under two seconds.',
-    stack: 'Flutter / FastAPI / Supabase',
-  },
-  {
     name: 'AI-Eye',
     desc: 'Computer vision for accessibility: real-time text recognition and speech output at 92% OCR accuracy with sub-second inference.',
     stack: 'Python / TensorFlow / CNN / TTS',

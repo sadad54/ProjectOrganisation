@@ -11,17 +11,33 @@ const rise = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
-// Rail order matches DOM order of .proj articles below (highlighting matches by
-// array position via IntersectionObserver, not by data-go id) — preserved from the
-// original vanilla markup's own note.
-const RAIL = [
-  { go: 'p1', name: 'InterviewPilot', hook: 'Schema repair + eval loop' },
-  { go: 'p2', name: 'WC26 Predictor', hook: '10k-run Monte Carlo sim' },
-  { go: 'p3', name: 'Fraud Detection', hook: 'Imbalanced classification' },
-  { go: 'p4', name: 'Mindhive Chatbot', hook: 'RAG + Text2SQL agent' },
-  { go: 'p6', name: 'ExpenSense', hook: 'OCR + mobile pipeline' },
-  { go: 'p7', name: 'Aura', hook: 'AI wellness, Gemini API' },
-  { go: 'p5', name: 'FinScout', hook: 'Agentic research + eval harness', wip: true },
+// Grouped by domain rather than DOM order — active-state highlighting matches
+// by .proj element id now (see WorkRail below), not array position, so this
+// can be reordered/grouped freely without breaking the IntersectionObserver sync.
+const RAIL_GROUPS = [
+  {
+    label: 'GenAI / Agents',
+    items: [
+      { go: 'p1', name: 'InterviewPilot', hook: 'Schema repair + eval loop' },
+      { go: 'p4', name: 'Mindhive Chatbot', hook: 'RAG + Text2SQL agent' },
+      { go: 'p5', name: 'FinScout', hook: 'Agentic research + eval harness' },
+    ],
+  },
+  {
+    label: 'ML / Data',
+    items: [
+      { go: 'p2', name: 'WC26 Predictor', hook: '10k-run Monte Carlo sim' },
+      { go: 'p3', name: 'Fraud Detection', hook: 'Imbalanced classification' },
+    ],
+  },
+  {
+    label: 'Mobile',
+    items: [
+      { go: 'p6', name: 'ExpenSense', hook: 'OCR + mobile pipeline' },
+      { go: 'p7', name: 'Aura', hook: 'AI wellness, Gemini API' },
+      { go: 'p8', name: 'FitSync', hook: 'AI stylist, mobile' },
+    ],
+  },
 ];
 
 function imgs(dir, n) {
@@ -82,7 +98,7 @@ export default function Work() {
     <section className="band" id="work">
       <div className="wrap">
         <motion.p className="eyebrow" initial="hidden" whileInView="show" viewport={viewport} variants={rise}>
-          Selected work, seven builds
+          Selected work, eight builds
         </motion.p>
         <motion.h2 className="title" initial="hidden" whileInView="show" viewport={viewport} variants={rise}>
           Things I built, and the decision inside each one worth talking about.
@@ -303,7 +319,7 @@ export default function Work() {
               id="p5"
               whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
             >
-              <div className="proj-head"><span className="tag wip">In progress</span><span className="tag">2026</span><span className="tag">Agent + evaluation</span></div>
+              <div className="proj-head"><span className="tag live">Shipped</span><span className="tag">2026</span><span className="tag">Agent + evaluation</span></div>
               <h3 className="proj-name">FinScout</h3>
               <p className="proj-hook">Company research with a score attached.</p>
               <Shot
@@ -342,6 +358,63 @@ export default function Work() {
                 </div>
               </div>
             </motion.article>
+
+            <motion.article
+              className="proj"
+              id="p8"
+              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
+            >
+              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Mobile + AI' }]} />
+              <h3 className="proj-name">FitSync</h3>
+              <p className="proj-hook">A personal AI stylist that knows what&rsquo;s actually in your closet.</p>
+              <Shot
+                dataShots={imgsList('fitsync', [
+                  '00-sign-in.png',
+                  '01-onboarding.png',
+                  '02-home.png',
+                  '03-closet.png',
+                  '04-add-item.png',
+                  '05-generate.png',
+                  '06-saved.png',
+                  '07-profile.png',
+                  '08-tryon.png',
+                  '09-tryon-history.png',
+                  '10-community.png',
+                  '11-community-post.png',
+                  '12-community-challenge.png',
+                  '13-community-member.png',
+                  '14-trends.png',
+                  '15-trend-detail.png',
+                  '16-stores.png',
+                  '17-store-detail.png',
+                  '18-item-detail.png',
+                ])}
+                slug="fitsync"
+                alt="FitSync app screenshot"
+                mobileFit
+              />
+              <div className="proj-body">
+                <div>
+                  <ul className="notes">
+                    <li>You scan your own wardrobe into a digital closet, and outfit suggestions get generated against <b>what you actually own</b>, not a generic catalogue.</li>
+                    <li><b>Virtual try-on</b> lets you preview a suggested outfit on yourself before committing to it, with a history to revisit past try-ons.</li>
+                    <li>A community layer, style challenges, a trend feed and store integration, so it&rsquo;s not just solitary generation, it&rsquo;s social and shoppable.</li>
+                    <li>Modular recommendation backend over <b>Groq and Hugging Face</b>, returning suggestions in under two seconds.</li>
+                  </ul>
+                  <ul className="chips"><li>Flutter</li><li>Dart</li><li>FastAPI</li><li>Supabase</li><li>Groq API</li><li>Hugging Face</li></ul>
+                  <div className="proj-links">
+                    <span className="lnk is-disabled" aria-disabled="true">Repository coming soon</span>
+                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="slab-cap">Recommendation loop</p>
+                  <div className="slab" dangerouslySetInnerHTML={{ __html:
+                    'closet item added<br>\n&nbsp;&nbsp;&rarr; Groq + Hugging Face recommendation<br>\n&nbsp;&nbsp;&rarr; generated outfit<br>\n&nbsp;&nbsp;&rarr; virtual try-on preview<br><br>\n<span class="c"># suggestion returned in &lt; 2s</span>'
+                  }} />
+                </div>
+              </div>
+            </motion.article>
           </div>
         </div>
       </div>
@@ -351,7 +424,9 @@ export default function Work() {
 
 function WorkRail() {
   const reduceMotion = useReducedMotion();
-  const [active, setActive] = useState(0);
+  // Matches by .proj element id, not array position — safe now that the rail
+  // is grouped by domain instead of following strict DOM order.
+  const [activeId, setActiveId] = useState(RAIL_GROUPS[0]?.items[0]?.go);
 
   useEffect(() => {
     const projs = Array.from(document.querySelectorAll('.proj'));
@@ -360,8 +435,7 @@ function WorkRail() {
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          const i = projs.indexOf(entry.target);
-          if (i !== -1) setActive(i);
+          setActiveId(entry.target.id);
         });
       },
       { rootMargin: '-32% 0px -52% 0px' }
@@ -375,26 +449,31 @@ function WorkRail() {
   }
 
   return (
-    <aside className="work-rail">
-      <ol id="workRail">
-        {RAIL.map((item, i) => (
-          <li key={item.go} className={i === active ? 'on' : undefined}>
-            <motion.button
-              data-go={item.go}
-              onClick={() => goTo(item.go)}
-              whileHover={{ x: 3 }}
-              transition={{ duration: 0.18, ease: EASE }}
-            >
-              <span className="wr-text">
-                <span className="wr-name">
-                  {item.name} {item.wip && <span className="wr-status">WIP</span>}
-                </span>
-                <span className="wr-hook">{item.hook}</span>
-              </span>
-            </motion.button>
-          </li>
-        ))}
-      </ol>
+    <aside className="work-rail" id="workRail">
+      {RAIL_GROUPS.map((group) => (
+        <div className="wr-group" key={group.label}>
+          <p className="wr-group-label">{group.label}</p>
+          <ol>
+            {group.items.map((item) => (
+              <li key={item.go} className={item.go === activeId ? 'on' : undefined}>
+                <motion.button
+                  data-go={item.go}
+                  onClick={() => goTo(item.go)}
+                  whileHover={{ x: 3 }}
+                  transition={{ duration: 0.18, ease: EASE }}
+                >
+                  <span className="wr-text">
+                    <span className="wr-name">
+                      {item.name} {item.wip && <span className="wr-status">WIP</span>}
+                    </span>
+                    <span className="wr-hook">{item.hook}</span>
+                  </span>
+                </motion.button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
     </aside>
   );
 }

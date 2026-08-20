@@ -738,28 +738,12 @@ if (RM) { $('#scramble').innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.'; }
   $$('[data-count]').forEach(function(el){ io.observe(el); });
 })();
 
-/* =====================================================================
-   5. WORK RAIL
-   ===================================================================== */
-(function(){
-  const items = $$('#workRail li');
-  const projs = $$('.proj');
-  if (!items.length) return;
-  const io = new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      if (!e.isIntersecting) return;
-      const i = projs.indexOf(e.target);
-      items.forEach(function(li, j){ li.classList.toggle('on', j === i); });
-    });
-  }, {rootMargin:'-32% 0px -52% 0px'});
-  projs.forEach(function(p){ io.observe(p); });
-  $$('#workRail button').forEach(function(b){
-    b.addEventListener('click', function(){
-      const t = document.getElementById(b.dataset.go);
-      if (t) t.scrollIntoView({behavior: RM ? 'auto' : 'smooth', block:'start'});
-    });
-  });
-})();
+// Section 5 (work rail active-state + click-to-scroll) was missed when Work
+// section moved to React earlier this session — it duplicated (and, worse,
+// fought) the WorkRail component's own IntersectionObserver in Work.jsx,
+// using stale array-position matching that broke once the rail became
+// grouped by domain instead of strict DOM order. Removed 2026-08-12; the
+// React component is the sole owner of this behavior now.
 
 // Section 6 (rail creation, IntersectionObserver active-state, nav "stuck" scroll
 // class) now lives entirely in Nav.jsx (Framer Motion conversion).
