@@ -8,7 +8,7 @@
   --ink-3:#252528;
   --bone:#F3F0EA;
   --dim:#8C8A87;
-  --dimmer:#48474A;
+  --dimmer:#7C7A7D;  /* ~4.6:1 on --ink — was #48474A (~2.1:1), failed WCAG AA for the mono labels/timestamps that use it as text color */
   --sodium:#FF6A3D;
   --signal:#FF6A3D;
   --signal-hover:#FF8A5C;  /* brighter tint, hover only — still "one signal," now with tonal range for state */
@@ -653,7 +653,7 @@ h3.proj-name{
 .cell:hover{border-color:rgba(255,106,61,.35)}
 .cell:hover::before{opacity:1}
 .cell.wide{grid-column:span 3}
-.cell h4{
+.cell h3{
   font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--sodium);margin:0 0 14px;font-weight:500;position:relative;
 }
@@ -682,7 +682,7 @@ h3.proj-name{
 .more{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
 .more article{background:var(--ink);padding:24px;transition:background .4s var(--ease)}
 .more article:hover{background:var(--ink-2)}
-.more h5{font-family:var(--display);font-weight:600;font-size:1.12rem;letter-spacing:-.02em;margin:0 0 6px}
+.more h3{font-family:var(--display);font-weight:600;font-size:1.12rem;letter-spacing:-.02em;margin:0 0 6px}
 .more p{margin:0 0 12px;color:var(--dim);font-size:.92rem}
 .more .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--dimmer);text-transform:uppercase}
 

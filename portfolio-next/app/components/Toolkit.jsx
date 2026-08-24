@@ -55,7 +55,7 @@ function Cell({ cell }) {
       onPointerMove={onPointerMove}
       whileHover={{ y: -3, transition: { duration: 0.3, ease: EASE } }}
     >
-      <h4>{cell.title}</h4>
+      <h3>{cell.title}</h3>
       <ul>
         {cell.items.map((item) => (
           <li key={item}>{item}</li>

@@ -51,7 +51,7 @@ export default function More() {
         <motion.div className="more" initial={initial} whileInView="show" viewport={viewport} variants={listContainer}>
           {BUILDS.map((b) => (
             <motion.article key={b.name} variants={rise}>
-              <h5>{b.name}</h5>
+              <h3>{b.name}</h3>
               <p>{b.desc}</p>
               <span className="st">{b.stack}</span>
             </motion.article>
