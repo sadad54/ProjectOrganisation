@@ -26,6 +26,7 @@ const RAIL_GROUPS = [
   {
     label: 'ML / Data',
     items: [
+      { go: 'p9', name: 'Driftline', hook: 'Streaming fraud + drift retraining' },
       { go: 'p2', name: 'WC26 Predictor', hook: '10k-run Monte Carlo sim' },
       { go: 'p3', name: 'Fraud Detection', hook: 'Imbalanced classification' },
     ],
@@ -98,7 +99,7 @@ export default function Work() {
     <section className="band" id="work">
       <div className="wrap">
         <motion.p className="eyebrow" initial="hidden" whileInView="show" viewport={viewport} variants={rise}>
-          Selected work, eight builds
+          Selected work, nine builds
         </motion.p>
         <motion.h2 className="title" initial="hidden" whileInView="show" viewport={viewport} variants={rise}>
           Things I built, and the decision inside each one worth talking about.
@@ -107,6 +108,43 @@ export default function Work() {
         <div className="work-grid">
           <WorkRail />
           <div className="panels">
+            <motion.article
+              className="proj"
+              id="p9"
+              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
+            >
+              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Streaming ML / MLOps' }]} />
+              <h3 className="proj-name">Driftline</h3>
+              <p className="proj-hook">Six months of silent model decay, caught and reversed by the pipeline itself.</p>
+              <div className="proj-body">
+                <div>
+                  <ul className="notes">
+                    <li>Replays six months of real IEEE-CIS transaction data through <b>Redpanda (Kafka API)</b> and <b>PyFlink</b>, computing stateful 1h / 24h / 7d velocity aggregations exactly as a live system would see them, not a static notebook.</li>
+                    <li>A <b>graph-augmented entity model</b> (605K nodes, ~8M edges, PyTorch Geometric GraphSAGE) runs alongside XGBoost, with leakage boundaries tested, not assumed.</li>
+                    <li><b>Drift-triggered retraining.</b> PSI/KS statistical tests catch the decay, and when performance collapsed mid-stream to a PR-AUC of 0.2635, automatic retraining recovered it to 0.5211: a 97.8% jump in one week.</li>
+                    <li>Documents its own failures alongside the wins: GraphSAGE ensemble underperformance, an 8.66% online/offline feature-store skew, and ONNX export limits on categorical XGBoost, all reported honestly rather than left out.</li>
+                  </ul>
+                  <ul className="chips">
+                    <li>Python</li><li>Redpanda</li><li>PyFlink</li><li>Feast</li><li>XGBoost</li><li>PyTorch Geometric</li><li>FastAPI</li><li>ONNX Runtime</li><li>MLflow</li><li>Kubernetes</li><li>Prometheus / Grafana</li>
+                  </ul>
+                  <div className="proj-links">
+                    <a className="lnk" href="https://github.com/sadad54/driftline">Repository ↗</a>
+                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="slab-cap">Drift &amp; recovery</p>
+                  <div className="slab" dangerouslySetInnerHTML={{ __html:
+                    'baseline PR-AUC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.4761</span><br>\n' +
+                    'after 6mo, no retrain&nbsp;<span class="r">0.3680</span> <span class="c">&larr; decays silently</span><br><br>\n' +
+                    'mid-stream collapse&nbsp;&nbsp;&nbsp;<span class="r">0.2635</span><br>\n' +
+                    'after retraining&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.5211</span> <span class="c">&larr; +97.8% in one week</span><br><br>\n' +
+                    '<span class="c"># training/serving skew: 8.66%, found and documented</span>'
+                  }} />
+                </div>
+              </div>
+            </motion.article>
+
             <motion.article
               className="proj"
               id="p1"
