@@ -43,7 +43,7 @@ export default function More() {
   const initial = reduceMotion ? 'show' : 'hidden';
 
   return (
-    <section className="band" id="more" style={{ paddingTop: 0 }}>
+    <section className="band" id="more" style={{ paddingTop: 0 }} aria-label="Other builds">
       <div className="wrap">
         <motion.h2 className="title" initial={initial} whileInView="show" viewport={viewport} variants={rise}>
           Smaller things, same habits.

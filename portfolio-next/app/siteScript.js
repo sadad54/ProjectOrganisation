@@ -522,167 +522,18 @@ if (!RM) {
 })();
 
 /* =====================================================================
-   1c. AMBIENT FIELD  —  one particle field that explodes out of the hero
-   once, then drifts as a persistent, low-key backdrop behind every
-   section down to Contact. Layers BEHIND the existing per-section fluid
-   and neural-network canvases (z-index:0, painted first in the DOM), so
-   nothing already on the page is replaced — this just sits under it.
-   Normal scrolling only: nothing pins or hijacks the scroll.
+   1c. AMBIENT FIELD — the 2D particle field was replaced with a CSS-only
+   drifting warm glow (#ambientField .ambient-a / .ambient-b in globals.css).
+   The scattered-dots look read as a generic particle background and fought
+   the "one signal in the dark" restraint; the glow is pure atmosphere, runs
+   off the main thread, and costs nothing on scroll.
    ===================================================================== */
-(function(){
-  if (RM) return;
-  const canvas = $('#ambientField');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  let W = 0, H = 0;
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  function resize(){
-    W = innerWidth; H = innerHeight;
-    canvas.width = W * DPR; canvas.height = H * DPR;
-    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const nParticles = 220;
-  const parts = Array.from({length:nParticles}, function(){
-    return {
-      angle: Math.random() * Math.PI * 2,
-      dist: 0.08 + Math.random() * 0.92,      // fraction of max radius once fully exploded
-      size: 0.9 + Math.random() * 2.0,
-      warm: Math.random() < 0.8,
-      driftSpeed: 0.15 + Math.random() * 0.3,
-      driftPhase: Math.random() * Math.PI * 2
-    };
-  });
-  // sorted by angle so consecutive array neighbors are also spatial neighbors —
-  // lets the connecting-line pass below stay O(n) instead of O(n^2)
-  parts.sort(function(a, b){ return a.angle - b.angle; });
-
-  let progress = 0; // 0 = tight cluster at hero, 1 = fully exploded — stays at 1 for the rest of the page
-  const hero = $('#top');
-
-  // per-section pulse: nudges overall alpha up slightly while any tracked
-  // section is well into view, giving the backdrop a gentle sitewide "breathing"
-  // sync with scroll instead of one flat post-hero plateau
-  let pulseTarget = 1, pulse = 1;
-  const pulseSections = $$('section.band, header.hero, section.contact');
-  if (pulseSections.length){
-    const inView = new Set();
-    const pulseIO = new IntersectionObserver(function(es){
-      es.forEach(function(e){
-        if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target);
-      });
-      pulseTarget = inView.size ? 1.12 : 1;
-    }, {threshold:0.5});
-    pulseSections.forEach(function(s){ pulseIO.observe(s); });
-  }
-
-  const hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
-  if (hasGSAP && hero){
-    gsap.registerPlugin(ScrollTrigger);
-    ScrollTrigger.create({
-      trigger: hero, start:'top top', end:'bottom top', scrub:0.6,
-      onUpdate: function(self){ progress = self.progress; }
-    });
-  } else if (hero) {
-    function updateFallback(){
-      const r = hero.getBoundingClientRect();
-      progress = Math.max(0, Math.min(1, -r.top / Math.max(r.height, 1)));
-    }
-    window.addEventListener('scroll', updateFallback, {passive:true});
-    updateFallback();
-  }
-
-  const MAX_LINE_DIST = 130;
-
-  function draw(t){
-    ctx.clearRect(0, 0, W, H);
-    const cx = W / 2, cy = H * 0.42;
-    const maxR = Math.min(W, H) * 0.68;
-    const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic — punchy explode, settles gently
-    pulse += (pulseTarget - pulse) * 0.02; // slow lerp, reads as a breathing sync, not a flicker
-    const alphaCap = 0.4 * Math.min(1, progress / 0.3) * pulse; // fades up quickly, then holds
-
-    if (alphaCap <= 0.002) { requestAnimationFrame(draw); return; }
-
-    const pts = [];
-    parts.forEach(function(part, i){
-      // cap cost while Hero/Contact's own dedicated fluid canvas is also rendering —
-      // this field is a low-key backdrop, it doesn't need full density stacked on top
-      if (fluidLocalActive && (i % 3 !== 0)) return;
-      const drift = Math.sin(t * 0.00016 * part.driftSpeed + part.driftPhase) * 10 * ease;
-      const r = maxR * part.dist * ease;
-      const x = cx + Math.cos(part.angle) * r + drift;
-      const y = cy + Math.sin(part.angle) * r * 0.72 + drift * 0.6;
-      const alpha = alphaCap * (0.5 + 0.5 * Math.sin(part.driftPhase + t * 0.0003));
-      ctx.beginPath();
-      ctx.arc(x, y, part.size, 0, Math.PI * 2);
-      ctx.fillStyle = part.warm
-        ? 'rgba(255,106,61,' + alpha.toFixed(3) + ')'
-        : 'rgba(255,176,136,' + alpha.toFixed(3) + ')';
-      ctx.fill();
-      pts.push({x:x, y:y, alpha:alpha});
-    });
-
-    // faint connecting lines between angular neighbors (parts is pre-sorted by
-    // angle) — echoes the hero neural network's web motif so the two particle
-    // systems read as one visual language instead of two unrelated effects
-    ctx.lineWidth = 1;
-    for (let i = 0; i < pts.length - 1; i++){
-      const a = pts[i], b = pts[i + 1];
-      const dx = a.x - b.x, dy = a.y - b.y;
-      const d = Math.sqrt(dx * dx + dy * dy);
-      if (d >= MAX_LINE_DIST) continue;
-      const lineAlpha = Math.min(a.alpha, b.alpha) * 0.35 * (1 - d / MAX_LINE_DIST);
-      if (lineAlpha <= 0.002) continue;
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.strokeStyle = 'rgba(255,106,61,' + lineAlpha.toFixed(3) + ')';
-      ctx.stroke();
-    }
-
-    requestAnimationFrame(draw);
-  }
-  requestAnimationFrame(draw);
-})();
 
 /* =====================================================================
-   2. HEADLINE DECODE
+   2. HEADLINE — the scramble/decode effect was removed in Phase 5.
+   Text-scramble on a heading is unreadable mid-animation (spec §7 ban);
+   the hero H1 now does a single line-mask reveal in Hero.jsx instead.
    ===================================================================== */
-(function(){
-  const el = $('#scramble');
-  if (!el || RM) return;
-  const final = el.dataset.final;
-  const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*<>/\\{}[]01';
-  const queue = final.split('').map(function(ch, i){
-    const s = i * 14;
-    return {ch:ch, start:s, end: s + 180 + Math.random() * 260};
-  });
-  el.textContent = '';
-  let t0 = 0;
-  function tick(now){
-    if (!t0) t0 = now;
-    const ms = now - t0;
-    let out = '', done = 0;
-    for (let i = 0; i < queue.length; i++){
-      const q = queue[i];
-      if (ms >= q.end) { out += q.ch; done++; }
-      else if (ms >= q.start) {
-        out += (q.ch === ' ') ? ' ' : glyphs[(Math.random() * glyphs.length) | 0];
-      }
-    }
-    el.textContent = out;
-    if (done < queue.length) requestAnimationFrame(tick);
-    else el.innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.';
-  }
-  setTimeout(function(){ requestAnimationFrame(tick); }, 260);
-})();
-if (RM) { $('#scramble').innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.'; }
 
 /* =====================================================================
    3. REVEALS
@@ -1145,16 +996,19 @@ if (RM) { $('#scramble').innerHTML = 'Hi, I&rsquo;m <em>Adnan</em>.'; }
 // markup here, driven directly by that component.
 
 /* =====================================================================
-   12. SMOOTH ANCHORS
+   12. SMOOTH ANCHORS — skipped when Lenis is active (SmoothScroll.jsx owns
+       anchor routing via lenis.scrollTo, else the two smooth scrollers fight)
    ===================================================================== */
-$$('a[href^="#"]').forEach(function(a){
-  a.addEventListener('click', function(e){
-    const t = document.querySelector(a.getAttribute('href'));
-    if (!t) return;
-    e.preventDefault();
-    t.scrollIntoView({behavior: RM ? 'auto' : 'smooth'});
+if (!document.documentElement.classList.contains('lenis')) {
+  $$('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      const t = document.querySelector(a.getAttribute('href'));
+      if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({behavior: RM ? 'auto' : 'smooth'});
+    });
   });
-});
+}
 
 /* =====================================================================
    13. PROJECT SCREENSHOT CAROUSELS — autoplay + manual nav, crossfade

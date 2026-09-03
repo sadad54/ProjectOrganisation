@@ -4,52 +4,39 @@ import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const EASE = [0.2, 0, 0, 1];
-const viewport = { once: true, amount: 0.1, margin: '0px 0px -8% 0px' };
 
-const rise = {
-  hidden: { opacity: 0, y: 34 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-};
+/* ---------------------------------------------------------------------------
+   Screenshot carousel. The autoplay / manual-nav / crossfade behaviour still
+   lives in siteScript.js §13, keyed off `.shot[data-shots]`.
 
-// Grouped by domain rather than DOM order — active-state highlighting matches
-// by .proj element id now (see WorkRail below), not array position, so this
-// can be reordered/grouped freely without breaking the IntersectionObserver sync.
-const RAIL_GROUPS = [
-  {
-    label: 'GenAI / Agents',
-    items: [
-      { go: 'p1', name: 'InterviewPilot', hook: 'Schema repair + eval loop' },
-      { go: 'p4', name: 'Mindhive Chatbot', hook: 'RAG + Text2SQL agent' },
-      { go: 'p5', name: 'FinScout', hook: 'Agentic research + eval harness' },
-    ],
-  },
-  {
-    label: 'ML / Data',
-    items: [
-      { go: 'p9', name: 'Driftline', hook: 'Streaming fraud + drift retraining' },
-      { go: 'p2', name: 'WC26 Predictor', hook: '10k-run Monte Carlo sim' },
-      { go: 'p3', name: 'Fraud Detection', hook: 'Imbalanced classification' },
-    ],
-  },
-  {
-    label: 'Mobile',
-    items: [
-      { go: 'p6', name: 'ExpenSense', hook: 'OCR + mobile pipeline' },
-      { go: 'p7', name: 'Aura', hook: 'AI wellness, Gemini API' },
-      { go: 'p8', name: 'FitSync', hook: 'AI stylist, mobile' },
-    ],
-  },
-];
-
+   §1.1 — the literal "drop a file at assets/screenshots/…" caption is gone.
+   Every project below ships real screenshots; if one 404s at runtime the
+   onError handler collapses the frame to nothing (`.shot.empty { display:none }`)
+   rather than announcing a missing asset.
+--------------------------------------------------------------------------- */
 function imgs(dir, n) {
-  return JSON.stringify(Array.from({ length: n }, (_, i) => `assets/screenshots/${dir}/${String(i + 1).padStart(2, '0')}.png`));
+  return JSON.stringify(
+    Array.from({ length: n }, (_, i) => `assets/screenshots/${dir}/${String(i + 1).padStart(2, '0')}.png`)
+  );
 }
-
 function imgsList(dir, files) {
   return JSON.stringify(files.map((f) => `assets/screenshots/${dir}/${f}`));
 }
 
-function Shot({ dataShots, slug, alt, mobileFit }) {
+function Shot({ dataShots, alt, mobileFit }) {
+  if (process.env.NODE_ENV === 'development') {
+    let arr = null;
+    try {
+      arr = JSON.parse(dataShots);
+    } catch {
+      /* fall through */
+    }
+    if (!Array.isArray(arr) || arr.length === 0) {
+      // eslint-disable-next-line no-console
+      console.warn(`[shot] missing or empty screenshot set for: ${alt}`);
+    }
+  }
+
   return (
     <div className={`shot${mobileFit ? ' mobile-fit' : ''}`} data-shots={dataShots}>
       <img
@@ -58,7 +45,6 @@ function Shot({ dataShots, slug, alt, mobileFit }) {
         loading="lazy"
         onError={(e) => e.currentTarget.closest('.shot').classList.add('empty')}
       />
-      <span className="shot-label">Screenshot: drop a file at assets/screenshots/{slug}.png</span>
       <motion.button
         className="shot-arrow prev"
         data-shot-prev
@@ -84,434 +70,440 @@ function Shot({ dataShots, slug, alt, mobileFit }) {
   );
 }
 
-function Tags({ tags }) {
+/* =========================================================================
+   TIER 1 — FEATURED (§2.1). Four projects, full treatment: a sticky left
+   column carrying name + one headline number, a scrolling right column with
+   the bullets, chips, links and code panel.
+   ========================================================================= */
+function Featured({ id, name, year, kind, metric, metricLabel, hook, shot, notes, chips, links, slab, children }) {
   return (
-    <div className="proj-head">
-      {tags.map((t, i) => (
-        <span key={i} className={`tag${t.live ? ' live' : ''}${t.wip ? ' wip' : ''}`}>{t.t}</span>
-      ))}
-    </div>
-  );
-}
-
-export default function Work() {
-  return (
-    <section className="band" id="work">
-      <div className="wrap">
-        <motion.p className="eyebrow" initial="hidden" whileInView="show" viewport={viewport} variants={rise}>
-          Selected work, nine builds
-        </motion.p>
-        <motion.h2 className="title" initial="hidden" whileInView="show" viewport={viewport} variants={rise}>
-          Things I built, and the decision inside each one worth talking about.
-        </motion.h2>
-
-        <div className="work-grid">
-          <WorkRail />
-          <div className="panels">
-            <motion.article
-              className="proj"
-              id="p9"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Streaming ML / MLOps' }]} />
-              <h3 className="proj-name">Driftline</h3>
-              <p className="proj-hook">Six months of silent model decay, caught and reversed by the pipeline itself.</p>
-              <div className="proj-body">
-                <div>
-                  <ul className="notes">
-                    <li>Replays six months of real IEEE-CIS transaction data through <b>Redpanda (Kafka API)</b> and <b>PyFlink</b>, computing stateful 1h / 24h / 7d velocity aggregations exactly as a live system would see them, not a static notebook.</li>
-                    <li>A <b>graph-augmented entity model</b> (605K nodes, ~8M edges, PyTorch Geometric GraphSAGE) runs alongside XGBoost, with leakage boundaries tested, not assumed.</li>
-                    <li><b>Drift-triggered retraining.</b> PSI/KS statistical tests catch the decay, and when performance collapsed mid-stream to a PR-AUC of 0.2635, automatic retraining recovered it to 0.5211: a 97.8% jump in one week.</li>
-                    <li>Documents its own failures alongside the wins: GraphSAGE ensemble underperformance, an 8.66% online/offline feature-store skew, and ONNX export limits on categorical XGBoost, all reported honestly rather than left out.</li>
-                  </ul>
-                  <ul className="chips">
-                    <li>Python</li><li>Redpanda</li><li>PyFlink</li><li>Feast</li><li>XGBoost</li><li>PyTorch Geometric</li><li>FastAPI</li><li>ONNX Runtime</li><li>MLflow</li><li>Kubernetes</li><li>Prometheus / Grafana</li>
-                  </ul>
-                  <div className="proj-links">
-                    <a className="lnk" href="https://github.com/sadad54/driftline">Repository ↗</a>
-                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="slab-cap">Drift &amp; recovery</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    'baseline PR-AUC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.4761</span><br>\n' +
-                    'after 6mo, no retrain&nbsp;<span class="r">0.3680</span> <span class="c">&larr; decays silently</span><br><br>\n' +
-                    'mid-stream collapse&nbsp;&nbsp;&nbsp;<span class="r">0.2635</span><br>\n' +
-                    'after retraining&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.5211</span> <span class="c">&larr; +97.8% in one week</span><br><br>\n' +
-                    '<span class="c"># training/serving skew: 8.66%, found and documented</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p1"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Full stack + LLM' }]} />
-              <h3 className="proj-name">InterviewPilot</h3>
-              <p className="proj-hook">A mock interview that pushes back.</p>
-              <Shot dataShots={imgs('interviewpilot', 9)} slug="interviewpilot" alt="InterviewPilot screenshot" />
-              <div className="proj-body">
-                <div>
-                  <ul className="notes">
-                    <li>You answer out loud. <b>Whisper-large-v3</b> transcribes it, <b>Llama 3.3 70B</b> scores it against a rubric (technical accuracy, clarity, depth) and returns schema-validated JSON.</li>
-                    <li><b>The repair loop.</b> When the model breaks its own output schema, the invalid response is fed back with the validation error attached and the model is asked to fix it. No dropped requests, no half-parsed answers reaching the UI.</li>
-                    <li><b>The follow-up agent.</b> It reads what you actually said and decides whether to probe deeper or move on, the way a real interviewer does. Not a fixed question list.</li>
-                    <li>FastAPI + SQLAlchemy behind React and TypeScript. Conventional commits, a pytest suite with Groq calls fully mocked, a Dockerfile, and GitHub Actions on every push.</li>
-                  </ul>
-                  <ul className="chips">
-                    <li>Python</li><li>FastAPI</li><li>SQLAlchemy</li><li>React</li><li>TypeScript</li><li>Groq API</li><li>Whisper-large-v3</li><li>Llama 3.3 70B</li><li>Docker</li><li>GitHub Actions</li><li>pytest</li>
-                  </ul>
-                  <div className="proj-links">
-                    <a className="lnk" href="https://github.com/sadad54/interviewpilot">Repository ↗</a>
-                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="slab-cap">Evaluator contract</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    '<span class="c"># enforced on every response</span><br>\n{<br>\n' +
-                    '&nbsp;&nbsp;<span class="k">"technical_accuracy"</span>: <span class="s">0..5</span>,<br>\n' +
-                    '&nbsp;&nbsp;<span class="k">"clarity"</span>: <span class="s">0..5</span>,<br>\n' +
-                    '&nbsp;&nbsp;<span class="k">"depth"</span>: <span class="s">0..5</span>,<br>\n' +
-                    '&nbsp;&nbsp;<span class="k">"evidence"</span>: <span class="s">str[]</span>,<br>\n' +
-                    '&nbsp;&nbsp;<span class="k">"follow_up"</span>: <span class="s">str | null</span><br>\n}<br>\n' +
-                    '<span class="c">// invalid → repair → revalidate</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p2"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'ML + simulation' }]} />
-              <h3 className="proj-name">WC26 Predictor</h3>
-              <p className="proj-hook">Every path to the trophy, simulated ten thousand times.</p>
-              <Shot dataShots={imgs('wc26-predictor', 20)} slug="wc26-predictor" alt="WC26 Predictor dashboard screenshot" />
-              <div className="proj-body">
-                <div>
-                  <ul className="notes">
-                    <li>Feature pipeline over historical results, FIFA rankings, rolling form, squad proxies, head-to-head history and match context, assembled so a new fixture can be scored the moment the draw changes.</li>
-                    <li>Models match outcome, expected goals and scoreline probability, then <b>Monte Carlo simulates the full tournament</b>: group qualification, knockout paths, finalists, champion odds.</li>
-                    <li>Dashboard with tournament-path curves, group-pressure matrices, player-form impact views and a <b>predicted-vs-actual audit</b>, because a forecast nobody scores afterwards isn&rsquo;t a forecast.</li>
-                  </ul>
-                  <ul className="chips"><li>Python</li><li>XGBoost</li><li>FastAPI</li><li>React</li><li>TypeScript</li><li>Recharts</li><li>Monte Carlo</li></ul>
-                  <div className="proj-links"><a className="lnk" href="https://github.com/sadad54/worldcup_predictor">Repository ↗</a> <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span></div>
-                </div>
-                <div>
-                  <p className="slab-cap">Simulation loop</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    '<span class="k">for</span> sim <span class="k">in</span> range(<span class="s">10_000</span>):<br>\n' +
-                    '&nbsp;&nbsp;groups = play_group_stage(model)<br>\n&nbsp;&nbsp;bracket = seed_knockouts(groups)<br>\n' +
-                    '&nbsp;&nbsp;champion = play_out(bracket)<br>\n&nbsp;&nbsp;tally[champion] += <span class="s">1</span><br>\n<br>' +
-                    '<span class="c"># → per-team title probability</span><br>\n<span class="c"># → per-team path-to-final curve</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p3"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Imbalanced classification' }]} />
-              <h3 className="proj-name">Financial Fraud Detection</h3>
-              <p className="proj-hook">0.17% of transactions are fraud. Find them anyway.</p>
-              <Shot dataShots={imgs('fraud-detection', 10)} slug="fraud-detection" alt="Fraud detection dashboard screenshot" />
-              <div className="proj-body">
-                <div>
-                  <ul className="metrics">
-                    <div><span className="v" data-count="0.98" data-dec="2">0.00</span><span className="k">ROC-AUC</span></div>
-                    <div><span className="v" data-count="0.89" data-dec="2">0.00</span><span className="k">PR-AUC</span></div>
-                    <div><span className="v" data-count="284807" data-dec="0">0</span><span className="k">Transactions</span></div>
-                  </ul>
-                  <ul className="notes">
-                    <li>Ensemble of <b>Random Forest, XGBoost and Isolation Forest</b> over 284,807 real transactions: supervised signal plus an unsupervised outlier view for the patterns labels don&rsquo;t cover.</li>
-                    <li>Handled the 0.17% positive rate with SMOTE and class-weighted loss, and <b>reported PR-AUC as the headline number</b>. At this imbalance ROC-AUC flatters everything; precision-recall is the metric that tells you the truth.</li>
-                    <li>Modular inference service in FastAPI with Pydantic validation and OpenAPI docs, plus a Streamlit dashboard for batch scanning and explainability.</li>
-                  </ul>
-                  <ul className="chips"><li>Python</li><li>XGBoost</li><li>Scikit-learn</li><li>SMOTE</li><li>FastAPI</li><li>Pydantic</li><li>Streamlit</li></ul>
-                  <div className="proj-links">
-                    <span className="lnk is-disabled" aria-disabled="true">Repository coming soon</span>
-                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="slab-cap">Why PR-AUC</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    'positives&nbsp;&nbsp;<span class="s">492</span> / <span class="s">284,807</span><br>\nbase rate <span class="s">0.17%</span><br><br>\n' +
-                    '<span class="c"># a model predicting "never fraud"</span><br>\naccuracy&nbsp;&nbsp;<span class="r">99.83%</span> <span class="c">← useless</span><br>\n' +
-                    'recall&nbsp;&nbsp;&nbsp;&nbsp;<span class="r">0.00%</span><br><br>\n<span class="c"># so the harness reports</span><br>\nPR-AUC&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.89</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p4"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Delivered', live: true }, { t: '2025' }, { t: 'RAG + Text2SQL' }]} />
-              <h3 className="proj-name">Mindhive Chatbot Assessment</h3>
-              <p className="proj-hook">Five turns deep and still on topic.</p>
-              <Shot dataShots={imgs('mindhive-chatbot', 9)} slug="mindhive-chatbot" alt="Mindhive ZUS chatbot screenshot" />
-              <div className="proj-body">
-                <div>
-                  <ul className="notes">
-                    <li>Multi-turn conversational agent with <b>stateful memory and intent-based planning</b>, holding context across three to five related turns instead of treating each message as new.</li>
-                    <li>Two FastAPI microservices: a <b>RAG</b> product-knowledge endpoint tested against 200+ documents, and a <b>Text2SQL</b> outlet-query endpoint with injection protection on generated queries.</li>
-                    <li>Shipped as a complete repository: OpenAPI specification, test suite, architecture diagrams and a hosted demo. Built as a technical assessment, delivered like a product.</li>
-                  </ul>
-                  <ul className="chips"><li>FastAPI</li><li>RAG</li><li>Text2SQL</li><li>OpenAPI</li><li>Agentic planning</li></ul>
-                  <div className="proj-links"><a className="lnk" href="https://github.com/sadad54/chatbotZUS">Repository ↗</a> <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span></div>
-                </div>
-                <div>
-                  <p className="slab-cap">Turn handling</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    'user &rarr; <span class="c">"outlets in PJ?"</span><br>\n&nbsp;&nbsp;intent: <span class="k">outlet_lookup</span> &rarr; Text2SQL<br><br>\n' +
-                    'user &rarr; <span class="c">"which opens earliest?"</span><br>\n&nbsp;&nbsp;<span class="s">resolves against prior result</span><br>\n&nbsp;&nbsp;intent: <span class="k">outlet_refine</span><br><br>\n' +
-                    'user &rarr; <span class="c">"is it halal certified?"</span><br>\n&nbsp;&nbsp;intent: <span class="k">product_rag</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p6"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2024' }, { t: 'Mobile + OCR' }]} />
-              <h3 className="proj-name">ExpenSense</h3>
-              <p className="proj-hook">Point your camera at a receipt. Get a categorised expense.</p>
-              <Shot dataShots={imgs('expensense', 10)} slug="expensense" alt="ExpenSense app screenshot" mobileFit />
-              <div className="proj-body">
-                <div>
-                  <ul className="metrics">
-                    <div><span className="v" data-count="85" data-dec="0">0</span><span className="k">Categorisation precision %</span></div>
-                    <div><span className="v" data-count="500" data-dec="0">0</span><span className="k">Receipts / month</span></div>
-                  </ul>
-                  <ul className="notes">
-                    <li>Automated personal expense tracking by building an <b>OCR + TensorFlow classification pipeline</b>, reaching 85% categorisation precision across 500+ receipts scanned a month.</li>
-                    <li>Cut manual expense entry to seconds with a Flutter mobile app on a Firebase backend that scans, classifies and logs receipts in real time.</li>
-                    <li>Grounded the system academically: the pipeline underpins a published undergraduate thesis on OCR-based personal finance tracking for income tax readiness.</li>
-                  </ul>
-                  <ul className="chips"><li>Flutter</li><li>Dart</li><li>Firebase</li><li>TensorFlow</li><li>OCR</li></ul>
-                  <div className="proj-links">
-                    <a className="lnk" href="https://github.com/sadad54/expensense">Repository ↗</a>
-                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="slab-cap">Pipeline</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    'receipt photo<br>\n&nbsp;&nbsp;&rarr; OCR text extraction<br>\n&nbsp;&nbsp;&rarr; TensorFlow category classifier<br>\n' +
-                    '&nbsp;&nbsp;&rarr; amount + merchant + category<br>\n&nbsp;&nbsp;&rarr; synced to Firebase<br><br>\n<span class="c"># 85% precision · 500+ receipts / mo</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p7"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'AI wellness' }]} />
-              <h3 className="proj-name">Aura</h3>
-              <p className="proj-hook">Mood tracking that actually tells you something.</p>
-              <Shot dataShots={imgs('aura', 9)} slug="aura" alt="Aura app screenshot" mobileFit />
-              <div className="proj-body">
-                <div>
-                  <ul className="notes">
-                    <li>Built a full wellness experience, <b>mood tracking, guided journaling, meditation timers, ambient soundscapes and daily routines</b>, designed to make self-care a five-second habit, not a chore.</li>
-                    <li>Wired in the <b>Gemini API</b> to read mood, journal and habit history and surface AI-generated correlations and affirmations, instead of just logging numbers nobody looks at again.</li>
-                    <li>Built a themeable, component-driven UI in React and TypeScript on Vite, with custom charts, animated progress rings and mood orbs, tuned for a calm, low-friction daily check-in.</li>
-                  </ul>
-                  <ul className="chips"><li>React</li><li>TypeScript</li><li>Vite</li><li>Gemini API</li><li>Recharts</li></ul>
-                  <div className="proj-links">
-                    <a className="lnk" href="https://github.com/sadad54/AuraFinalPF">Repository ↗</a>
-                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="slab-cap">Insight loop</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    'mood + journal + habit log<br>\n&nbsp;&nbsp;&rarr; Gemini API<br>\n&nbsp;&nbsp;&rarr; pattern correlation<br>\n&nbsp;&nbsp;&rarr; affirmation / nudge<br><br>\n' +
-                    '<span class="c">// repo is currently private,</span><br>\n<span class="c">// make public before sharing this link</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p5"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <div className="proj-head"><span className="tag live">Shipped</span><span className="tag">2026</span><span className="tag">Agent + evaluation</span></div>
-              <h3 className="proj-name">FinScout</h3>
-              <p className="proj-hook">Company research with a score attached.</p>
-              <Shot
-                dataShots={imgsList('finscout', [
-                  '01-ask-empty.png',
-                  '02-ask-market-final.png',
-                  '03-ask-risk-rag-final.png',
-                  '04-research-empty.png',
-                  '05-research-pipeline-inflight.png',
-                  '06-research-final-top.png',
-                  '07-research-final-fullpage.png',
-                ])}
-                slug="finscout"
-                alt="FinScout research agent screenshot"
-              />
-              <div className="proj-body">
-                <div>
-                  <ul className="notes">
-                    <li>A public-markets research agent that gathers filings, financials and news on a listed company and writes a brief a human can actually check.</li>
-                    <li><b>Built harness-first.</b> The evaluation suite (retrieval precision, citation faithfulness, answer completeness) exists before the features do, so every change gets measured instead of eyeballed.</li>
-                    <li>The point of the project isn&rsquo;t the agent. It&rsquo;s being able to say what changed when I changed something.</li>
-                  </ul>
-                  <ul className="chips"><li>Python</li><li>Agentic retrieval</li><li>Eval harness</li><li>FastAPI</li></ul>
-                  <div className="proj-links">
-                    <a className="lnk" href="https://github.com/sadad54/finscout">Repository ↗</a>
-                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="slab-cap">Harness first</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    '<span class="c">## eval/run.py</span><br>\nretrieval_precision@5 &nbsp;<span class="k">→ tracked</span><br>\n' +
-                    'citation_faithfulness <span class="k">→ tracked</span><br>\ncompleteness&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">→ tracked</span><br>\n' +
-                    'latency_p95&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">→ tracked</span><br><br>\n<span class="c"># no merge without a delta</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-
-            <motion.article
-              className="proj"
-              id="p8"
-              whileHover={{ y: -4, transition: { duration: 0.3, ease: EASE } }}
-            >
-              <Tags tags={[{ t: 'Shipped', live: true }, { t: '2026' }, { t: 'Mobile + AI' }]} />
-              <h3 className="proj-name">FitSync</h3>
-              <p className="proj-hook">A personal AI stylist that knows what&rsquo;s actually in your closet.</p>
-              <Shot
-                dataShots={imgsList('fitsync', [
-                  '00-sign-in.png',
-                  '01-onboarding.png',
-                  '02-home.png',
-                  '03-closet.png',
-                  '04-add-item.png',
-                  '05-generate.png',
-                  '06-saved.png',
-                  '07-profile.png',
-                  '08-tryon.png',
-                  '09-tryon-history.png',
-                  '10-community.png',
-                  '11-community-post.png',
-                  '12-community-challenge.png',
-                  '13-community-member.png',
-                  '14-trends.png',
-                  '15-trend-detail.png',
-                  '16-stores.png',
-                  '17-store-detail.png',
-                  '18-item-detail.png',
-                ])}
-                slug="fitsync"
-                alt="FitSync app screenshot"
-                mobileFit
-              />
-              <div className="proj-body">
-                <div>
-                  <ul className="notes">
-                    <li>You scan your own wardrobe into a digital closet, and outfit suggestions get generated against <b>what you actually own</b>, not a generic catalogue.</li>
-                    <li><b>Virtual try-on</b> lets you preview a suggested outfit on yourself before committing to it, with a history to revisit past try-ons.</li>
-                    <li>A community layer, style challenges, a trend feed and store integration, so it&rsquo;s not just solitary generation, it&rsquo;s social and shoppable.</li>
-                    <li>Modular recommendation backend over <b>Groq and Hugging Face</b>, returning suggestions in under two seconds.</li>
-                  </ul>
-                  <ul className="chips"><li>Flutter</li><li>Dart</li><li>FastAPI</li><li>Supabase</li><li>Groq API</li><li>Hugging Face</li></ul>
-                  <div className="proj-links">
-                    <span className="lnk is-disabled" aria-disabled="true">Repository coming soon</span>
-                    <span className="lnk demo is-disabled" aria-disabled="true">Demo coming soon</span>
-                  </div>
-                </div>
-                <div>
-                  <p className="slab-cap">Recommendation loop</p>
-                  <div className="slab" dangerouslySetInnerHTML={{ __html:
-                    'closet item added<br>\n&nbsp;&nbsp;&rarr; Groq + Hugging Face recommendation<br>\n&nbsp;&nbsp;&rarr; generated outfit<br>\n&nbsp;&nbsp;&rarr; virtual try-on preview<br><br>\n<span class="c"># suggestion returned in &lt; 2s</span>'
-                  }} />
-                </div>
-              </div>
-            </motion.article>
-          </div>
+    <article className="feat" id={id} data-tech={chips.map((c) => c.toLowerCase()).join('|')}>
+      <div className="feat-aside">
+        <div className="feat-aside-in">
+          <p className="feat-meta">
+            <span>{year}</span>
+            <span className="sep">/</span>
+            <span>{kind}</span>
+          </p>
+          <h3 className="feat-name">{name}</h3>
+          <p className="feat-metric">
+            <span className="feat-metric-v">{metric}</span>
+            <span className="feat-metric-k">{metricLabel}</span>
+          </p>
         </div>
       </div>
-    </section>
+
+      <div className="feat-body">
+        <p className="feat-hook">{hook}</p>
+        {shot}
+        <ul className="notes reveal-group">
+          {notes.map((n, i) => (
+            <li key={i} dangerouslySetInnerHTML={{ __html: n }} />
+          ))}
+        </ul>
+        <ul className="chips reveal">
+          {chips.map((c) => (
+            <li key={c}>{c}</li>
+          ))}
+        </ul>
+        {links.length > 0 && (
+          <div className="proj-links reveal">
+            {links.map((l) =>
+              l.internal ? (
+                <a className="lnk pointer" key={l.href} href={l.href}>
+                  {l.label} &darr;
+                </a>
+              ) : (
+                <a className="lnk" key={l.href} href={l.href} target="_blank" rel="noopener">
+                  {l.label} ↗
+                </a>
+              )
+            )}
+          </div>
+        )}
+        {slab && (
+          <div className="feat-slab reveal">
+            <p className="slab-cap">{slab.cap}</p>
+            <div className="slab" dangerouslySetInnerHTML={{ __html: slab.html }} />
+          </div>
+        )}
+        {children}
+      </div>
+    </article>
   );
 }
 
-function WorkRail() {
+/* =========================================================================
+   TIER 2 — COMPACT (§2.1 / §6.4). One dense row each. Click expands inline —
+   bullets + code panel — with only one row open at a time. Real <button
+   aria-expanded>, keyboard-operable.
+   ========================================================================= */
+function CompactRow({ row, open, onToggle }) {
   const reduceMotion = useReducedMotion();
-  // Matches by .proj element id, not array position — safe now that the rail
-  // is grouped by domain instead of following strict DOM order.
-  const [activeId, setActiveId] = useState(RAIL_GROUPS[0]?.items[0]?.go);
+  return (
+    <li
+      className={`crow${open ? ' is-open' : ''}`}
+      id={row.id}
+      data-tech={row.chips.map((c) => c.toLowerCase()).join('|')}
+    >
+      <button
+        type="button"
+        className="crow-head"
+        aria-expanded={open}
+        aria-controls={`${row.id}-panel`}
+        onClick={onToggle}
+      >
+        <span className="crow-main">
+          <span className="crow-name">{row.name}</span>
+          <span className="crow-hook">{row.hook}</span>
+        </span>
+        <span className="crow-side">
+          <span className="crow-meta">
+            {row.year} <span className="sep">·</span> {row.kind}
+          </span>
+          <span className="crow-tech">{row.tech.join(' · ')}</span>
+        </span>
+        <span className="crow-plus" aria-hidden="true">
+          +
+        </span>
+      </button>
 
+      {/* Panel is always in the DOM — readable with JS disabled and to crawlers.
+          framer-motion emits height:0 into the SSR markup; the `html:not(.js)`
+          rule in globals.css forces it open again for no-JS. Once hydrated, JS
+          collapses it (initial=false) and animates the accordion on toggle. */}
+      <motion.div
+        className="crow-panel"
+        id={`${row.id}-panel`}
+        role="region"
+        aria-label={`${row.name} details`}
+        aria-hidden={!open}
+        initial={false}
+        animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+        transition={{ duration: reduceMotion ? 0 : 0.4, ease: [0.83, 0, 0.17, 1] }}
+      >
+        <div className="crow-panel-in">
+          <ul className="notes">
+            {row.notes.map((n, i) => (
+              <li key={i} dangerouslySetInnerHTML={{ __html: n }} />
+            ))}
+          </ul>
+          <div>
+            <ul className="chips">
+              {row.chips.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+            {row.links.length > 0 && (
+              <div className="proj-links">
+                {row.links.map((l) =>
+                  l.internal ? (
+                    <a className="lnk pointer" key={l.href} href={l.href}>
+                      {l.label} &darr;
+                    </a>
+                  ) : (
+                    <a className="lnk" key={l.href} href={l.href} target="_blank" rel="noopener">
+                      {l.label} ↗
+                    </a>
+                  )
+                )}
+              </div>
+            )}
+            {row.slab && (
+              <div className="feat-slab">
+                <p className="slab-cap">{row.slab.cap}</p>
+                <div className="slab" dangerouslySetInnerHTML={{ __html: row.slab.html }} />
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </li>
+  );
+}
+
+const COMPACT = [
+  {
+    id: 'p-finscout',
+    name: 'FinScout',
+    hook: 'Company research with a score attached.',
+    year: '2026',
+    kind: 'Agent + evaluation',
+    tech: ['Python', 'FastAPI', 'Evals'],
+    chips: ['Python', 'Agentic retrieval', 'Eval harness', 'FastAPI'],
+    notes: [
+      'A public-markets research agent that gathers filings, financials and news on a listed company and writes a brief a human can actually check.',
+      '<b>Built harness-first.</b> The evaluation suite (retrieval precision, citation faithfulness, answer completeness) exists before the features do, so every change gets measured instead of eyeballed.',
+      'The point of the project isn&rsquo;t the agent. It&rsquo;s being able to say what changed when I changed something.',
+    ],
+    links: [{ label: 'Repository', href: 'https://github.com/sadad54/finscout' }],
+    slab: {
+      cap: 'Harness first',
+      html:
+        '<span class="c">## eval/run.py</span><br>\nretrieval_precision@5 &nbsp;<span class="k">&rarr; tracked</span><br>\n' +
+        'citation_faithfulness <span class="k">&rarr; tracked</span><br>\ncompleteness&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">&rarr; tracked</span><br>\n' +
+        'latency_p95&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">&rarr; tracked</span><br><br>\n<span class="c"># no merge without a delta</span>',
+    },
+  },
+  {
+    id: 'p-fraud',
+    name: 'Financial Fraud Detection',
+    hook: '0.17% of transactions are fraud. Find them anyway.',
+    year: '2026',
+    kind: 'Imbalanced classification',
+    tech: ['XGBoost', 'SMOTE', 'FastAPI'],
+    chips: ['Python', 'XGBoost', 'Scikit-learn', 'SMOTE', 'FastAPI', 'Pydantic', 'Streamlit'],
+    notes: [
+      'Ensemble of <b>Random Forest, XGBoost and Isolation Forest</b> over 284,807 real transactions: supervised signal plus an unsupervised outlier view for the patterns labels don&rsquo;t cover.',
+      'Handled the 0.17% positive rate with SMOTE and class-weighted loss, and <b>reported PR-AUC as the headline number</b> &mdash; at this imbalance ROC-AUC flatters everything.',
+      'Modular inference service in FastAPI with Pydantic validation and OpenAPI docs, plus a Streamlit dashboard for batch scanning and explainability.',
+    ],
+    links: [],
+    slab: {
+      cap: 'Why PR-AUC',
+      html:
+        'positives&nbsp;&nbsp;<span class="s">492</span> / <span class="s">284,807</span> &middot; base rate <span class="s">0.17%</span><br>\n' +
+        '<span class="c"># a model predicting "never fraud"</span><br>\n' +
+        'accuracy&nbsp;&nbsp;<span class="r">99.83%</span> <span class="c">&larr; useless</span><br>\n' +
+        'recall&nbsp;&nbsp;&nbsp;&nbsp;<span class="r">0.00%</span><br><br>\n' +
+        '<span class="c"># so the harness reports</span><br>\nPR-AUC&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.89</span>',
+    },
+  },
+  {
+    id: 'p-expensense',
+    name: 'ExpenSense',
+    hook: 'Point your camera at a receipt. Get a categorised expense.',
+    year: '2024',
+    kind: 'Mobile + OCR',
+    tech: ['Flutter', 'Firebase', 'TensorFlow'],
+    chips: ['Flutter', 'Dart', 'Firebase', 'TensorFlow', 'OCR'],
+    notes: [
+      'Automated personal expense tracking with an <b>OCR + TensorFlow classification pipeline</b>, reaching 85% categorisation precision across 500+ receipts a month.',
+      'Cut manual entry to seconds with a Flutter app on a Firebase backend that scans, classifies and logs receipts in real time.',
+      'Grounded academically: the pipeline underpins a published undergraduate thesis on OCR-based personal finance tracking for income-tax readiness.',
+    ],
+    links: [{ label: 'Repository', href: 'https://github.com/sadad54/expensense' }],
+    slab: {
+      cap: 'Pipeline',
+      html:
+        'receipt photo<br>\n&nbsp;&nbsp;&rarr; OCR text extraction<br>\n&nbsp;&nbsp;&rarr; TensorFlow category classifier<br>\n' +
+        '&nbsp;&nbsp;&rarr; amount + merchant + category<br>\n&nbsp;&nbsp;&rarr; synced to Firebase<br><br>\n<span class="c"># 85% precision &middot; 500+ receipts / mo</span>',
+    },
+  },
+  {
+    id: 'p-aura',
+    name: 'Aura',
+    hook: 'Mood tracking that actually tells you something.',
+    year: '2026',
+    kind: 'AI wellness',
+    tech: ['React', 'TypeScript', 'Gemini API'],
+    chips: ['React', 'TypeScript', 'Vite', 'Gemini API', 'Recharts'],
+    notes: [
+      'A full wellness experience &mdash; <b>mood tracking, guided journaling, meditation timers, ambient soundscapes and daily routines</b> &mdash; designed to make self-care a five-second habit.',
+      'Wired in the <b>Gemini API</b> to read mood, journal and habit history and surface AI-generated correlations and affirmations, instead of logging numbers nobody revisits.',
+      'A themeable, component-driven UI in React and TypeScript on Vite, with custom charts, animated progress rings and mood orbs.',
+    ],
+    links: [],
+    slab: {
+      cap: 'Insight loop',
+      html:
+        'mood + journal + habit log<br>\n&nbsp;&nbsp;&rarr; Gemini API<br>\n&nbsp;&nbsp;&rarr; pattern correlation<br>\n&nbsp;&nbsp;&rarr; affirmation / nudge',
+    },
+  },
+  {
+    id: 'p-fitsync',
+    name: 'FitSync',
+    hook: 'A personal AI stylist that knows what’s actually in your closet.',
+    year: '2026',
+    kind: 'Mobile + AI',
+    tech: ['Flutter', 'FastAPI', 'Groq API'],
+    chips: ['Flutter', 'Dart', 'FastAPI', 'Supabase', 'Groq API', 'Hugging Face'],
+    notes: [
+      'You scan your own wardrobe into a digital closet, and outfit suggestions get generated against <b>what you actually own</b>, not a generic catalogue.',
+      '<b>Virtual try-on</b> lets you preview a suggested outfit on yourself before committing, with a history to revisit past try-ons.',
+      'A community layer &mdash; style challenges, a trend feed, store integration &mdash; so it&rsquo;s social and shoppable, not solitary generation.',
+      'Modular recommendation backend over <b>Groq and Hugging Face</b>, returning suggestions in under two seconds.',
+    ],
+    links: [],
+    slab: {
+      cap: 'Recommendation loop',
+      html:
+        'closet item added<br>\n&nbsp;&nbsp;&rarr; Groq + Hugging Face recommendation<br>\n&nbsp;&nbsp;&rarr; generated outfit<br>\n&nbsp;&nbsp;&rarr; virtual try-on preview<br><br>\n<span class="c"># suggestion returned in &lt; 2s</span>',
+    },
+  },
+];
+
+export default function Work() {
+  const [openRow, setOpenRow] = useState(null);
+
+  // spec §6.5 — Toolkit chip clicks broadcast a tech; matching projects stay
+  // lit, the rest drop back.
   useEffect(() => {
-    const projs = Array.from(document.querySelectorAll('.proj'));
-    if (!projs.length) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          setActiveId(entry.target.id);
-        });
-      },
-      { rootMargin: '-32% 0px -52% 0px' }
-    );
-    projs.forEach((p) => io.observe(p));
-    return () => io.disconnect();
+    function onFilter(e) {
+      const tech = e.detail?.tech || null;
+      const items = document.querySelectorAll('#work [data-tech]');
+      let anyMatch = false;
+      items.forEach((el) => {
+        const list = (el.getAttribute('data-tech') || '').split('|');
+        if (tech && list.includes(tech)) anyMatch = true;
+      });
+      items.forEach((el) => {
+        const list = (el.getAttribute('data-tech') || '').split('|');
+        const match = !!tech && anyMatch && list.includes(tech);
+        el.classList.toggle('is-dim', !!tech && anyMatch && !match);
+        el.classList.toggle('is-match', match);
+      });
+    }
+    window.addEventListener('portfolio:filter', onFilter);
+    return () => window.removeEventListener('portfolio:filter', onFilter);
   }, []);
 
-  function goTo(id) {
-    document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-  }
-
   return (
-    <aside className="work-rail" id="workRail">
-      {RAIL_GROUPS.map((group) => (
-        <div className="wr-group" key={group.label}>
-          <p className="wr-group-label">{group.label}</p>
-          <ol>
-            {group.items.map((item) => (
-              <li key={item.go} className={item.go === activeId ? 'on' : undefined}>
-                <motion.button
-                  data-go={item.go}
-                  onClick={() => goTo(item.go)}
-                  whileHover={{ x: 3 }}
-                  transition={{ duration: 0.18, ease: EASE }}
-                >
-                  <span className="wr-text">
-                    <span className="wr-name">
-                      {item.name} {item.wip && <span className="wr-status">WIP</span>}
-                    </span>
-                    <span className="wr-hook">{item.hook}</span>
-                  </span>
-                </motion.button>
-              </li>
-            ))}
-          </ol>
+    <section className="band" id="work" aria-label="Selected work">
+      <div className="wrap">
+        <p className="eyebrow reveal">Selected work</p>
+        <h2 className="title reveal">
+          Things I built, and the decision inside each one worth talking about.
+        </h2>
+
+        <div className="feat-list">
+          <Featured
+            id="p-driftline"
+            name="Driftline"
+            year="2026"
+            kind="Streaming ML / MLOps"
+            metric="+97.8%"
+            metricLabel="PR-AUC recovered after drift"
+            hook="Six months of silent model decay, caught and reversed by the pipeline itself."
+            notes={[
+              'Replays six months of real IEEE-CIS transaction data through <b>Redpanda (Kafka API)</b> and <b>PyFlink</b>, computing stateful 1h / 24h / 7d velocity aggregations exactly as a live system would see them, not a static notebook.',
+              'A <b>graph-augmented entity model</b> (605K nodes, ~8M edges, PyTorch Geometric GraphSAGE) runs alongside XGBoost, with leakage boundaries tested, not assumed.',
+              '<b>Drift-triggered retraining.</b> PSI/KS statistical tests catch the decay; when performance collapsed mid-stream to a PR-AUC of 0.2635, automatic retraining recovered it to 0.5211 &mdash; a 97.8% jump in one week.',
+              'Documents its own failures alongside the wins: GraphSAGE ensemble underperformance, an 8.66% online/offline feature-store skew, and ONNX export limits on categorical XGBoost.',
+            ]}
+            chips={[
+              'Python', 'Redpanda', 'PyFlink', 'Feast', 'XGBoost', 'PyTorch Geometric',
+              'FastAPI', 'ONNX Runtime', 'MLflow', 'Kubernetes', 'Prometheus / Grafana',
+            ]}
+            links={[{ label: 'Repository', href: 'https://github.com/sadad54/driftline' }]}
+            slab={{
+              cap: 'Drift & recovery',
+              html:
+                'baseline PR-AUC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.4761</span><br>\n' +
+                'after 6mo, no retrain&nbsp;<span class="r">0.3680</span> <span class="c">&larr; decays silently</span><br><br>\n' +
+                'mid-stream collapse&nbsp;&nbsp;&nbsp;<span class="r">0.2635</span><br>\n' +
+                'after retraining&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">0.5211</span> <span class="c">&larr; +97.8% in one week</span><br><br>\n' +
+                '<span class="c"># training/serving skew: 8.66%, found and documented</span>',
+            }}
+          />
+
+          <Featured
+            id="p-interviewpilot"
+            name="InterviewPilot"
+            year="2026"
+            kind="Full stack + LLM"
+            metric="0"
+            metricLabel="dropped requests under schema repair"
+            hook="A mock interview that pushes back."
+            shot={
+              <Shot
+                dataShots={imgs('interviewpilot', 9)}
+                alt="InterviewPilot: a mock-interview session with the live transcript on the left and rubric scores for technical accuracy, clarity and depth on the right."
+              />
+            }
+            notes={[
+              'You answer out loud. <b>Whisper-large-v3</b> transcribes it, <b>Llama 3.3 70B</b> scores it against a rubric (technical accuracy, clarity, depth) and returns schema-validated JSON.',
+              '<b>The repair loop.</b> When the model breaks its own output schema, the invalid response is fed back with the validation error attached and the model is asked to fix it. No dropped requests, no half-parsed answers reaching the UI.',
+              '<b>The follow-up agent.</b> It reads what you actually said and decides whether to probe deeper or move on, the way a real interviewer does. Not a fixed question list.',
+              'FastAPI + SQLAlchemy behind React and TypeScript. Conventional commits, a pytest suite with Groq calls fully mocked, a Dockerfile, and GitHub Actions on every push.',
+            ]}
+            chips={[
+              'Python', 'FastAPI', 'SQLAlchemy', 'React', 'TypeScript', 'Groq API',
+              'Whisper-large-v3', 'Llama 3.3 70B', 'Docker', 'GitHub Actions', 'pytest',
+            ]}
+            links={[{ label: 'Repository', href: 'https://github.com/sadad54/interviewpilot' }]}
+            slab={{
+              cap: 'Evaluator contract',
+              html:
+                '<span class="c"># enforced on every response</span><br>\n{<br>\n' +
+                '&nbsp;&nbsp;<span class="k">"technical_accuracy"</span>: <span class="s">0..5</span>,<br>\n' +
+                '&nbsp;&nbsp;<span class="k">"clarity"</span>: <span class="s">0..5</span>,<br>\n' +
+                '&nbsp;&nbsp;<span class="k">"depth"</span>: <span class="s">0..5</span>,<br>\n' +
+                '&nbsp;&nbsp;<span class="k">"evidence"</span>: <span class="s">str[]</span>,<br>\n' +
+                '&nbsp;&nbsp;<span class="k">"follow_up"</span>: <span class="s">str | null</span><br>\n}<br>\n' +
+                '<span class="c">// invalid &rarr; repair &rarr; revalidate</span>',
+            }}
+          />
+
+          <Featured
+            id="p-wc26"
+            name="WC26 Predictor"
+            year="2026"
+            kind="ML + simulation"
+            metric="10,000"
+            metricLabel="tournaments simulated per forecast"
+            hook="Every path to the trophy, simulated ten thousand times."
+            shot={
+              <Shot
+                dataShots={imgs('wc26-predictor', 20)}
+                alt="WC26 Predictor dashboard: tournament-path probability curves, a group-pressure matrix, and a predicted-versus-actual audit panel."
+              />
+            }
+            notes={[
+              'Feature pipeline over historical results, FIFA rankings, rolling form, squad proxies, head-to-head history and match context, so a new fixture can be scored the moment the draw changes.',
+              'Models match outcome, expected goals and scoreline probability, then <b>Monte Carlo simulates the full tournament</b>: group qualification, knockout paths, finalists, champion odds.',
+              'Dashboard with tournament-path curves, group-pressure matrices, player-form impact views and a <b>predicted-vs-actual audit</b>, because a forecast nobody scores afterwards isn&rsquo;t a forecast.',
+            ]}
+            chips={['Python', 'XGBoost', 'FastAPI', 'React', 'TypeScript', 'Recharts', 'Monte Carlo']}
+            links={[
+              { label: 'Repository', href: 'https://github.com/sadad54/worldcup_predictor' },
+              { label: 'The trade-off behind this', href: '#slide-sim', internal: true },
+            ]}
+          />
+
+          <Featured
+            id="p-mindhive"
+            name="Mindhive Chatbot"
+            year="2025"
+            kind="RAG + Text2SQL"
+            metric="200+"
+            metricLabel="documents in the RAG test set"
+            hook="Five turns deep and still on topic."
+            shot={
+              <Shot
+                dataShots={imgs('mindhive-chatbot', 9)}
+                alt="Mindhive chatbot: a multi-turn conversation about ZUS outlets, resolving a follow-up question against the previous answer."
+              />
+            }
+            notes={[
+              'Multi-turn conversational agent with <b>stateful memory and intent-based planning</b>, holding context across three to five related turns instead of treating each message as new.',
+              'Two FastAPI microservices: a <b>RAG</b> product-knowledge endpoint tested against 200+ documents, and a <b>Text2SQL</b> outlet-query endpoint with injection protection on generated queries.',
+              'Shipped as a complete repository: OpenAPI specification, test suite, architecture diagrams and a hosted demo. Built as a technical assessment, delivered like a product.',
+            ]}
+            chips={['FastAPI', 'RAG', 'Text2SQL', 'OpenAPI', 'Agentic planning']}
+            links={[]}
+            slab={{
+              cap: 'Turn handling',
+              html:
+                'user &rarr; <span class="c">"outlets in PJ?"</span><br>\n&nbsp;&nbsp;intent: <span class="k">outlet_lookup</span> &rarr; Text2SQL<br><br>\n' +
+                'user &rarr; <span class="c">"which opens earliest?"</span><br>\n&nbsp;&nbsp;<span class="s">resolves against prior result</span><br>\n&nbsp;&nbsp;intent: <span class="k">outlet_refine</span><br><br>\n' +
+                'user &rarr; <span class="c">"is it halal certified?"</span><br>\n&nbsp;&nbsp;intent: <span class="k">product_rag</span>',
+            }}
+          />
         </div>
-      ))}
-    </aside>
+
+        <h3 className="work-subhead reveal">More work</h3>
+        <ul className="compact-list">
+          {COMPACT.map((row) => (
+            <CompactRow
+              key={row.id}
+              row={row}
+              open={openRow === row.id}
+              onToggle={() => setOpenRow((cur) => (cur === row.id ? null : row.id))}
+            />
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }

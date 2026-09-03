@@ -11,6 +11,8 @@ import Toolkit from './components/Toolkit';
 import More from './components/More';
 import Contact from './components/Contact';
 import CommandPalette from './components/CommandPalette';
+import SmoothScroll from './components/SmoothScroll';
+import BackgroundFX from './components/BackgroundFX';
 
 export default function Page() {
   useEffect(() => {
@@ -19,24 +21,29 @@ export default function Page() {
   }, []);
 
   return (
-    <>
+    <SmoothScroll>
       {/* Must render first: #ambientField (fixed, z-index:0) stacks by DOM order
           against the position:relative sections below it — see bodyMarkup.js */}
+      <BackgroundFX />
       <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: ATMOSPHERE_HTML }} />
+      <a className="skip-link" href="#main">Skip to content</a>
       <Nav />
-      <Hero />
-      <About />
-      <Work />
-      <Approach />
-      <Toolkit />
-      <More />
-      <Contact />
+      <main id="main">
+        <Hero />
+        <About />
+        {/* §2.3 — Approach leads Work: the thesis before the evidence. */}
+        <Approach />
+        <Work />
+        <Toolkit />
+        <More />
+        <Contact />
+      </main>
       <footer>
         <span>&copy; 2026 Adnan Mashrur Sadad</span>
-        <span>Built from scratch. No framework, no template.</span>
+        <span>Hand-built. No template.</span>
         <span>Kuala Lumpur, Malaysia</span>
       </footer>
       <CommandPalette />
-    </>
+    </SmoothScroll>
   );
 }

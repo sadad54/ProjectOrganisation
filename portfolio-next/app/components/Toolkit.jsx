@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const EASE = [0.2, 0, 0, 1];
@@ -15,6 +16,7 @@ const gridContainer = {
   show: { transition: { staggerChildren: 0.08 } },
 };
 
+// spec §6.5 — "Working languages" dropped from Toolkit; it now lives in About.
 const CELLS = [
   {
     wide: true,
@@ -34,14 +36,19 @@ const CELLS = [
     title: 'Core CS',
     items: ['Data structures & algorithms', 'OOP', 'Operating systems', 'Databases', 'Software engineering', 'Computer architecture'],
   },
-  {
-    wide: true,
-    title: 'Working languages',
-    items: ['English', 'Bengali', 'Bahasa Malaysia (conversational)', 'Hindi / Urdu (conversational)'],
-  },
 ];
 
-function Cell({ cell }) {
+// which chips actually map to a project on the page (see Work.jsx chip lists)
+const PROJECT_TECH = new Set([
+  'python', 'fastapi', 'react', 'typescript', 'xgboost', 'scikit-learn', 'tensorflow', 'ocr',
+  'docker', 'github actions', 'pytest', 'supabase', 'firebase', 'flutter', 'dart', 'groq api',
+  'hugging face', 'rag', 'text2sql', 'openapi', 'gemini api', 'vite', 'recharts', 'monte carlo',
+  'smote', 'pydantic', 'streamlit', 'sqlalchemy', 'whisper-large-v3', 'llama 3.3 70b',
+  'redpanda', 'pyflink', 'feast', 'pytorch geometric', 'onnx runtime', 'mlflow', 'kubernetes',
+  'prometheus / grafana', 'agentic retrieval', 'eval harness',
+]);
+
+function Cell({ cell, active, onPick }) {
   function onPointerMove(e) {
     const r = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty('--mx', ((e.clientX - r.left) / r.width) * 100 + '%');
@@ -57,9 +64,26 @@ function Cell({ cell }) {
     >
       <h3>{cell.title}</h3>
       <ul>
-        {cell.items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
+        {cell.items.map((item) => {
+          const key = item.toLowerCase();
+          const filterable = PROJECT_TECH.has(key);
+          return (
+            <li key={item}>
+              {filterable ? (
+                <button
+                  type="button"
+                  className={`chip-btn${active === key ? ' on' : ''}`}
+                  aria-pressed={active === key}
+                  onClick={() => onPick(active === key ? null : key, item)}
+                >
+                  {item}
+                </button>
+              ) : (
+                item
+              )}
+            </li>
+          );
+        })}
       </ul>
     </motion.div>
   );
@@ -68,16 +92,47 @@ function Cell({ cell }) {
 export default function Toolkit() {
   const reduceMotion = useReducedMotion();
   const initial = reduceMotion ? 'show' : 'hidden';
+  const [active, setActive] = useState(null);
+  const [activeLabel, setActiveLabel] = useState('');
+
+  function pick(key, label) {
+    setActive(key);
+    setActiveLabel(key ? label : '');
+    window.dispatchEvent(new CustomEvent('portfolio:filter', { detail: { tech: key } }));
+  }
+
+  // clear the filter if the user leaves the section entirely
+  useEffect(() => {
+    return () => window.dispatchEvent(new CustomEvent('portfolio:filter', { detail: { tech: null } }));
+  }, []);
 
   return (
-    <section className="band" id="toolkit">
+    <section className="band" id="toolkit" aria-label="Toolkit">
       <div className="wrap">
         <motion.h2 className="title" initial={initial} whileInView="show" viewport={viewport} variants={rise}>
           What I reach for.
         </motion.h2>
+        <motion.p
+          className="toolkit-hint"
+          initial={initial}
+          whileInView="show"
+          viewport={viewport}
+          variants={rise}
+        >
+          {active ? (
+            <>
+              Highlighting projects that use <strong>{activeLabel}</strong> —{' '}
+              <button type="button" className="toolkit-clear" onClick={() => pick(null)}>
+                clear
+              </button>
+            </>
+          ) : (
+            'Tap a highlighted skill to see which projects use it.'
+          )}
+        </motion.p>
         <motion.div className="bento" initial={initial} whileInView="show" viewport={viewport} variants={gridContainer}>
           {CELLS.map((cell) => (
-            <Cell cell={cell} key={cell.title} />
+            <Cell cell={cell} key={cell.title} active={active} onPick={pick} />
           ))}
         </motion.div>
 

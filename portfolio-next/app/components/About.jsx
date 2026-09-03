@@ -54,7 +54,7 @@ export default function About() {
   const initial = reduceMotion ? 'show' : 'hidden';
 
   return (
-    <section className="band" id="about">
+    <section className="band" id="about" aria-label="About">
       <div className="wrap">
         <motion.div
           className="about-grid"
@@ -82,6 +82,9 @@ export default function About() {
               Now I build AI systems end to end. The model call is the easy part. What I find interesting is
               everything wrapped around it: making a language model return structured output you can trust,
               and having a plan for when it doesn&rsquo;t.
+            </motion.p>
+            <motion.p className="about-langs" variants={rise}>
+              I work in English, and speak Bengali, Bahasa Malaysia and Hindi/Urdu conversationally.
             </motion.p>
           </div>
           <motion.figure className="portrait" style={{ margin: 0 }} variants={rise}>
@@ -111,7 +114,10 @@ export default function About() {
         >
           {TIMELINE.map((row) => (
             <motion.div className="tl-row" key={row.when + row.title} variants={rise}>
-              <span className="tl-when">{row.when}</span>
+              <span className="tl-when">
+                {row.when === 'Now' && <span className="tl-now-dot" aria-hidden="true" />}
+                {row.when}
+              </span>
               <span className="tl-what">
                 <b>{row.title}</b>
                 <span>{row.detail}</span>

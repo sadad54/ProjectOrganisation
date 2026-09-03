@@ -75,3 +75,6 @@ src/plugins/impeccable-live.client.ts
 
 .vercel
 .env*
+
+# local design QA screenshots
+scripts/shots/

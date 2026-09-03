@@ -1,9 +1,12 @@
 import './globals.css';
 
+export const viewport = {
+  themeColor: '#0B0B0D',
+};
+
 export const metadata = {
   title: 'Adnan Mashrur Sadad - AI & Software Engineer',
   description: 'AI and software engineer in Kuala Lumpur. I build LLM systems that check their own work.',
-  themeColor: '#0B0B0D',
   openGraph: {
     title: 'Adnan Mashrur Sadad - AI & Software Engineer',
     description: 'I build LLM systems that check their own work.',
@@ -16,8 +19,18 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Pre-hydration: mark JS available, and re-apply a stored reduced-motion
+            override before first paint so it never flashes. The inline script
+            mutates <html>'s className before React hydrates, so the root element
+            is exempted from hydration attribute diffing. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.documentElement.classList.add('js');try{if(localStorage.getItem('rm')==='1')document.documentElement.classList.add('rm')}catch(e){}",
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const EASE = [0.2, 0, 0, 1];
@@ -15,19 +16,56 @@ const listContainer = {
   show: { transition: { staggerChildren: 0.07, delayChildren: 0.1 } },
 };
 
+const EMAIL = 'adnanmashrursadad@gmail.com';
+
 const REACH = [
-  { href: 'mailto:adnanmashrursadad@gmail.com', v: 'adnanmashrursadad@gmail.com', k: 'Email', external: false },
-  { href: 'https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237', v: 'LinkedIn', k: 'Profile ↗', external: true },
-  { href: 'https://github.com/sadad54', v: 'GitHub', k: 'Code ↗', external: true },
-  { href: 'resume.pdf', v: 'Résumé', k: 'PDF ↓', download: true },
+  { href: `mailto:${EMAIL}`, v: EMAIL, k: 'Email', kind: 'email' },
+  { href: 'https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237', v: 'LinkedIn', k: 'Profile ↗', kind: 'external' },
+  { href: 'https://github.com/sadad54', v: 'GitHub', k: 'Code ↗', kind: 'external' },
+  { href: 'resume.pdf', v: 'Résumé', k: 'PDF ↓', kind: 'download' },
 ];
+
+// §6.6 — local time indicator. Answers "is there a real person in a real
+// timezone" without a word of copy.
+function useKualaLumpurTime() {
+  const [t, setT] = useState('');
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Kuala_Lumpur',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    const paint = () => setT(fmt.format(new Date()).toLowerCase());
+    paint();
+    const id = setInterval(paint, 60_000);
+    return () => clearInterval(id);
+  }, []);
+  return t;
+}
 
 export default function Contact() {
   const reduceMotion = useReducedMotion();
   const initial = reduceMotion ? 'show' : 'hidden';
+  const localTime = useKualaLumpurTime();
+  const [copied, setCopied] = useState(false);
+
+  function copyEmail(e) {
+    if (!navigator.clipboard) return; // let the mailto: href do its job
+    e.preventDefault();
+    navigator.clipboard.writeText(EMAIL).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1600);
+      },
+      () => {
+        window.location.href = `mailto:${EMAIL}`;
+      }
+    );
+  }
 
   return (
-    <section className="contact" id="contact">
+    <section className="contact" id="contact" aria-label="Contact">
       <canvas id="fluid2" aria-hidden="true"></canvas>
       <canvas id="contact3d" aria-hidden="true"></canvas>
       <div className="contact-veil" aria-hidden="true"></div>
@@ -46,20 +84,32 @@ export default function Contact() {
               I&rsquo;d enjoy digging into, say hello. Good conversations about interesting work are
               reason enough to reach out.
             </motion.p>
+            <motion.p
+              className="contact-time"
+              initial={initial}
+              whileInView="show"
+              viewport={viewport}
+              variants={rise}
+            >
+              Kuala Lumpur <span className="sep">·</span>{' '}
+              <time suppressHydrationWarning>{localTime || '—'}</time> local
+            </motion.p>
           </div>
           <motion.ul className="reach" initial={initial} whileInView="show" viewport={viewport} variants={listContainer}>
             {REACH.map((r) => (
               <motion.li key={r.href} variants={rise}>
                 <motion.a
                   href={r.href}
-                  target={r.external ? '_blank' : undefined}
-                  rel={r.external ? 'noopener' : undefined}
-                  download={r.download || undefined}
+                  target={r.kind === 'external' ? '_blank' : undefined}
+                  rel={r.kind === 'external' ? 'noopener' : undefined}
+                  download={r.kind === 'download' ? true : undefined}
+                  onClick={r.kind === 'email' ? copyEmail : undefined}
+                  aria-label={r.kind === 'email' ? 'Copy email address' : undefined}
                   whileHover={{ x: 6, color: 'var(--signal-hover)' }}
                   whileTap={{ color: 'var(--signal-press)' }}
                   transition={{ duration: 0.2, ease: EASE }}
                 >
-                  <span className="v">{r.v}</span>
+                  <span className="v">{r.kind === 'email' && copied ? 'Copied to clipboard ✓' : r.v}</span>
                   <span className="k">{r.k}</span>
                 </motion.a>
               </motion.li>
@@ -67,6 +117,9 @@ export default function Contact() {
           </motion.ul>
         </div>
       </div>
+      <p className="sr-only" role="status" aria-live="polite">
+        {copied ? 'Email address copied to clipboard' : ''}
+      </p>
     </section>
   );
 }
