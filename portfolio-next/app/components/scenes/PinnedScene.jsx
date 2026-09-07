@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useScroll, useSpring, useReducedMotion, useMotionValue } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import { useScroll, useSpring, useReducedMotion, useMotionValue, useTransform } from 'framer-motion';
 
 /* spec §4B — one progress value per pinned scene, shared by every element in
    it so they stay in sync. Pin is `position: sticky`, never a library.
@@ -17,15 +17,22 @@ export function useSceneProgress(ref) {
     offset: ['start start', 'end end'],
   });
   const smooth = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
-  const forced = useMotionValue(0);
-  const [mounted, setMounted] = useState(false);
+  const staticMode = useMotionValue(0);
+  const progress = useTransform([smooth, staticMode], ([value, isStatic]) => isStatic ? 1 : value);
 
   useEffect(() => {
-    setMounted(true);
-    if (reduce) forced.set(1);
-  }, [reduce, forced]);
+    const media = window.matchMedia('(max-width: 900px), (max-height: 650px)');
+    const update = () => {
+      staticMode.set(reduce || media.matches || document.documentElement.classList.contains('rm') ? 1 : 0);
+    };
+    update();
+    media.addEventListener('change', update);
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => { media.removeEventListener('change', update); observer.disconnect(); };
+  }, [reduce, staticMode]);
 
-  return mounted && reduce ? forced : smooth;
+  return progress;
 }
 
 /**

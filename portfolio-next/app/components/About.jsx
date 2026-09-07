@@ -65,7 +65,7 @@ export default function About() {
         >
           <div className="about-copy">
             <motion.h2 className="title" variants={rise}>
-              Four years learning the theory, one internship learning what breaks.
+              Software engineering. Applied to AI.
             </motion.h2>
             <motion.p variants={rise}>
               I&rsquo;m finishing a Bachelor of Software Engineering at <b>MJIIT, Universiti Teknologi Malaysia</b> in
@@ -74,14 +74,10 @@ export default function About() {
             </motion.p>
             <motion.p variants={rise}>
               Between those, six months at <b>Joget Inc.</b> shipping enterprise workflow automations and UI
-              components that clients used in production. That&rsquo;s where I learned the unglamorous half:
-              integrating REST services someone else owns, cutting 30% of manual effort out of a data flow,
-              and sitting in sprint reviews where a merge has consequences.
+              components that clients used in production. The work included REST service integrations, reducing manual effort in a data flow by 30%, and collaborating through sprint reviews.
             </motion.p>
             <motion.p variants={rise}>
-              Now I build AI systems end to end. The model call is the easy part. What I find interesting is
-              everything wrapped around it: making a language model return structured output you can trust,
-              and having a plan for when it doesn&rsquo;t.
+              Now I build AI systems end to end, with a focus on structured outputs, evaluation, and recovery when a model returns an invalid response.
             </motion.p>
             <motion.p className="about-langs" variants={rise}>
               I work in English, and speak Bengali, Bahasa Malaysia and Hindi/Urdu conversationally.

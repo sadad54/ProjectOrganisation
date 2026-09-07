@@ -363,7 +363,7 @@ export default function Work() {
       <div className="wrap">
         <p className="eyebrow reveal">Selected work</p>
         <h2 className="title reveal">
-          Things I built, and the decision inside each one worth talking about.
+          From model to working system.
         </h2>
 
         <div className="feat-list">
