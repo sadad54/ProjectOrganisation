@@ -1,5 +1,15 @@
 # Portfolio audit and editorial redesign
 
+## Revision 2 — personality and scrollytelling
+
+The owner preferred a more vibrant direction and explicitly requested the original interactive neural field. This revision restores the pointer-responsive field with a scroll-interpolated tangerine, periwinkle, and mint palette. A three-chapter project story now pairs the problem, engineering decision, and result with existing product screenshots. The hero introduces Adnan personally; project accents and a mint contact section extend the colour throughout the page.
+
+Desktop storytelling uses one 260svh sequence. Narrow or short screens and reduced-motion mode show every chapter in normal flow. The restored background responds to the OS and manual motion settings, redraws on resize, and pauses its animation when the tab is hidden. The prior audit below records the first iteration; its removal of the neural field and restrained blue palette are superseded by this revision.
+
+Validation: production build and generated image/anchor checks pass. Browser visual/interaction checks remain outstanding. Production remains unchanged; this revision updates the existing draft preview.
+
+---
+
 Reviewed 7 September 2026 against main commit baeffeb1cb38e808faae9df809c0f8bf20404a8e.
 
 ## Assessment

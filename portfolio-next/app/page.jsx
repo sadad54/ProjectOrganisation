@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import BackgroundFX from './components/BackgroundFX';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -20,6 +21,7 @@ export default function Page() {
 
   return (
     <SmoothScroll>
+      <BackgroundFX />
       <div className="toast" id="toast" role="status" aria-live="polite" aria-hidden="true" />
       <a className="skip-link" href="#main">Skip to content</a>
       <Nav />

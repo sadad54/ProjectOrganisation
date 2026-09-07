@@ -1,13 +1,14 @@
 'use client';
 
+import useMotionPreference from '../hooks/useMotionPreference';
 import { useRef } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const ease = [0.22, 1, 0.36, 1];
 
 export default function Hero() {
   const ref = useRef(null);
-  const reduce = useReducedMotion();
+  const reduce = useMotionPreference();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 48]);
 
@@ -21,7 +22,7 @@ export default function Hero() {
         <div className="hero-main">
           <div className="hero-content">
             <h1 className="hero-h">
-              {['AI systems.', 'Built to work.'].map((line, i) => (
+              {['Hi, I’m Adnan.', 'Let’s make AI work.'].map((line, i) => (
                 <span className="hero-h-mask" key={line}>
                   <motion.span className="hero-h-line"
                     initial={false}
@@ -32,7 +33,7 @@ export default function Hero() {
               ))}
             </h1>
             <div className="hero-sub">
-              <p>I build applied AI, from language-model workflows to machine-learning pipelines. With the validation, evaluation, and software around them to make the results useful.</p>
+              <p>I like the messy space between a promising model and something people can use. I build the pipelines, interfaces, and recovery paths that connect the two.</p>
               <div className="hero-cta">
                 <a className="btn btn-solid" href="#work">Explore selected work <span aria-hidden="true">↘</span></a>
                 <a className="hero-text-link" href="/resume.pdf" download>Download résumé</a>
@@ -43,7 +44,7 @@ export default function Hero() {
             <div className="hero-photo-frame">
               <img src="/assets/portrait-hero.webp" alt="Adnan Mashrur Sadad" width="920" height="1150" fetchPriority="high" />
             </div>
-            <figcaption>Adnan Mashrur Sadad</figcaption>
+            <figcaption><span>Adnan Mashrur Sadad</span><span className="portrait-note">AI & software</span></figcaption>
           </motion.figure>
         </div>
         <div className="hero-foot">

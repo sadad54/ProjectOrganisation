@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import useMotionPreference from '../hooks/useMotionPreference';
 
 /* =====================================================================
    LATENT FIELD — the background is an embedding space sitting in the dark.
@@ -16,13 +16,14 @@ import { useReducedMotion } from 'framer-motion';
    Reduced motion → one static lit frame, no loop.
    ===================================================================== */
 export default function BackgroundFX() {
-  const reduce = useReducedMotion();
+  const reduce = useMotionPreference();
   const cvRef = useRef(null);
 
   useEffect(() => {
     const cv = cvRef.current;
     if (!cv) return;
     const ctx = cv.getContext('2d');
+    if (!ctx) return;
     const DPR = Math.min(devicePixelRatio || 1, 2);
 
     // seeded PRNG so the field is stable across reloads / resizes
@@ -86,12 +87,17 @@ export default function BackgroundFX() {
       ty = innerHeight * 0.4,
       lx = tx,
       ly = ty,
-      auto = !fine,
+      auto = true,
       autoT = rnd() * 6.28,
       raf = 0,
-      running = true;
+      running = document.visibilityState === 'visible';
 
     function draw() {
+      const pageProgress = window.scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight);
+      const palettes = [[255, 155, 106], [183, 186, 255], [164, 237, 200]];
+      const position = Math.min(1.999, pageProgress * 2);
+      const base = Math.floor(position), mix = position - base;
+      const rgb = palettes[base].map((v, i) => Math.round(v + (palettes[base + 1][i] - v) * mix)).join(',');
       const R = Math.min(460, Math.max(300, W * 0.29));
       if (!reduce && auto) {
         autoT += 0.0045;
@@ -110,9 +116,9 @@ export default function BackgroundFX() {
 
       // the light itself — a soft warm wash, brighter core
       const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, R);
-      g.addColorStop(0, 'rgba(255,106,61,0.085)');
-      g.addColorStop(0.5, 'rgba(255,106,61,0.03)');
-      g.addColorStop(1, 'rgba(255,106,61,0)');
+      g.addColorStop(0, `rgba(${rgb},0.12)`);
+      g.addColorStop(0.5, `rgba(${rgb},0.04)`);
+      g.addColorStop(1, `rgba(${rgb},0)`);
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
 
@@ -130,7 +136,7 @@ export default function BackgroundFX() {
         const lenFall = 1 - Math.min(len / MAX_EDGE, 1);
         const al = Math.pow(near, 1.5) * lenFall * 0.6;
         if (al < 0.012) continue;
-        ctx.strokeStyle = `rgba(255,106,61,${al.toFixed(3)})`;
+        ctx.strokeStyle = `rgba(${rgb},${al.toFixed(3)})`;
         ctx.beginPath();
         ctx.moveTo(ax, ay);
         ctx.lineTo(bx, by);
@@ -154,12 +160,12 @@ export default function BackgroundFX() {
         }
         const aa = Math.min(a, 0.98);
         if (aa > 0.5) {
-          ctx.fillStyle = `rgba(255,106,61,${(aa * 0.22).toFixed(3)})`;
+          ctx.fillStyle = `rgba(${rgb},${(aa * 0.22).toFixed(3)})`;
           ctx.beginPath();
           ctx.arc(x, y, 3.4 + aa * 3.2, 0, 6.283);
           ctx.fill();
         }
-        ctx.fillStyle = `rgba(255,120,74,${aa.toFixed(3)})`;
+        ctx.fillStyle = `rgba(${rgb},${aa.toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(x, y, 1 + aa * 2.3, 0, 6.283);
         ctx.fill();
@@ -168,11 +174,11 @@ export default function BackgroundFX() {
       // the nearest point IS the retrieved match — bright core + ring
       if (nd < R) {
         const q = 1 - nd / R;
-        ctx.fillStyle = `rgba(255,180,140,${(0.5 + q * 0.45).toFixed(3)})`;
+        ctx.fillStyle = `rgba(${rgb},${(0.5 + q * 0.45).toFixed(3)})`;
         ctx.beginPath();
         ctx.arc(nx, ny, 2.6, 0, 6.283);
         ctx.fill();
-        ctx.strokeStyle = `rgba(255,138,92,${(0.18 + q * 0.4).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(${rgb},${(0.18 + q * 0.4).toFixed(3)})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(nx, ny, 9 + (1 - q) * 18, 0, 6.283);
@@ -187,6 +193,7 @@ export default function BackgroundFX() {
       tx = e.clientX;
       ty = e.clientY;
     }
+    function onResize() { resize(); if (reduce) draw(); }
     function onVis() {
       running = document.visibilityState === 'visible';
       if (running && !reduce) {
@@ -195,7 +202,7 @@ export default function BackgroundFX() {
       }
     }
     if (fine) window.addEventListener('pointermove', onMove, { passive: true });
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', onResize);
     document.addEventListener('visibilitychange', onVis);
     draw();
 
@@ -203,7 +210,7 @@ export default function BackgroundFX() {
       running = false;
       cancelAnimationFrame(raf);
       if (fine) window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVis);
     };
   }, [reduce]);
