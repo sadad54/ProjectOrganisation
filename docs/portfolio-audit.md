@@ -1,5 +1,11 @@
 # Portfolio audit and editorial redesign
 
+## Revision 3 — saturated colour and scroll detail
+
+Replaced pastel surfaces with burnt orange (#F56332), emerald (#00BA88), and electric indigo (#6550EE), using separate lighter accent colours for text. The contact surface is now deep emerald (#075E48). Reduced diffuse neural glow while strengthening connections. Added continuous chapter progress and subtle scroll-linked screenshot movement, retaining static mobile/reduced-motion layouts.
+
+Validation: production build passes. Calculated contrast for the seven revised text/surface pairs is at least 5.3:1. This verifies those pairs, not whole-page accessibility. Browser visual and interaction checks remain outstanding.
+
 ## Revision 2 — personality and scrollytelling
 
 The owner preferred a more vibrant direction and explicitly requested the original interactive neural field. This revision restores the pointer-responsive field with a scroll-interpolated tangerine, periwinkle, and mint palette. A three-chapter project story now pairs the problem, engineering decision, and result with existing product screenshots. The hero introduces Adnan personally; project accents and a mint contact section extend the colour throughout the page.

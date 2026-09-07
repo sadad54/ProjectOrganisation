@@ -94,7 +94,7 @@ export default function BackgroundFX() {
 
     function draw() {
       const pageProgress = window.scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight);
-      const palettes = [[255, 155, 106], [183, 186, 255], [164, 237, 200]];
+      const palettes = [[255, 102, 48], [108, 79, 255], [0, 205, 145]];
       const position = Math.min(1.999, pageProgress * 2);
       const base = Math.floor(position), mix = position - base;
       const rgb = palettes[base].map((v, i) => Math.round(v + (palettes[base + 1][i] - v) * mix)).join(',');
@@ -116,8 +116,8 @@ export default function BackgroundFX() {
 
       // the light itself — a soft warm wash, brighter core
       const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, R);
-      g.addColorStop(0, `rgba(${rgb},0.12)`);
-      g.addColorStop(0.5, `rgba(${rgb},0.04)`);
+      g.addColorStop(0, `rgba(${rgb},0.055)`);
+      g.addColorStop(0.5, `rgba(${rgb},0.018)`);
       g.addColorStop(1, `rgba(${rgb},0)`);
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
@@ -134,7 +134,7 @@ export default function BackgroundFX() {
         if (dl > R) continue;
         const near = 1 - dl / R;
         const lenFall = 1 - Math.min(len / MAX_EDGE, 1);
-        const al = Math.pow(near, 1.5) * lenFall * 0.6;
+        const al = Math.pow(near, 1.5) * lenFall * 0.8;
         if (al < 0.012) continue;
         ctx.strokeStyle = `rgba(${rgb},${al.toFixed(3)})`;
         ctx.beginPath();
