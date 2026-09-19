@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-// §2.3 — visual order after the reorder: Approach now sits above Work.
+// Keep navigation order aligned with the page.
 const SECTIONS = [
   ['top', 'Intro'],
-  ['about', 'About'],
-  ['loop', 'Approach'],
   ['work', 'Work'],
+  ['loop', 'Approach'],
+  ['about', 'About'],
   ['toolkit', 'Toolkit'],
   ['contact', 'Contact'],
 ];
@@ -78,12 +78,12 @@ export default function Nav() {
         transition={{ duration: reduceMotion ? 0 : 0.24, ease: EASE }}
       >
         <a className="nav-mark" href="#top">
-          <b>ADNAN M. SADAD</b> <span>AI / Data / Full Stack</span>
+          <b>Adnan Sadad<span className="wordmark-period">.</span></b>
         </a>
         <div className="nav-right">
           {[
-            ['#loop', 'Approach'],
             ['#work', 'Work'],
+            ['#loop', 'Approach'],
             ['#contact', 'Contact'],
           ].map(([href, label]) => {
             const isActive = SECTIONS[active]?.[0] === href.slice(1);

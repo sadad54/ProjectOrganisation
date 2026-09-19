@@ -79,9 +79,6 @@ export default function Contact() {
 
   return (
     <section className="contact" id="contact" aria-label="Contact">
-      <canvas id="fluid2" aria-hidden="true"></canvas>
-      <canvas id="contact3d" aria-hidden="true"></canvas>
-      <div className="contact-veil" aria-hidden="true"></div>
       <div className="wrap">
         <motion.p className="eyebrow" initial={initial} whileInView="show" viewport={viewport} variants={rise}>
           Contact
@@ -89,13 +86,10 @@ export default function Contact() {
         <div className="contact-grid">
           <div>
             <motion.h2 className="big" initial={initial} whileInView="show" viewport={viewport} variants={rise}>
-              Building something interesting? I&rsquo;d like to hear about it.
+              Let&rsquo;s build something useful.
             </motion.h2>
             <motion.p className="lede" initial={initial} whileInView="show" viewport={viewport} variants={rise}>
-              This site is a running log of things I&rsquo;ve built and the decisions behind them, not a
-              pitch. If something here resonates, or you&rsquo;re working on a problem you think
-              I&rsquo;d enjoy digging into, say hello. Good conversations about interesting work are
-              reason enough to reach out.
+              I&rsquo;m open to AI engineering and software roles. If my work fits a problem your team is solving, I&rsquo;d like to talk.
             </motion.p>
             <motion.p
               className="contact-time"

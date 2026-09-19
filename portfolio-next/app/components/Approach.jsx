@@ -33,15 +33,14 @@ export default function Approach() {
         >
           <div>
             <motion.p className="eyebrow" variants={rise}>
-              How I think about engineering trade-offs
+              Engineering notes
             </motion.p>
             <motion.h2 className="title" style={{ marginBottom: 0 }} variants={rise}>
-              Four decisions I&rsquo;d defend in an interview.
+              The decisions behind the work.
             </motion.h2>
           </div>
           <motion.p className="lede" variants={rise}>
-            Each one is a real decision from a shipped project.{' '}
-            <strong>Scroll through — the diagram draws itself.</strong>
+            Output validation, model drift, uncertainty, and adaptive follow-ups. Four problems, and the choices I made to handle them.
           </motion.p>
         </motion.div>
       </div>
