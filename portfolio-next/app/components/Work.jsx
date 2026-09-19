@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import ProofHireScene from './scenes/ProofHireScene';
 
 const EASE = [0.2, 0, 0, 1];
 
@@ -71,7 +72,7 @@ function Shot({ dataShots, alt, mobileFit }) {
 }
 
 /* =========================================================================
-   TIER 1 — FEATURED (§2.1). Four projects, full treatment: a sticky left
+   TIER 1 — FEATURED (§2.1). Five projects, full treatment: a sticky left
    column carrying name + one headline number, a scrolling right column with
    the bullets, chips, links and code panel.
    ========================================================================= */
@@ -367,6 +368,28 @@ export default function Work() {
         </h2>
 
         <div className="feat-list">
+          <Featured
+            id="p-proofhire"
+            name="ProofHire"
+            year="2026"
+            kind="AI engineering / Full stack"
+            metric="5 ms"
+            metricLabel="retrieval p50 · 20k rows · local benchmark"
+            hook="Your code is the evidence. Every application claim has to earn its place."
+            notes={[
+              'Turns authorized GitHub repositories into a <b>provenance-aware evidence graph</b>, tracing technical claims to source files and commits. Incremental sync processes changed artifacts and marks stale evidence.',
+              '<b>Hybrid retrieval + LLM reranking</b> map job requirements to Strong / Partial / Gap / Unknown coverage. Two-stage indexed candidate generation made retrieval 80× faster at 20k rows in the local benchmark.',
+              'Generates resumes and cover letters with <b>claim-level citations, deterministic fact guards and bounded repair</b>. Unsupported claims are blocked from export; rendered PDFs undergo parse-back and overflow checks.',
+              'Built end to end: <b>Next.js / React, FastAPI, PostgreSQL + pgvector and Redis workers</b>, with an interactive evidence constellation, streaming progress, typed API contracts and Playwright accessibility checks.',
+            ]}
+            chips={['Python', 'FastAPI', 'Next.js', 'React', 'TypeScript', 'PostgreSQL', 'pgvector', 'Redis', 'RAG', 'Docker', 'Playwright']}
+            links={[
+              { label: 'Repository', href: 'https://github.com/sadad54/ResumeGitProject' },
+              { label: 'Trace a claim', href: '#slide-proofhire', internal: true },
+            ]}
+          />
+          <ProofHireScene />
+
           <Featured
             id="p-driftline"
             name="Driftline"

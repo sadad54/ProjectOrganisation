@@ -56,6 +56,7 @@ function applyRM(on) {
 }
 
 const PROJECTS = [
+  ['p-proofhire', 'ProofHire'],
   ['p-driftline', 'Driftline'],
   ['p-interviewpilot', 'InterviewPilot'],
   ['p-wc26', 'WC26 Predictor'],
