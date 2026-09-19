@@ -96,7 +96,16 @@ export default function CommandPalette() {
       h: 'External',
       go: () => window.open('https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237', '_blank', 'noopener'),
     },
-    { n: 'Download résumé', h: 'File', go: () => window.open('resume.pdf', '_blank', 'noopener') },
+    {
+      n: 'Download résumé — AI / ML',
+      h: 'File',
+      go: () => window.open('/Adnan_Sadad_AI_ML_Resume_LaTeX.pdf', '_blank', 'noopener'),
+    },
+    {
+      n: 'Download résumé — Full-Stack',
+      h: 'File',
+      go: () => window.open('/Adnan_Sadad_SWE_Resume_LaTeX.pdf', '_blank', 'noopener'),
+    },
     { n: 'The repair-loop scene', h: 'Approach', go: () => jump('slide-repair', reduceMotion) },
     {
       n: rmOn ? 'Turn motion back on' : 'Toggle reduced motion',

@@ -22,7 +22,20 @@ const REACH = [
   { href: `mailto:${EMAIL}`, v: EMAIL, k: 'Email', kind: 'email' },
   { href: 'https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237', v: 'LinkedIn', k: 'Profile ↗', kind: 'external' },
   { href: 'https://github.com/sadad54', v: 'GitHub', k: 'Code ↗', kind: 'external' },
-  { href: 'resume.pdf', v: 'Résumé', k: 'PDF ↓', kind: 'download' },
+  {
+    href: '/Adnan_Sadad_AI_ML_Resume_LaTeX.pdf',
+    downloadAs: 'Adnan-Sadad-Resume-AI-ML.pdf',
+    v: 'Résumé — AI / ML',
+    k: 'PDF ↓',
+    kind: 'download',
+  },
+  {
+    href: '/Adnan_Sadad_SWE_Resume_LaTeX.pdf',
+    downloadAs: 'Adnan-Sadad-Resume-Full-Stack.pdf',
+    v: 'Résumé — Full-Stack',
+    k: 'PDF ↓',
+    kind: 'download',
+  },
 ];
 
 // §6.6 — local time indicator. Answers "is there a real person in a real
@@ -102,7 +115,7 @@ export default function Contact() {
                   href={r.href}
                   target={r.kind === 'external' ? '_blank' : undefined}
                   rel={r.kind === 'external' ? 'noopener' : undefined}
-                  download={r.kind === 'download' ? true : undefined}
+                  download={r.kind === 'download' ? r.downloadAs || true : undefined}
                   onClick={r.kind === 'email' ? copyEmail : undefined}
                   aria-label={r.kind === 'email' ? 'Copy email address' : undefined}
                   whileHover={{ x: 6, color: 'var(--signal-hover)' }}

@@ -45,7 +45,7 @@ Site sections: hero (status line, headline, CTA, portrait), About (bio, timeline
 
 - Real, shipped project detail for all 7 case studies (architecture, metrics, stack, decisions) already written into the site — not placeholder copy.
 - Real metrics quoted: 0.98 ROC-AUC / 0.89 PR-AUC on Fraud Detection (284,807 transactions, 0.17% positive rate); 85% categorisation precision / 500+ receipts/month on ExpenSense; Gold Medal & Best Video at the myHCI-UX Student Design Challenge (national, Malaysia); Secretary Treasurer, SOFEA Society, workshops for 200+ students.
-- Résumé PDF at `resume.pdf` (also `portfolio-next/public/resume.pdf`), served by the "Résumé" link and the ⌘K "Download résumé" action.
+- Two résumé variants, both in `portfolio-next/public/`: `Adnan_Sadad_AI_ML_Resume_LaTeX.pdf` (AI/ML, leads) and `Adnan_Sadad_SWE_Resume_LaTeX.pdf` (Full-Stack), each served by its own row in the Contact "reach" list and its own ⌘K "Download résumé" action (2026-09-19). Superseded single-résumé PDFs live outside the served folder at `portfolio-next/old_resumes/` for archival only — never link to that path from the site.
 - Assets on hand: `assets/portrait.jpeg` (real photo, used in About section), `assets/hero.png` (source headshot, unprocessed), `assets/adnan-headshot.webp` (processed/graded headshot, produced but not currently wired in), `assets/bobblehead.webp` (current hero visual).
 - Absent: repo link for Fraud Detection; demo links for six projects; screenshots for most/all project cards — future work must not fabricate these, only use the placeholder mechanism already in place.
 
