@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import ProofHireScene from './scenes/ProofHireScene';
 
 const EASE = [0.2, 0, 0, 1];
 
@@ -388,7 +387,6 @@ export default function Work() {
               { label: 'Trace a claim', href: '#slide-proofhire', internal: true },
             ]}
           />
-          <ProofHireScene />
 
           <Featured
             id="p-driftline"

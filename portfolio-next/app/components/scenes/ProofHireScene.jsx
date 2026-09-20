@@ -30,7 +30,7 @@ function EvidenceStory({ p }) {
   const exportClaim = useTransform(p, [0.75, 0.95], [0, 1]);
 
   return (
-    <div className="scene-wrap">
+    <div className="scene-wrap wrap">
       <div className="scene-copy">
         <p className="scene-eyebrow">ProofHire · Evidence before eloquence</p>
         <h3 className="scene-h" id="scene-proofhire-h">A convincing claim is easy. A defensible one needs a source.</h3>

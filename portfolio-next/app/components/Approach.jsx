@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import RepairLoopScene from './scenes/RepairLoopScene';
 import DriftlineScene from './scenes/DriftlineScene';
 import MonteCarloScene from './scenes/MonteCarloScene';
-import FollowUpScene from './scenes/FollowUpScene';
+import ProofHireScene from './scenes/ProofHireScene';
 
 const EASE = [0.2, 0, 0, 1];
 const viewport = { once: true, amount: 0.15, margin: '0px 0px -8% 0px' };
@@ -49,7 +49,7 @@ export default function Approach() {
       <RepairLoopScene />
       <DriftlineScene />
       <MonteCarloScene />
-      <FollowUpScene />
+      <ProofHireScene />
     </section>
   );
 }
