@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const viewport = {
-  themeColor: '#0B0B0D',
+  themeColor: '#F5F1E8', // paper — matches --ink on the bone palette
 };
 
 export const metadata = {
@@ -28,13 +28,20 @@ export default function RootLayout({ children }) {
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "document.documentElement.classList.add('js');try{if(localStorage.getItem('rm')==='1')document.documentElement.classList.add('rm')}catch(e){}",
+              "document.documentElement.classList.add('js');" +
+              "try{if(localStorage.getItem('rm')==='1')document.documentElement.classList.add('rm')}catch(e){}" +
+              // ?theme=acid|thermal, sticky across navigation; ?theme=sodium resets
+              // bone is the site palette; ?theme= still reaches the alternates
+              "try{var t=new URLSearchParams(location.search).get('theme');" +
+              "if(t){localStorage.setItem('theme',t)}else{t=localStorage.getItem('theme')}" +
+              "document.documentElement.dataset.theme=t||'bone'}catch(e){" +
+              "document.documentElement.dataset.theme='bone'}",
           }}
         />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Archivo:wght@600;700&family=Abril+Fatface&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Archivo:wght@600;700&family=Abril+Fatface&family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap"
           rel="stylesheet"
         />
       </head>

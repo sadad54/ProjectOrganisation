@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { activeTheme, rgba } from '../theme';
 
 /* =====================================================================
    LATENT FIELD — the background is an embedding space sitting in the dark.
@@ -23,6 +24,7 @@ export default function BackgroundFX() {
     const cv = cvRef.current;
     if (!cv) return;
     const ctx = cv.getContext('2d');
+    const C = activeTheme();
     const DPR = Math.min(devicePixelRatio || 1, 2);
 
     // seeded PRNG so the field is stable across reloads / resizes
@@ -110,9 +112,9 @@ export default function BackgroundFX() {
 
       // the light itself — a soft warm wash, brighter core
       const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, R);
-      g.addColorStop(0, 'rgba(255,106,61,0.085)');
-      g.addColorStop(0.5, 'rgba(255,106,61,0.03)');
-      g.addColorStop(1, 'rgba(255,106,61,0)');
+      g.addColorStop(0, rgba(C.fieldWash, C.light ? 0.10 : 0.085));
+      g.addColorStop(0.5, rgba(C.fieldWash, C.light ? 0.04 : 0.03));
+      g.addColorStop(1, rgba(C.fieldWash, 0));
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
 
@@ -130,7 +132,7 @@ export default function BackgroundFX() {
         const lenFall = 1 - Math.min(len / MAX_EDGE, 1);
         const al = Math.pow(near, 1.5) * lenFall * 0.6;
         if (al < 0.012) continue;
-        ctx.strokeStyle = `rgba(255,106,61,${al.toFixed(3)})`;
+        ctx.strokeStyle = rgba(C.field, al.toFixed(3));
         ctx.beginPath();
         ctx.moveTo(ax, ay);
         ctx.lineTo(bx, by);
@@ -152,14 +154,14 @@ export default function BackgroundFX() {
           nx = x;
           ny = y;
         }
-        const aa = Math.min(a, 0.98);
+        const aa = Math.min(a, C.fieldAlpha ?? 0.98);
         if (aa > 0.5) {
-          ctx.fillStyle = `rgba(255,106,61,${(aa * 0.22).toFixed(3)})`;
+          ctx.fillStyle = rgba(C.field, (aa * (C.light ? 0.12 : 0.22)).toFixed(3));
           ctx.beginPath();
           ctx.arc(x, y, 3.4 + aa * 3.2, 0, 6.283);
           ctx.fill();
         }
-        ctx.fillStyle = `rgba(255,120,74,${aa.toFixed(3)})`;
+        ctx.fillStyle = rgba(C.light ? C.field : C.signalBright, aa.toFixed(3));
         ctx.beginPath();
         ctx.arc(x, y, 1 + aa * 2.3, 0, 6.283);
         ctx.fill();
@@ -168,11 +170,11 @@ export default function BackgroundFX() {
       // the nearest point IS the retrieved match — bright core + ring
       if (nd < R) {
         const q = 1 - nd / R;
-        ctx.fillStyle = `rgba(255,180,140,${(0.5 + q * 0.45).toFixed(3)})`;
+        ctx.fillStyle = rgba(C.light ? C.signal : C.signalPale, (0.5 + q * 0.45).toFixed(3));
         ctx.beginPath();
         ctx.arc(nx, ny, 2.6, 0, 6.283);
         ctx.fill();
-        ctx.strokeStyle = `rgba(255,138,92,${(0.18 + q * 0.4).toFixed(3)})`;
+        ctx.strokeStyle = rgba(C.light ? C.signal : C.signalSoft, (0.18 + q * 0.4).toFixed(3));
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(nx, ny, 9 + (1 - q) * 18, 0, 6.283);

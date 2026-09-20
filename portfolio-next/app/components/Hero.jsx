@@ -9,6 +9,7 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion';
+import { THEMES, DEFAULT_THEME, activeTheme } from '../theme';
 
 const EASE = [0.2, 0, 0, 1];
 
@@ -86,6 +87,16 @@ export default function Hero() {
   const initial = reduceMotion ? 'show' : 'hidden';
   const heroRef = useRef(null);
 
+  /* The rim light is coloured to agree with the accent, so the portrait is a
+     theme asset. Resolved after mount rather than during render: on the server
+     there is no data-theme to read, and swapping src mid-hydration would
+     mismatch. */
+  const [portrait, setPortrait] = useState(THEMES[DEFAULT_THEME].portrait);
+  useEffect(() => {
+    const p = activeTheme().portrait;
+    if (p) setPortrait(p);
+  }, []);
+
   // desktop-only shallow parallax as the hero scrolls away (§6.1)
   const [desktop, setDesktop] = useState(false);
   useEffect(() => {
@@ -156,11 +167,12 @@ export default function Hero() {
                 <span className="halo" aria-hidden="true"></span>
                 <span className="portrait-brackets" aria-hidden="true"></span>
                 <img
-                  src="assets/portrait-hero-rim-light.webp"
-                  alt="Black-and-white studio portrait of Adnan Mashrur Sadad with an orange rim light"
+                  src={portrait}
+                  alt="Studio portrait of Adnan Mashrur Sadad, lit from one side by a coloured rim light"
                   width="1000"
-                  height="1339"
+                  height="1333"
                   loading="eager"
+                  fetchPriority="high"
                 />
                 <span className="portrait-tag" aria-hidden="true">
                   Portrait <span className="sep">/</span> Rim Light <span className="sep">/</span> KL 2026

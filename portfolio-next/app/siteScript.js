@@ -5,10 +5,12 @@
 //    so every `window.gsap`/`window.ScrollTrigger` check further down keeps working unchanged.
 import gsapLib from 'gsap';
 import { ScrollTrigger as ScrollTriggerLib } from 'gsap/ScrollTrigger';
+import { activeTheme } from './theme';
 
 if (typeof window !== 'undefined' && !window.__siteInited) {
   window.__siteInited = true;
   window.gsap = gsapLib;
+  const PAL = activeTheme();
   window.ScrollTrigger = ScrollTriggerLib;
 /* =====================================================================
    0. ENVIRONMENT
@@ -84,9 +86,9 @@ NOISE,
 '  dye*=0.9942;',
 '  float d=seg(p,uP*uAsp,uPPrev*uAsp);',
 '  float inj=exp(-d*d/0.0022)*uForce;',
-'  vec3 warm=vec3(0.58,0.30,0.22);',
-'  vec3 cool=vec3(0.14,0.15,0.20);',
-'  vec3 rose=vec3(0.42,0.17,0.21);',
+'  vec3 warm=vec3('+PAL.fluid.warm.join(',')+');',
+'  vec3 cool=vec3('+PAL.fluid.cool.join(',')+');',
+'  vec3 rose=vec3('+PAL.fluid.rose.join(',')+');',
 '  float mixv=0.5+0.5*sin(uTime*0.45);',
 '  vec3 c=mix(warm,cool,mixv);',
 '  c=mix(c,rose,0.10+0.14*sin(uTime*0.21+1.7));',
@@ -118,12 +120,12 @@ NOISE,
 '  float b=texture2D(uTex,uv-vec2(ab,0.0)).b;',
 '  vec3 dye=vec3(r,g,b);',
 '  float lum=dot(dye,vec3(0.30,0.59,0.11));',
-'  vec3 base=vec3(0.031,0.031,0.059);',
-'  vec3 col=base+dye*0.82;',
-'  col+=vec3(0.02,0.06,0.16)*smoothstep(0.02,0.48,lum);',
-'  col=col/(col+0.86)*1.22;',
+'  vec3 base=vec3('+PAL.fluid.base.join(',')+');',
+(PAL.light?'  vec3 col=base-dye*0.42;':'  vec3 col=base+dye*0.82;'),
+(PAL.light?'  col-=vec3('+PAL.fluid.lift.join(',')+')*smoothstep(0.02,0.48,lum);':'  col+=vec3('+PAL.fluid.lift.join(',')+')*smoothstep(0.02,0.48,lum);'),
+(PAL.light?'  col=clamp(col,0.0,1.0);':'  col=col/(col+0.86)*1.22;'),
 '  vec2 c=uv-0.5;',
-'  col*=1.0-smoothstep(0.20,0.74,length(c))*0.66;',
+(PAL.light?'  col*=1.0-smoothstep(0.30,0.80,length(c))*0.10;':'  col*=1.0-smoothstep(0.20,0.74,length(c))*0.66;'),
 '  float n=snoise(uv*vec2(920.0,780.0)+uTime*13.0)*0.018;',
 '  col+=n;',
 '  gl_FragColor=vec4(max(col,0.0),1.0);',
@@ -325,6 +327,11 @@ if (!RM) {
     nodeOpacity = (typeof nodeOpacity === 'number') ? nodeOpacity : 0.85;
     lineOpacity = (typeof lineOpacity === 'number') ? lineOpacity : 0.16;
     ptSize = (typeof ptSize === 'number') ? ptSize : 0.05;
+    // Light themes draw the network with normal blending, which lands far
+    // heavier on paper than additive does on black — scale the whole thing back.
+    const NA = (typeof PAL.netAlpha === 'number') ? PAL.netAlpha : 1;
+    nodeOpacity *= NA;
+    lineOpacity *= NA;
     if (!canvas) return;
     let THREE;
     try { THREE = await import('three'); } catch (err) { return; }
@@ -357,7 +364,7 @@ if (!RM) {
       const nodeArr = new Float32Array(nNodes * 3);
       nodePos.forEach(function(p, i){ nodeArr[i*3] = p[0]; nodeArr[i*3+1] = p[1]; nodeArr[i*3+2] = p[2]; });
       nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodeArr, 3));
-      nodeMat = new THREE.PointsMaterial({size:ptSize, color:color, transparent:true, opacity:nodeOpacity, blending:THREE.AdditiveBlending, depthWrite:false});
+      nodeMat = new THREE.PointsMaterial({size:ptSize, color:color, transparent:true, opacity:nodeOpacity, blending:PAL.netBlend==='normal'?THREE.NormalBlending:THREE.AdditiveBlending, depthWrite:false});
       nodeBaseOpacity = nodeOpacity;
       group.add(new THREE.Points(nodeGeo, nodeMat));
 
@@ -385,7 +392,7 @@ if (!RM) {
       });
       const lineGeo = new THREE.BufferGeometry();
       lineGeo.setAttribute('position', new THREE.BufferAttribute(lineArr, 3));
-      lineMat = new THREE.LineBasicMaterial({color:color, transparent:true, opacity:lineOpacity, blending:THREE.AdditiveBlending});
+      lineMat = new THREE.LineBasicMaterial({color:color, transparent:true, opacity:lineOpacity, blending:PAL.netBlend==='normal'?THREE.NormalBlending:THREE.AdditiveBlending});
       lineBaseOpacity = lineOpacity;
       group.add(new THREE.LineSegments(lineGeo, lineMat));
 
@@ -398,7 +405,7 @@ if (!RM) {
       const pulseArr = new Float32Array(nPulse * 3);
       const pulseGeo = new THREE.BufferGeometry();
       pulseGeo.setAttribute('position', new THREE.BufferAttribute(pulseArr, 3));
-      const pulseMat = new THREE.PointsMaterial({size:0.09, color:0xFFB088, transparent:true, opacity:0.95, blending:THREE.AdditiveBlending, depthWrite:false});
+      const pulseMat = new THREE.PointsMaterial({size:0.09, color:PAL.netPulse, transparent:true, opacity:0.95*NA, blending:PAL.netBlend==='normal'?THREE.NormalBlending:THREE.AdditiveBlending, depthWrite:false});
       pulses = new THREE.Points(pulseGeo, pulseMat);
       group.add(pulses);
       neuralEdges = edges; neuralNodePos = nodePos;
@@ -413,11 +420,11 @@ if (!RM) {
         pos[i*3+2] = r * Math.cos(phi);
       }
       geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      nodeMat = new THREE.PointsMaterial({size:0.026, color:color, transparent:true, opacity:0.82, blending:THREE.AdditiveBlending, depthWrite:false});
+      nodeMat = new THREE.PointsMaterial({size:0.026, color:color, transparent:true, opacity:0.82*NA, blending:PAL.netBlend==='normal'?THREE.NormalBlending:THREE.AdditiveBlending, depthWrite:false});
       nodeBaseOpacity = 0.82;
       group.add(new THREE.Points(geo, nodeMat));
 
-      lineMat = new THREE.MeshBasicMaterial({color:0xE5484D, wireframe:true, transparent:true, opacity:0.14});
+      lineMat = new THREE.MeshBasicMaterial({color:PAL.netLine, wireframe:true, transparent:true, opacity:0.14*NA});
       lineBaseOpacity = 0.14;
       const shell = new THREE.Mesh(new THREE.IcosahedronGeometry(radius + 0.35, 1), lineMat);
       group.add(shell);
@@ -501,8 +508,8 @@ if (!RM) {
   // partly behind the headline and now needs to hold its own next to the
   // rim-lit portrait photo, so opacity/size are pushed further (additive
   // blending on both materials is already on — this just gives it more to work with)
-  if (heroCanvas) mountScene(heroCanvas, 0xFF6A3D, 130, 2.9, true, 1.0, 0.42, 0.08);
-  if (contactCanvas) mountScene(contactCanvas, 0xFF6A3D, 1500, 1.9, false);
+  if (heroCanvas) mountScene(heroCanvas, PAL.net, 130, 2.9, true, 1.0, 0.42, 0.08);
+  if (contactCanvas) mountScene(contactCanvas, PAL.net, 1500, 1.9, false);
 
   // tie the hero network's rotation/zoom/fade to scroll position
   const heroSection = $('#top');

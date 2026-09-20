@@ -1,63 +1,81 @@
 ---
 name: Adnan Mashrur Sadad — Portfolio
-description: A dark, single-signal engineering portfolio built around one warm accent glowing against near-total black.
+description: A warm-paper engineering portfolio set in an editorial serif, built around one cobalt signal on printed ground.
 colors:
-  signal-orange: "#FF6A3D"
-  signal-orange-hover: "#FF8A5C"
-  signal-orange-press: "#E0501F"
-  alert-rose: "#E5484D"
-  void-black: "#0B0B0D"
-  surface-1: "#131315"
-  surface-2: "#1B1B1E"
-  surface-3: "#252528"
-  warm-bone: "#F3F0EA"
-  shadow-gray: "#8C8A87"
-  shadow-gray-deep: "#48474A"
-  hairline: "rgba(255,106,61,0.10)"
-  hairline-faint: "rgba(255,106,61,0.05)"
+  signal-cobalt: "#1B35C9"
+  signal-cobalt-hover: "#2644E0"
+  signal-cobalt-press: "#152AA0"
+  warm-accent: "#C2410C"
+  alert-rose: "#B3261E"
+  paper: "#F5F1E8"
+  paper-1: "#EDE7DA"
+  paper-2: "#E3DCCB"
+  paper-raised: "#FDFBF6"
+  ink: "#16130E"
+  ink-secondary: "#5C554A"
+  ink-tertiary: "#6E665A"
+  hairline: "rgba(27,53,201,0.20)"
+  hairline-faint: "rgba(27,53,201,0.10)"
 typography:
   hero-display:
-    fontFamily: "Archivo, Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(3rem, 8.6vw, 8rem)"
     fontWeight: 700
     lineHeight: 0.94
     letterSpacing: "-0.042em"
   hero-display-accent:
-    fontFamily: "Abril Fatface, Georgia, serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(3rem, 8.6vw, 8rem)"
     fontWeight: 400
     letterSpacing: "-0.01em"
   contact-display:
-    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(2.3rem, 7vw, 5.4rem)"
     fontWeight: 600
     lineHeight: 0.96
     letterSpacing: "-0.042em"
   display:
-    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(2rem, 4.6vw, 3.5rem)"
     fontWeight: 600
     lineHeight: 1.02
     letterSpacing: "-0.03em"
   project-name:
-    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(1.75rem, 3.5vw, 2.75rem)"
     fontWeight: 600
     lineHeight: 1.04
     letterSpacing: "-0.03em"
+  featured-name:
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
+    fontSize: "clamp(1.6rem, 3vw, 2.4rem)"
+    fontWeight: 600
+    lineHeight: 1.04
+    letterSpacing: "-0.03em"
+  compact-name:
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
+    fontSize: "clamp(1.05rem, 1.7vw, 1.35rem)"
+    fontWeight: 600
+    letterSpacing: "-0.02em"
+  metric-value-lg:
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
+    fontSize: "clamp(1.9rem, 3.6vw, 2.7rem)"
+    fontWeight: 600
+    lineHeight: 1
+    letterSpacing: "-0.03em"
   metric-value:
-    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(1.5rem, 3vw, 2.1rem)"
     fontWeight: 600
     letterSpacing: "-0.03em"
   slide-heading:
-    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(1.35rem, 2.6vw, 1.9rem)"
     fontWeight: 600
     lineHeight: 1.12
     letterSpacing: "-0.02em"
   project-hook:
-    fontFamily: "Instrument Sans, Helvetica Neue, sans-serif"
+    fontFamily: "Instrument Serif, Instrument Sans, Georgia, serif"
     fontSize: "clamp(1.1rem, 1.9vw, 1.5rem)"
     fontWeight: 400
     lineHeight: 1.28
@@ -159,31 +177,31 @@ spacing:
   container: "1320px"
 components:
   button-primary:
-    backgroundColor: "{colors.warm-bone}"
-    textColor: "{colors.void-black}"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
     rounded: "{rounded.pill}"
     padding: "14px 24px"
   button-primary-hover:
-    backgroundColor: "{colors.signal-orange}"
-    textColor: "{colors.void-black}"
+    backgroundColor: "{colors.signal-cobalt-hover}"
+    textColor: "{colors.paper}"
   button-ghost:
     backgroundColor: "transparent"
-    textColor: "{colors.warm-bone}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.pill}"
     padding: "14px 24px"
   button-ghost-hover:
-    backgroundColor: "{colors.warm-bone}"
-    textColor: "{colors.void-black}"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
   tag:
     backgroundColor: "transparent"
-    textColor: "{colors.shadow-gray}"
+    textColor: "{colors.ink-secondary}"
     rounded: "{rounded.pill}"
     padding: "5px 10px"
   tag-live:
-    textColor: "{colors.signal-orange}"
+    textColor: "{colors.signal-cobalt}"
   slab:
-    backgroundColor: "{colors.surface-1}"
-    textColor: "{colors.shadow-gray}"
+    backgroundColor: "{colors.paper-1}"
+    textColor: "{colors.ink-secondary}"
     rounded: "{rounded.sm}"
     padding: "20px"
 ---
@@ -192,17 +210,21 @@ components:
 
 ## Overview
 
-**Creative North Star: "The Signal in the Dark"**
+**Creative North Star: "Ink on Paper"** *(revised 2026-09-20; supersedes "The Signal in the Dark")*
 
-One warm indicator light against near-total darkness. The system's own code names the accent `--signal` before it names it `--sodium` — this isn't a metaphor imposed from outside, it's what the implementation already calls itself. The base surface (`--ink`, #0B0B0D) sits at the very edge of black, and exactly one hue — a warm orange-red — is allowed to glow against it: a pulsing status dot in the hero, a hover state on a button, the cursor of a running process. Everything else — text, borders, secondary surfaces — stays in a narrow band of warm grays and off-white, so the signal color reads as *information*, not decoration.
+One cobalt signal on warm printed ground. The base surface (`--ink`, #F5F1E8) is paper, not black — the token keeps its structural name (ground) while its value inverted, which is why every component flipped polarity for free. Exactly one hue, a saturated cobalt, is allowed to carry state against it: the active nav rule, a hover, the retrieved match in the latent field. Everything else — text, borders, secondary surfaces — stays in a narrow band of warm grays and near-black ink, so the signal reads as *information*, not decoration.
 
-The system is unapologetically technical without being cold. Monospace labels (`Geist Mono`) carry metadata, timestamps, and status the way a terminal or a build log would; a distinctive "slab" component renders code and data with syntax-highlight-style inline color (comment / keyword / string / result), reinforcing that this is a working engineer's site, not a marketing template pretending to be one. Photography (the hero portrait, the About section photo) is the one place the system allows itself real depth — soft `drop-shadow` filters, not flat cards — floating those images above the flat plane everything else lives on.
+The palette moved off warm orange for two reasons, both structural rather than fashionable. First, the old accent (#FF6A3D) and the error rose (#E5484D) sat in the same hue family, so "live" and "failed" read almost identically in the Approach diagrams — a cool signal buys that separation back. Second, a dark ground with one accent is the default hedge for engineering portfolios; committing to paper, with this much motion craft still intact, is the more confident position. The rim-lit portrait is colour-matched to the accent rather than fighting it.
+
+The alternates (`?theme=sodium | acid | thermal | oxide`) are kept live as tokens, not as shipped options — useful for comparison, not a user-facing theme switcher.
+
+The system is unapologetically technical without being cold. Monospace labels (`Geist Mono`) carry metadata, timestamps, and status the way a terminal or a build log would; a distinctive "slab" component renders code and data with syntax-highlight-style inline color (comment / keyword / string / result), reinforcing that this is a working engineer's site, not a marketing template pretending to be one. Photography is handled as print, not as UI: the hero portrait is shot on white, has the paper multiply baked into the asset, and is masked to dissolve at its lower and left edges so it bleeds into the page like a plate rather than sitting in a frame. The About photo keeps a real `drop-shadow`, because it *is* a framed photograph.
 
 Confirmed rejection: generic SaaS gradient-and-glassmorphism — gradient text, frosted-glass cards, pastel palettes, rounded-everything softness. None of that belongs here; the system's restraint (one accent, flat surfaces, hairline borders) is the entire point, not a placeholder waiting to be prettied up.
 
 **Key Characteristics:**
-- Near-black base with exactly one warm accent color, used sparingly and functionally (status, hover, active states)
-- Monospace labels for all metadata/status text; a serif-free display face for headlines
+- Warm-paper base with exactly one cobalt accent, used sparingly and functionally (status, hover, active states)
+- Monospace labels for all metadata/status text; a high-contrast display serif (Instrument Serif) for headlines, Instrument Sans for body
 - Flat by default — depth comes from hairline borders and tonal surface steps, not shadows
 - A signature "slab" component renders code/data with terminal-style syntax coloring
 - Motion is restrained and purposeful: a pulsing status dot, hover-only color shifts, WebGL ambient effects that never demand attention
@@ -232,7 +254,7 @@ The palette is almost monochrome by design — a narrow range of near-black surf
 ### Named Rules
 **The One Signal Rule.** The accent hue is used on a small fraction of any given screen, and always to mean something (active, live, hovered, pressed, pulsing) — never as background fill or decoration. As of 2026-08-10 the signal has three tonal steps (default / hover / press) instead of one flat value, but they are three shades of the *same* hue gated to the *same* rule — this is tonal range for state, not a second accent color. Orange must never appear as a background tint, section divider, or decorative fill; if a design calls for that, it is a different brand decision, not an extension of this rule.
 
-**The Translucency Rule.** Gradients, veils, glows, and borders are built by varying the *opacity* of an already-documented base color (`--ink`/void-black for darkening veils, `--sodium`/signal-orange for glows and hairlines, `--rose`/alert-rose for error emphasis, `--bone`/warm-bone for faint highlight washes) — never by introducing a new hue. A component using `rgba(255,106,61,0.24)` instead of the documented `rgba(255,106,61,0.10)` hairline is still using signal orange, just at a different translucency for a different purpose (a stronger emphasis border vs. a quiet divider); it is not a new color.
+**The Translucency Rule.** Gradients, veils, glows, and borders are built by varying the *opacity* of an already-documented base color (`--ink-rgb` for veils, `--signal-rgb` for hairlines and accents, `--rose-rgb` for error emphasis, `--warm-rgb` for the portrait and hero dye) — never by introducing a new hue. A component using `rgba(var(--signal-rgb),0.24)` instead of the documented `rgba(var(--signal-rgb),0.10)` hairline is still using the signal, just at a different translucency for a different purpose (a stronger emphasis border vs. a quiet divider); it is not a new color. Every accent value in the codebase resolves through these tokens — there are no literal accent hexes outside the palette blocks.
 
 ## Typography
 
@@ -244,8 +266,10 @@ The palette is almost monochrome by design — a narrow range of near-black surf
 
 ### Hierarchy
 - **Hero Display** (Archivo, 700 weight, `clamp(3rem, 8.6vw, 8rem)`, 0.94 line-height, -0.042em tracking): "Hi, I'm" in the hero headline only.
-- **Hero Display Accent** (Abril Fatface, 400 weight, same size as Hero Display, -0.01em tracking, signal-orange): "Adnan." in the hero headline only — the one word on the site set in a display serif.
+- **Hero Display Accent** (Instrument Serif, 400 weight, same size as Hero Display, cobalt): "Adnan." in the hero headline only — the one word on the site carrying the signal colour.
 - **Display** (600 weight, `clamp(2rem, 4.6vw, 3.5rem)`, 1.02 line-height, -0.03em tracking): section titles (`h2.title`) and project names.
+- **Featured Name** (600 weight, `clamp(1.6rem, 3vw, 2.4rem)`, 1.04 line-height): the project name on a featured work card (`.feat-name`) only. Deliberately one step *below* Project Name so that within the card the metric — not the name — is the largest thing. A featured card argues with evidence first.
+- **Metric Value Large** (600 weight, `clamp(1.9rem, 3.6vw, 2.7rem)`, -0.03em tracking, signal-coloured): the headline number on a featured work card (`.feat-metric-v`) only. The loudest element in the card, and the one place a metric outranks a name.
 - **Body** (400 weight, `clamp(15px, 1.02vw, 17px)`, 1.62 line-height): all prose copy; capped at a comfortable measure per paragraph (`max-width:46-62ch` depending on context).
 - **Label** (400 weight, 8-13px in a fine ~0.5-1px ramp — `label-micro` through `label-lg` in the frontmatter — 0.1-0.2em tracking, uppercase): eyebrows, tags, timestamps, nav, button text, diagram annotations — always monospace, always tracked wide, almost always uppercase. The fine step size is deliberate: each component picks the density-appropriate step (a diagram annotation and a nav link are both "labels" but at different visual weights), not an accident of arbitrary values.
 
@@ -270,25 +294,25 @@ Two families of corner language, used consistently by role: fully pill-shaped (`
 
 ### Buttons
 - **Shape:** fully pill-shaped (100px radius).
-- **Primary (solid):** warm bone background, void-black text; on hover, the fill wipes to signal orange from behind via a `translateY` reveal, text stays void-black throughout.
-- **Ghost:** transparent background, hairline border, warm bone text; on hover, fills to warm bone with void-black text (same wipe mechanic as primary, different destination color).
-- **Hover / Focus:** all buttons share a `cubic-bezier(.22,1,.36,1)` ease on border-color/color/transform; the arrow glyph inside CTA buttons nudges right 4px on hover. Focus-visible gets a 2px signal-orange outline with 3px offset, site-wide.
+- **Primary (solid):** ink background, paper text; on hover, the fill wipes to cobalt from behind via a `translateY` reveal.
+- **Ghost:** transparent background, hairline border, ink text; on hover, fills to ink with paper text (same wipe mechanic as primary, different destination colour).
+- **Hover / Focus:** all buttons share a `cubic-bezier(.22,1,.36,1)` ease on border-color/color/transform; the arrow glyph inside CTA buttons nudges right 4px on hover. Focus-visible gets a 2px cobalt outline with 3px offset, site-wide.
 
 ### Tags / Chips
 - **Tags** (`.tag`): pill-shaped, hairline border, small mono uppercase label. A `.live` or `.wip` modifier tints text and border to signal orange — the only thing distinguishing a status tag from a neutral metadata tag is that color.
 - **Chips** (`.chips li`): small-radius (4px) rectangles, hairline border, mono label; border and text shift to signal orange on hover.
 
 ### Cards / Slabs (signature component)
-- **Slab** (the code/data display block): surface-one background with a very faint top-to-bottom lightening gradient, 6px radius, hairline border, monospace body at 11.5px/1.85 line-height. Inline spans carry syntax-highlight-style roles: `.c` (comment) uses shadow-gray-deep, `.k` (keyword) uses signal orange, `.s` (string/value) also signal orange, `.r` (result/error) uses alert rose. This is the system's most distinctive component — it's what makes the site read as "built by an engineer" rather than "designed to look like one."
+- **Slab** (the code/data display block): paper-1 background with a very faint top-to-bottom lightening gradient, 6px radius, hairline border, monospace body at 11.5px/1.85 line-height. Inline spans carry syntax-highlight-style roles: `.c` (comment) uses ink-tertiary, `.k` (keyword) uses cobalt, `.s` (string/value) also cobalt, `.r` (result/error) uses alert rose. This is the system's most distinctive component — it's what makes the site read as "built by an engineer" rather than "designed to look like one."
 - **Cell** (bento/toolkit cards): surface-one background, 6px radius, hairline border; on hover, border tints to signal orange and the card lifts 3px with a subtle radial accent glow fading in behind it.
 
 ### Inputs
-- **Command palette search:** borderless except a hairline bottom border, transparent background, monospace 13px text, warm-bone on focus (no visible focus ring — the modal context itself signals focus).
+- **Command palette search:** borderless except a hairline bottom border, transparent background, monospace 13px text, ink on focus (no visible focus ring — the modal context itself signals focus).
 
 ### Navigation
-- **Top nav:** fixed, transparent until scrolled, then gains a blurred near-black background and hairline bottom border (`backdrop-filter:blur(14px)`). Links are shadow-gray, shifting to signal orange on hover; no underlines anywhere in the system.
+- **Top nav:** fixed, transparent until scrolled, then gains a blurred paper background and hairline bottom border (`backdrop-filter:blur(14px)`). Links are ink-secondary, shifting to cobalt on hover; no underlines anywhere in the system.
 - **Section rail** (right-edge dot nav): ticks grow from 20px to 40px and tint signal orange when their section is active; labels stay hidden until hover or active state.
-- **Work rail:** a numbered (`01`-`07`), left-aligned list; the active project's number and text shift to warm bone / signal orange while inactive items stay shadow-gray-deep.
+- **Work rail:** removed in the two-tier restructure — each featured project now carries its own sticky column with a headline metric instead.
 
 ## Do's and Don'ts
 
