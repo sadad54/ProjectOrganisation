@@ -1256,6 +1256,74 @@ footer{padding:26px var(--gut);border-top:1px solid var(--line);
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* ============================================================
+   PROJECT DETAIL PAGES (/work/[slug])
+   ============================================================ */
+.project-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px var(--gut);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+}
+.project-header a{color:var(--dimmer);text-decoration:none;transition:color var(--dur-quick) var(--ease)}
+.project-header a:hover{color:var(--signal)}
+
+.project-hero{padding-block:clamp(48px,8vh,96px) clamp(56px,9vh,110px)}
+.project-hero-name{
+  font-family:var(--hero-display);font-weight:700;
+  font-size:clamp(2.2rem,6vw,4.2rem);letter-spacing:-.02em;color:var(--bone);
+  margin:14px 0 22px;
+}
+
+.video-placeholder{
+  position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
+  background:linear-gradient(160deg,var(--ink-2),var(--ink-1));
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  margin-top:32px;
+}
+.video-placeholder-play{
+  width:64px;height:64px;border-radius:50%;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;color:var(--signal);
+  font-size:20px;
+}
+.video-placeholder-cap{
+  position:absolute;bottom:18px;left:18px;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);
+}
+
+.story{display:flex;flex-direction:column;gap:22px;max-width:68ch;margin-top:16px}
+.story h4{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--sodium);margin:0 0 8px;
+}
+.story p{color:var(--dim);font-size:1rem;line-height:1.65;margin:0}
+
+.diagram-frame{
+  margin-top:22px;border:1px solid var(--line);border-radius:12px;
+  background:rgba(var(--ink-rgb),.4);padding:clamp(16px,3vw,28px);overflow-x:auto;
+}
+.diagram-frame svg text{font-family:var(--mono);fill:var(--dim)}
+.diagram-frame svg .dg-label{fill:var(--bone);font-weight:600}
+.diagram-frame svg .dg-accent{fill:var(--signal)}
+.diagram-frame svg .dg-line{stroke:var(--dimmer)}
+.diagram-frame svg .dg-box{fill:var(--ink-2);stroke:var(--line)}
+
+.highlights{display:flex;flex-direction:column;gap:56px;margin-top:16px}
+.highlight-caption{font-size:.95rem;color:var(--dim);margin-top:14px}
+.highlight-caption b{color:var(--bone);font-weight:500}
+
+.limitations-block{margin-top:16px}
+.limitations{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
+.limitations li{position:relative;padding-left:22px;color:var(--dim);font-size:.95rem}
+.limitations li::before{content:"\2013";position:absolute;left:0;color:var(--dimmer)}
+
+.project-nav{
+  display:flex;justify-content:space-between;gap:20px;margin-top:clamp(70px,10vh,120px);
+  padding-top:26px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+}
+.project-nav a{color:var(--dim);text-decoration:none;transition:color var(--dur-quick) var(--ease)}
+.project-nav a:hover{color:var(--signal)}
+
+/* ============================================================
    REDUCED MOTION
    ============================================================ */
 @media (prefers-reduced-motion:reduce){
