@@ -434,7 +434,7 @@ export default function Work() {
             }
             notes={[
               'Multi-turn conversational agent with <b>stateful memory and intent-based planning</b>, holding context across three to five related turns instead of treating each message as new.',
-              'Two FastAPI microservices: a <b>RAG</b> product-knowledge endpoint tested against 200+ documents, and a <b>Text2SQL</b> outlet-query endpoint with injection protection on generated queries.',
+              'Two FastAPI microservices: a <b>RAG</b> product-knowledge endpoint evaluated across a 36-document corpus at 85.0% Hit Rate@1, and a <b>Text2SQL</b> outlet-query endpoint with injection protection on generated queries.',
               'Shipped as a complete repository: OpenAPI specification, test suite, architecture diagrams and a hosted demo. Built as a technical assessment, delivered like a product.',
             ]}
             chips={['FastAPI', 'RAG', 'Text2SQL', 'OpenAPI', 'Agentic planning']}
