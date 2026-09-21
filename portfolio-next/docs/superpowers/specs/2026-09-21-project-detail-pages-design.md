@@ -139,8 +139,12 @@ Each `app/data/projects/<slug>.js` file exports one object:
   fabricate a missing measurement"); no load testing beyond per-request latency; provider cost
   telemetry exists end-to-end but reports zero by construction against the mock provider; live
   Chrome-extension walkthrough not done (Chrome blocks automation on `chrome://extensions`).
-- **Screenshots:** none yet (`public/assets/screenshots/proofhire` doesn't exist) — the existing
-  ProofHireScene component + the internal `#slide-proofhire` link from the homepage stand in.
+- **Screenshots:** ProofHire has a real frontend, so it gets a wired screenshot slot like
+  InterviewPilot/WC26/Mindhive — pointing at `public/assets/screenshots/proofhire/`, which doesn't
+  contain images yet. The existing `Shot` component already collapses gracefully
+  (`.shot.empty`, no broken-image UI) when a file 404s, so this is a true placeholder: no code
+  changes needed later, just dropping numbered PNGs into that folder. The existing `ProofHireScene`
+  component stays too, used in the Highlights section (not as a screenshot substitute).
 - **Links:** repo (existing), "Trace a claim" homepage anchor (existing).
 
 ### Driftline (`sadad54/driftline`)
@@ -193,8 +197,10 @@ Each `app/data/projects/<slug>.js` file exports one object:
   entities not added; GraphSAGE not wired into serving; k3d manifests cover the scorer only;
   multi-worker uvicorn fix identified but not yet re-benchmarked; no demo video recorded (until
   this project page's placeholder is filled).
-- **Screenshots:** none in `public/assets/screenshots/` — page relies on the architecture/highlight
-  diagrams plus the existing `DriftlineScene` component.
+- **Screenshots:** Driftline has no frontend (it's a streaming/ML pipeline — API + Kubernetes, no
+  UI), so it permanently has no screenshot section, not a placeholder awaiting one. The page relies
+  on the architecture/highlight diagrams plus the existing `DriftlineScene` component for its
+  visual anchor.
 - **Links:** repo (existing).
 
 ### InterviewPilot (`sadad54/interviewpilot`)
@@ -343,10 +349,11 @@ Each `app/data/projects/<slug>.js` file exports one object:
 - **Diagrams**: inline SVG components, monospace/terminal palette matching `.slab`/`.feat-slab` in
   `globals.css` (same font stack, same accent colors), not photorealistic — consistent with the
   site's existing code-slab aesthetic rather than a new visual language.
-- **`Shot` carousel**: reused unchanged from `Work.jsx` for the 3 projects with screenshots
-  (InterviewPilot, WC26, Mindhive). ProofHire and Driftline render their existing scene components
-  (`ProofHireScene`, `DriftlineScene`) in that slot instead, since no screenshot folders exist for
-  them and re-purposing the existing built scenes avoids an empty section.
+- **`Shot` carousel**: reused unchanged from `Work.jsx` for the 4 projects with a real frontend
+  (InterviewPilot, WC26, Mindhive — already have images; ProofHire — wired now, images added later).
+  A new empty `public/assets/screenshots/proofhire/` directory is created as part of this work so
+  the slot is ready to receive files. Driftline has no frontend and permanently has no screenshot
+  slot; its existing `DriftlineScene` component is its sole visual anchor alongside the diagrams.
 - **Consistency**: `ProjectPage` reuses existing CSS classes/patterns (`.feat-meta`, `.chips`,
   `.proj-links`, `.slab`, reveal-on-scroll classes) rather than introducing a parallel style system,
   so a visitor moving from the homepage to a project page sees continuity, not a different site.
