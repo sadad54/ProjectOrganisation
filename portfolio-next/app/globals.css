@@ -1323,6 +1323,9 @@ footer{padding:26px var(--gut);border-top:1px solid var(--line);
 .project-nav a{color:var(--dim);text-decoration:none;transition:color var(--dur-quick) var(--ease)}
 .project-nav a:hover{color:var(--signal)}
 
+.feat-name a{color:inherit;font:inherit;text-decoration:none;transition:color var(--dur-quick) var(--ease)}
+.feat-name a:hover{color:var(--signal)}
+
 /* ============================================================
    REDUCED MOTION
    ============================================================ */
