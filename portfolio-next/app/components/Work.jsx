@@ -2,73 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import Shot, { imgs } from './Shot';
 
 const EASE = [0.2, 0, 0, 1];
-
-/* ---------------------------------------------------------------------------
-   Screenshot carousel. The autoplay / manual-nav / crossfade behaviour still
-   lives in siteScript.js §13, keyed off `.shot[data-shots]`.
-
-   §1.1 — the literal "drop a file at assets/screenshots/…" caption is gone.
-   Every project below ships real screenshots; if one 404s at runtime the
-   onError handler collapses the frame to nothing (`.shot.empty { display:none }`)
-   rather than announcing a missing asset.
---------------------------------------------------------------------------- */
-function imgs(dir, n) {
-  return JSON.stringify(
-    Array.from({ length: n }, (_, i) => `assets/screenshots/${dir}/${String(i + 1).padStart(2, '0')}.png`)
-  );
-}
-function imgsList(dir, files) {
-  return JSON.stringify(files.map((f) => `assets/screenshots/${dir}/${f}`));
-}
-
-function Shot({ dataShots, alt, mobileFit }) {
-  if (process.env.NODE_ENV === 'development') {
-    let arr = null;
-    try {
-      arr = JSON.parse(dataShots);
-    } catch {
-      /* fall through */
-    }
-    if (!Array.isArray(arr) || arr.length === 0) {
-      // eslint-disable-next-line no-console
-      console.warn(`[shot] missing or empty screenshot set for: ${alt}`);
-    }
-  }
-
-  return (
-    <div className={`shot${mobileFit ? ' mobile-fit' : ''}`} data-shots={dataShots}>
-      <img
-        src={JSON.parse(dataShots)[0]}
-        alt={alt}
-        loading="lazy"
-        onError={(e) => e.currentTarget.closest('.shot').classList.add('empty')}
-      />
-      <motion.button
-        className="shot-arrow prev"
-        data-shot-prev
-        aria-label="Previous screenshot"
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.94 }}
-        transition={{ duration: 0.15 }}
-      >
-        &larr;
-      </motion.button>
-      <motion.button
-        className="shot-arrow next"
-        data-shot-next
-        aria-label="Next screenshot"
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.94 }}
-        transition={{ duration: 0.15 }}
-      >
-        &rarr;
-      </motion.button>
-      <div className="shot-dots" data-shot-dots></div>
-    </div>
-  );
-}
 
 /* =========================================================================
    TIER 1 — FEATURED (§2.1). Five projects, full treatment: a sticky left
