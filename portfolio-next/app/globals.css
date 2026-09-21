@@ -472,7 +472,15 @@ section{position:relative}
   font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--dimmer);display:flex;align-items:center;gap:12px;margin:0 0 26px;
 }
-.eyebrow::before{content:"";width:26px;height:1px;background:var(--sodium);flex:none}
+.eyebrow::before{
+  content:"▸";
+  width:auto;height:auto;
+  background:none;
+  color:var(--sodium);
+  font-size:13px;
+  line-height:1;
+  transform:translateY(-1px);
+}
 h2.title{
   font-family:var(--display);font-weight:600;
   font-size:clamp(2rem,4.6vw,3.5rem);line-height:1.02;letter-spacing:-.03em;
@@ -1038,7 +1046,14 @@ h3.proj-name{
   font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
   color:var(--sodium);margin:0 0 16px;display:flex;align-items:center;gap:10px;
 }
-.scene-eyebrow::before{content:"";width:22px;height:1px;background:var(--sodium);flex:none}
+.scene-eyebrow::before{
+  content:"▸";
+  width:auto;height:auto;
+  background:none;
+  font-size:12px;
+  line-height:1;
+  transform:translateY(-1px);
+}
 .scene-h{
   font-family:var(--display);font-weight:600;font-size:clamp(1.35rem,2.6vw,1.9rem);
   line-height:1.12;letter-spacing:-.02em;margin:0 0 14px;max-width:24ch;
