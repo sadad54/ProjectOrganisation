@@ -423,8 +423,8 @@ export default function Work() {
             name="Mindhive Chatbot"
             year="2025"
             kind="RAG + Text2SQL"
-            metric="200+"
-            metricLabel="documents in the RAG test set"
+            metric="36"
+            metricLabel="documents in the RAG eval set · 85.0% Hit Rate@1"
             hook="Five turns deep and still on topic."
             shot={
               <Shot
@@ -438,7 +438,7 @@ export default function Work() {
               'Shipped as a complete repository: OpenAPI specification, test suite, architecture diagrams and a hosted demo. Built as a technical assessment, delivered like a product.',
             ]}
             chips={['FastAPI', 'RAG', 'Text2SQL', 'OpenAPI', 'Agentic planning']}
-            links={[]}
+            links={[{ label: 'Repository', href: 'https://github.com/sadad54/chatbotZUS' }]}
             slab={{
               cap: 'Turn handling',
               html:
