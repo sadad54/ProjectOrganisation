@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
 import BackgroundFX from '../BackgroundFX';
 import SmoothScroll from '../SmoothScroll';
-import Shot from '../Shot';
+import Shot, { imgs } from '../Shot';
 import Hero from './Hero';
 import Overview from './Overview';
 import Story from './Story';
@@ -16,7 +15,7 @@ import { initShotCarousels } from './shotCarousel';
 
 export default function ProjectPage({ project, prev, next }) {
   useEffect(() => {
-    initShotCarousels();
+    return initShotCarousels();
   }, []);
 
   return (
@@ -26,8 +25,8 @@ export default function ProjectPage({ project, prev, next }) {
         Skip to content
       </a>
       <header className="project-header wrap">
-        <Link href="/">ADNAN M. SADAD</Link>
-        <Link href="/#work">&larr; All work</Link>
+        <a href="/">ADNAN M. SADAD</a>
+        <a href="/#work">&larr; All work</a>
       </header>
       <main id="project-main">
         <Hero
@@ -47,14 +46,9 @@ export default function ProjectPage({ project, prev, next }) {
 
           {project.screenshots && (
             <div className="reveal" style={{ marginTop: 48 }}>
-              <h3 className="work-subhead">Screenshots</h3>
+              <h2 className="work-subhead">Screenshots</h2>
               <Shot
-                dataShots={JSON.stringify(
-                  Array.from(
-                    { length: project.screenshots.count },
-                    (_, i) => `assets/screenshots/${project.screenshots.dir}/${String(i + 1).padStart(2, '0')}.png`
-                  )
-                )}
+                dataShots={imgs(project.screenshots.dir, project.screenshots.count)}
                 alt={project.screenshots.alt}
               />
             </div>
@@ -76,7 +70,7 @@ export default function ProjectPage({ project, prev, next }) {
                   target={l.internal ? undefined : '_blank'}
                   rel={l.internal ? undefined : 'noopener'}
                 >
-                  {l.label} {l.internal ? '↓' : '↗'}
+                  {l.label} {l.internal ? '→' : '↗'}
                 </a>
               ))}
             </div>

@@ -1,10 +1,10 @@
-import { DiagramRenderer } from './Architecture';
+import { DiagramRenderer } from './diagrams';
 
 export default function Highlights({ items }) {
   if (!items?.length) return null;
   return (
     <div style={{ marginTop: 48 }}>
-      <h3 className="work-subhead reveal">Highlights</h3>
+      <h2 className="work-subhead reveal">Highlights</h2>
       <div className="highlights">
         {items.map((item) => (
           <div key={item.title} className="reveal">

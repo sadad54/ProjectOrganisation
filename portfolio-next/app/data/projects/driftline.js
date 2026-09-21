@@ -54,7 +54,7 @@ export default {
         nodes: [
           { label: 'PSI/KS drift monitor', sub: 'weekly, 369 features' },
           { label: 'Retrain candidate' },
-          { label: 'Shadow-score vs. incumbent', sub: 'held-out tail, same window' },
+          { label: 'Shadow-score', sub: 'vs. incumbent, held-out tail' },
           { label: 'Promotion gate', sub: '≤0.02 PR-AUC regression' },
         ],
         gateLabel: 'First promotion: candidate 0.4802 vs. incumbent 0.2811 on the identical shadow holdout',

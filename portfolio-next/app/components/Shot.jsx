@@ -12,11 +12,8 @@
 --------------------------------------------------------------------------- */
 export function imgs(dir, n) {
   return JSON.stringify(
-    Array.from({ length: n }, (_, i) => `assets/screenshots/${dir}/${String(i + 1).padStart(2, '0')}.png`)
+    Array.from({ length: n }, (_, i) => `/assets/screenshots/${dir}/${String(i + 1).padStart(2, '0')}.png`)
   );
-}
-export function imgsList(dir, files) {
-  return JSON.stringify(files.map((f) => `assets/screenshots/${dir}/${f}`));
 }
 
 export default function Shot({ dataShots, alt, mobileFit }) {

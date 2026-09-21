@@ -7,7 +7,7 @@ export default function Story({ situation, task, action, result }) {
   ];
   return (
     <div className="reveal-group" style={{ marginTop: 48 }}>
-      <h3 className="work-subhead reveal">The story</h3>
+      <h2 className="work-subhead reveal">The story</h2>
       <div className="story">
         {parts.map(([label, text]) => (
           <div key={label}>

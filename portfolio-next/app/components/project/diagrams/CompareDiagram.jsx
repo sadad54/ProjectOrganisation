@@ -1,18 +1,22 @@
 'use client';
 
+import { useId } from 'react';
+
 const COL_W = 260;
 const COL_H = 130;
 const GAP = 60;
 const PAD = 20;
 
 export default function CompareDiagram({ before, after, diffLabel, title }) {
+  const uid = useId();
+  const arrowId = `dg-arrow-compare-${uid}`;
   const width = PAD * 2 + COL_W * 2 + GAP;
   const height = PAD * 2 + COL_H;
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} width="100%" role="img" aria-label={title || 'Comparison diagram'}>
       <defs>
-        <marker id="dg-arrow-compare" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <marker id={arrowId} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
           <path d="M0,0 L8,4 L0,8 Z" className="dg-accent" />
         </marker>
       </defs>
@@ -42,7 +46,7 @@ export default function CompareDiagram({ before, after, diffLabel, title }) {
         y2={PAD + COL_H / 2}
         className="dg-line"
         strokeWidth="1.5"
-        markerEnd="url(#dg-arrow-compare)"
+        markerEnd={`url(#${arrowId})`}
       />
       {diffLabel && (
         <text x={PAD + COL_W + GAP / 2} y={PAD + COL_H / 2 - 10} className="dg-accent" fontSize="12" textAnchor="middle">

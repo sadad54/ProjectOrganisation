@@ -5,6 +5,7 @@
 export function initShotCarousels(root) {
   const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const scope = root || document;
+  const disposers = [];
 
   scope.querySelectorAll('.shot[data-shots]').forEach(function (shot) {
     if (shot.__carouselInited) return;
@@ -148,5 +149,16 @@ export function initShotCarousels(root) {
       { threshold: 0.35 }
     );
     io.observe(shot);
+
+    disposers.push(function dispose() {
+      io.disconnect();
+      stopAutoplay();
+    });
   });
+
+  return function disposeAll() {
+    disposers.forEach(function (dispose) {
+      dispose();
+    });
+  };
 }

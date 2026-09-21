@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import Shot, { imgs } from './Shot';
 
@@ -23,7 +22,10 @@ function Featured({ id, name, year, kind, metric, metricLabel, hook, shot, notes
             <span>{kind}</span>
           </p>
           <h3 className="feat-name">
-            <Link href={`/work/${id.replace(/^p-/, '')}`}>{name}</Link>
+            <a href={`/work/${id.replace(/^p-/, '')}`}>
+              {name}
+              <span aria-hidden="true" className="feat-name-arrow">→</span>
+            </a>
           </h3>
           <p className="feat-metric">
             <span className="feat-metric-v">{metric}</span>

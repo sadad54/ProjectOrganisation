@@ -1,18 +1,22 @@
 'use client';
 
+import { useId } from 'react';
+
 const BOX_W = 560;
 const BOX_H = 46;
 const GAP = 34;
 const PAD = 20;
 
 export default function FlowDiagram({ steps, title }) {
+  const uid = useId();
+  const arrowId = `dg-arrow-flow-${uid}`;
   const width = BOX_W + PAD * 2;
   const height = PAD * 2 + steps.length * BOX_H + (steps.length - 1) * GAP;
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} width="100%" role="img" aria-label={title || 'Architecture diagram'}>
       <defs>
-        <marker id="dg-arrow-flow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <marker id={arrowId} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
           <path d="M0,0 L8,4 L0,8 Z" className="dg-accent" />
         </marker>
       </defs>
@@ -37,7 +41,7 @@ export default function FlowDiagram({ steps, title }) {
                 y2={y + BOX_H + GAP}
                 className="dg-line"
                 strokeWidth="1.5"
-                markerEnd="url(#dg-arrow-flow)"
+                markerEnd={`url(#${arrowId})`}
               />
             )}
           </g>

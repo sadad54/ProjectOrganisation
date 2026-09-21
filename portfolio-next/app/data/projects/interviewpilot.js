@@ -51,7 +51,7 @@ export default {
         nodes: [
           { label: 'Model responds' },
           { label: 'Schema validation', sub: 'technical_accuracy, clarity, depth 0–5, evidence[], follow_up' },
-          { label: 'Invalid → feed back with validation error' },
+          { label: 'Invalid → re-prompt', sub: 'validation error attached' },
           { label: 'Re-validate' },
         ],
         gateLabel: 'Zero dropped requests, zero half-parsed answers reaching the UI',

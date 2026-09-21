@@ -6,7 +6,7 @@ export default {
   hook: 'Five turns deep and still on topic.',
   headline: {
     metric: '36',
-    label: 'documents in the RAG eval corpus · 85.0% Hit Rate@1 (MRR 0.8625)',
+    label: 'documents in the RAG eval set · 85.0% Hit Rate@1 (MRR 0.8625)',
   },
   overview: {
     summary:

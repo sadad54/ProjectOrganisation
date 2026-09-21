@@ -1,5 +1,7 @@
 'use client';
 
+import { useId } from 'react';
+
 const ROOT_W = 220;
 const ROOT_H = 44;
 const BRANCH_W = 140;
@@ -9,7 +11,11 @@ const PAD = 20;
 const V_GAP = 46;
 
 export default function BranchDiagram({ root, branches, outcome, title }) {
-  const width = PAD * 2 + branches.length * BRANCH_W + (branches.length - 1) * GAP_X;
+  const uid = useId();
+  const arrowId = `dg-arrow-branch-${uid}`;
+  let width = PAD * 2 + branches.length * BRANCH_W + (branches.length - 1) * GAP_X;
+  const outcomeW = Math.max(180, outcome.length * 7 + 32);
+  if (outcomeW + PAD * 2 > width) width = outcomeW + PAD * 2;
   const rootX = width / 2 - ROOT_W / 2;
   const rootY = PAD;
   const branchY = rootY + ROOT_H + V_GAP;
@@ -19,7 +25,7 @@ export default function BranchDiagram({ root, branches, outcome, title }) {
   return (
     <svg viewBox={`0 0 ${width} ${height}`} width="100%" role="img" aria-label={title || 'Simulation fan-out diagram'}>
       <defs>
-        <marker id="dg-arrow-branch" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <marker id={arrowId} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
           <path d="M0,0 L8,4 L0,8 Z" className="dg-accent" />
         </marker>
       </defs>
@@ -40,7 +46,7 @@ export default function BranchDiagram({ root, branches, outcome, title }) {
               y2={branchY}
               className="dg-line"
               strokeWidth="1.2"
-              markerEnd="url(#dg-arrow-branch)"
+              markerEnd={`url(#${arrowId})`}
             />
             <rect x={x} y={branchY} width={BRANCH_W} height={BRANCH_H} rx={8} className="dg-box" />
             <text x={midX} y={branchY + 22} className="dg-label" fontSize="11" textAnchor="middle">
@@ -58,13 +64,13 @@ export default function BranchDiagram({ root, branches, outcome, title }) {
               y2={outcomeY}
               className="dg-line"
               strokeWidth="1.2"
-              markerEnd="url(#dg-arrow-branch)"
+              markerEnd={`url(#${arrowId})`}
             />
           </g>
         );
       })}
 
-      <rect x={width / 2 - 90} y={outcomeY} width={180} height={44} rx={8} className="dg-box" />
+      <rect x={width / 2 - outcomeW / 2} y={outcomeY} width={outcomeW} height={44} rx={8} className="dg-box" />
       <text x={width / 2} y={outcomeY + 26} className="dg-accent" fontSize="12" textAnchor="middle">
         {outcome}
       </text>

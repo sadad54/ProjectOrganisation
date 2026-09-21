@@ -1,5 +1,7 @@
 'use client';
 
+import { useId } from 'react';
+
 const BOX_W = 150;
 const BOX_H = 56;
 const GAP = 34;
@@ -7,13 +9,15 @@ const PAD = 24;
 const ROW_Y = 30;
 
 export default function LoopDiagram({ nodes, gateLabel, title }) {
+  const uid = useId();
+  const arrowId = `dg-arrow-loop-${uid}`;
   const width = PAD * 2 + nodes.length * BOX_W + (nodes.length - 1) * GAP;
   const height = 210;
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} width="100%" role="img" aria-label={title || 'Loop diagram'}>
       <defs>
-        <marker id="dg-arrow-loop" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <marker id={arrowId} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
           <path d="M0,0 L8,4 L0,8 Z" className="dg-accent" />
         </marker>
       </defs>
@@ -38,7 +42,7 @@ export default function LoopDiagram({ nodes, gateLabel, title }) {
                 y2={ROW_Y + BOX_H / 2}
                 className="dg-line"
                 strokeWidth="1.5"
-                markerEnd="url(#dg-arrow-loop)"
+                markerEnd={`url(#${arrowId})`}
               />
             )}
           </g>
@@ -50,7 +54,7 @@ export default function LoopDiagram({ nodes, gateLabel, title }) {
         fill="none"
         className="dg-line"
         strokeWidth="1.5"
-        markerEnd="url(#dg-arrow-loop)"
+        markerEnd={`url(#${arrowId})`}
       />
       {gateLabel && (
         <text x={width / 2} y={height - 8} className="dg-accent" fontSize="11" textAnchor="middle">
