@@ -1,4 +1,4 @@
-import VideoPlaceholder from './VideoPlaceholder';
+import ProjectVideo from '../ProjectVideo';
 
 export default function Hero({ slug, name, year, kind, hook, headline }) {
   return (
@@ -10,7 +10,7 @@ export default function Hero({ slug, name, year, kind, hook, headline }) {
       </p>
       <h1 className="project-hero-name reveal">{name}</h1>
       <p className="feat-hook reveal">{hook}</p>
-      <VideoPlaceholder name={name} slug={slug} />
+      <ProjectVideo slug={slug} name={name} alt={`${name} walkthrough`} variant="hero" />
       <p className="feat-metric reveal" style={{ marginTop: 28 }}>
         <span className="feat-metric-v">{headline.metric}</span>
         <span className="feat-metric-k">{headline.label}</span>

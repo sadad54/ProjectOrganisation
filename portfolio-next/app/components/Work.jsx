@@ -2,9 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import Shot, { imgs } from './Shot';
+import ProjectVideo from './ProjectVideo';
 
 const EASE = [0.2, 0, 0, 1];
+
+/* Links render three ways: `internal` scrolls to a same-page slide (↓),
+   `route` navigates to the project's own page (→), anything else opens an
+   external URL in a new tab (↗). Shared by Featured and CompactRow so every
+   project link in the section behaves consistently. */
+function ProjLink({ l }) {
+  if (l.internal) {
+    return (
+      <a className="lnk pointer" href={l.href}>
+        {l.label} &darr;
+      </a>
+    );
+  }
+  if (l.route) {
+    return (
+      <a className="lnk" href={l.href}>
+        {l.label} &rarr;
+      </a>
+    );
+  }
+  return (
+    <a className="lnk" href={l.href} target="_blank" rel="noopener">
+      {l.label} ↗
+    </a>
+  );
+}
 
 /* =========================================================================
    TIER 1 — FEATURED (§2.1). Five projects, full treatment: a sticky left
@@ -49,17 +75,9 @@ function Featured({ id, name, year, kind, metric, metricLabel, hook, shot, notes
         </ul>
         {links.length > 0 && (
           <div className="proj-links reveal">
-            {links.map((l) =>
-              l.internal ? (
-                <a className="lnk pointer" key={l.href} href={l.href}>
-                  {l.label} &darr;
-                </a>
-              ) : (
-                <a className="lnk" key={l.href} href={l.href} target="_blank" rel="noopener">
-                  {l.label} ↗
-                </a>
-              )
-            )}
+            {links.map((l) => (
+              <ProjLink l={l} key={l.href} />
+            ))}
           </div>
         )}
         {slab && (
@@ -137,17 +155,9 @@ function CompactRow({ row, open, onToggle }) {
             </ul>
             {row.links.length > 0 && (
               <div className="proj-links">
-                {row.links.map((l) =>
-                  l.internal ? (
-                    <a className="lnk pointer" key={l.href} href={l.href}>
-                      {l.label} &darr;
-                    </a>
-                  ) : (
-                    <a className="lnk" key={l.href} href={l.href} target="_blank" rel="noopener">
-                      {l.label} ↗
-                    </a>
-                  )
-                )}
+                {row.links.map((l) => (
+                  <ProjLink l={l} key={l.href} />
+                ))}
               </div>
             )}
             {row.slab && (
@@ -316,6 +326,7 @@ export default function Work() {
             metric="5 ms"
             metricLabel="retrieval p50 · 20k rows · local benchmark"
             hook="Your code is the evidence. Every application claim has to earn its place."
+            shot={<ProjectVideo slug="proofhire" name="ProofHire" alt="ProofHire product walkthrough" variant="card" />}
             notes={[
               'Turns authorized GitHub repositories into a <b>provenance-aware evidence graph</b>, tracing technical claims to source files and commits. Incremental sync processes changed artifacts and marks stale evidence.',
               '<b>Hybrid retrieval + LLM reranking</b> map job requirements to Strong / Partial / Gap / Unknown coverage. Two-stage indexed candidate generation made retrieval 80× faster at 20k rows in the local benchmark.',
@@ -324,6 +335,7 @@ export default function Work() {
             ]}
             chips={['Python', 'FastAPI', 'Next.js', 'React', 'TypeScript', 'PostgreSQL', 'pgvector', 'Redis', 'RAG', 'Docker', 'Playwright']}
             links={[
+              { label: 'View project', href: '/work/proofhire', route: true },
               { label: 'Repository', href: 'https://github.com/sadad54/ResumeGitProject' },
               { label: 'Trace a claim', href: '#slide-proofhire', internal: true },
             ]}
@@ -337,6 +349,7 @@ export default function Work() {
             metric="+97.8%"
             metricLabel="PR-AUC recovered after drift"
             hook="Six months of silent model decay, caught and reversed by the pipeline itself."
+            shot={<ProjectVideo slug="driftline" name="Driftline" alt="Driftline product walkthrough" variant="card" />}
             notes={[
               'Replays six months of real IEEE-CIS transaction data through <b>Redpanda (Kafka API)</b> and <b>PyFlink</b>, computing stateful 1h / 24h / 7d velocity aggregations exactly as a live system would see them, not a static notebook.',
               'A <b>graph-augmented entity model</b> (605K nodes, ~8M edges, PyTorch Geometric GraphSAGE) runs alongside XGBoost, with leakage boundaries tested, not assumed.',
@@ -347,7 +360,10 @@ export default function Work() {
               'Python', 'Redpanda', 'PyFlink', 'Feast', 'XGBoost', 'PyTorch Geometric',
               'FastAPI', 'ONNX Runtime', 'MLflow', 'Kubernetes', 'Prometheus / Grafana',
             ]}
-            links={[{ label: 'Repository', href: 'https://github.com/sadad54/driftline' }]}
+            links={[
+              { label: 'View project', href: '/work/driftline', route: true },
+              { label: 'Repository', href: 'https://github.com/sadad54/driftline' },
+            ]}
             slab={{
               cap: 'Drift & recovery',
               html:
@@ -368,9 +384,11 @@ export default function Work() {
             metricLabel="dropped requests under schema repair"
             hook="A mock interview that pushes back."
             shot={
-              <Shot
-                dataShots={imgs('interviewpilot', 9)}
+              <ProjectVideo
+                slug="interviewpilot"
+                name="InterviewPilot"
                 alt="InterviewPilot: a mock-interview session with the live transcript on the left and rubric scores for technical accuracy, clarity and depth on the right."
+                variant="card"
               />
             }
             notes={[
@@ -383,7 +401,10 @@ export default function Work() {
               'Python', 'FastAPI', 'SQLAlchemy', 'React', 'TypeScript', 'Groq API',
               'Whisper-large-v3', 'Llama 3.3 70B', 'Docker', 'GitHub Actions', 'pytest',
             ]}
-            links={[{ label: 'Repository', href: 'https://github.com/sadad54/interviewpilot' }]}
+            links={[
+              { label: 'View project', href: '/work/interviewpilot', route: true },
+              { label: 'Repository', href: 'https://github.com/sadad54/interviewpilot' },
+            ]}
             slab={{
               cap: 'Evaluator contract',
               html:
@@ -406,9 +427,11 @@ export default function Work() {
             metricLabel="tournaments simulated per forecast"
             hook="Every path to the trophy, simulated ten thousand times."
             shot={
-              <Shot
-                dataShots={imgs('wc26-predictor', 20)}
+              <ProjectVideo
+                slug="wc26"
+                name="WC26 Predictor"
                 alt="WC26 Predictor dashboard: tournament-path probability curves, a group-pressure matrix, and a predicted-versus-actual audit panel."
+                variant="card"
               />
             }
             notes={[
@@ -418,6 +441,7 @@ export default function Work() {
             ]}
             chips={['Python', 'XGBoost', 'FastAPI', 'React', 'TypeScript', 'Recharts', 'Monte Carlo']}
             links={[
+              { label: 'View project', href: '/work/wc26', route: true },
               { label: 'Repository', href: 'https://github.com/sadad54/worldcup_predictor' },
               { label: 'The trade-off behind this', href: '#slide-sim', internal: true },
             ]}
@@ -432,9 +456,11 @@ export default function Work() {
             metricLabel="documents in the RAG eval set · 85.0% Hit Rate@1"
             hook="Five turns deep and still on topic."
             shot={
-              <Shot
-                dataShots={imgs('mindhive-chatbot', 9)}
+              <ProjectVideo
+                slug="mindhive"
+                name="Mindhive Chatbot"
                 alt="Mindhive chatbot: a multi-turn conversation about ZUS outlets, resolving a follow-up question against the previous answer."
+                variant="card"
               />
             }
             notes={[
@@ -443,7 +469,10 @@ export default function Work() {
               'Shipped as a complete repository: OpenAPI specification, test suite, architecture diagrams and a hosted demo. Built as a technical assessment, delivered like a product.',
             ]}
             chips={['FastAPI', 'RAG', 'Text2SQL', 'OpenAPI', 'Agentic planning']}
-            links={[{ label: 'Repository', href: 'https://github.com/sadad54/chatbotZUS' }]}
+            links={[
+              { label: 'View project', href: '/work/mindhive', route: true },
+              { label: 'Repository', href: 'https://github.com/sadad54/chatbotZUS' },
+            ]}
             slab={{
               cap: 'Turn handling',
               html:

@@ -925,6 +925,48 @@ h3.proj-name{
 .lnk.demo{color:var(--sodium);border-color:rgba(var(--signal-rgb),.32)}
 .lnk.demo.is-disabled{color:var(--dimmer);border-color:var(--line-2)}
 
+/* ---------------------------------------------------------------------------
+   Walkthrough videos. `.proj-video-card` matches `.shot`'s frame (border,
+   glow, spacing) so a video card and a screenshot card read as one system in
+   the Work section; `.proj-video-hero` matches the old `.video-placeholder`
+   sizing for the project-detail hero. Both share the same play affordance.
+--------------------------------------------------------------------------- */
+.proj-video{
+  position:relative;border-radius:8px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(237,234,227,.03),transparent 60%),var(--ink-1);
+}
+.proj-video-card{
+  border:1px solid rgba(var(--signal-rgb),.34);aspect-ratio:16/9;margin-bottom:28px;
+  box-shadow:0 0 0 1px rgba(var(--signal-rgb),.08),0 0 22px rgba(var(--signal-rgb),.16),0 0 60px rgba(var(--signal-rgb),.08),inset 0 0 40px rgba(var(--signal-rgb),.04);
+  transition:box-shadow .4s var(--ease),border-color .4s var(--ease);
+}
+.proj-video-card:hover{
+  border-color:rgba(var(--signal-rgb),.55);
+  box-shadow:0 0 0 1px rgba(var(--signal-rgb),.14),0 0 32px rgba(var(--signal-rgb),.26),0 0 84px rgba(var(--signal-rgb),.14),inset 0 0 40px rgba(var(--signal-rgb),.06);
+}
+.proj-video-hero{
+  aspect-ratio:16/9;border-radius:14px;border:1px solid var(--line);margin-top:32px;
+  background:linear-gradient(160deg,var(--ink-2),var(--ink-1));
+}
+.proj-video-poster{
+  position:relative;width:100%;height:100%;display:block;padding:0;border:0;background:none;cursor:pointer;
+}
+.proj-video-poster img{
+  width:100%;height:100%;object-fit:cover;display:block;transition:filter .3s var(--ease),transform .5s var(--ease);
+}
+.proj-video-poster:hover img{filter:brightness(.7);transform:scale(1.02)}
+.proj-video-play{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:64px;height:64px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(var(--ink-rgb),.55);border:1px solid rgba(var(--signal-rgb),.5);
+  color:var(--bone);font-size:20px;line-height:1;padding-left:4px;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:background .2s,border-color .2s,transform .3s var(--ease);
+}
+.proj-video-poster:hover .proj-video-play{background:rgba(var(--signal-rgb),.28);border-color:var(--signal-hover);transform:translate(-50%,-50%) scale(1.06)}
+.proj-video-el{width:100%;height:100%;display:block;background:#000}
+
 /* ============================================================
    SIGNATURE — repair loop
    ============================================================ */
@@ -1294,22 +1336,6 @@ footer{padding:26px var(--gut);border-top:1px solid var(--line);
   font-family:var(--hero-display);font-weight:700;
   font-size:clamp(2.2rem,6vw,4.2rem);letter-spacing:-.02em;color:var(--bone);
   margin:14px 0 22px;
-}
-
-.video-placeholder{
-  position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
-  background:linear-gradient(160deg,var(--ink-2),var(--ink-1));
-  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-  margin-top:32px;
-}
-.video-placeholder-play{
-  width:64px;height:64px;border-radius:50%;border:1px solid var(--line);
-  display:flex;align-items:center;justify-content:center;color:var(--signal);
-  font-size:20px;
-}
-.video-placeholder-cap{
-  position:absolute;bottom:18px;left:18px;font-family:var(--mono);font-size:10px;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--dimmer);
 }
 
 .story{display:flex;flex-direction:column;gap:22px;max-width:68ch;margin-top:16px}
