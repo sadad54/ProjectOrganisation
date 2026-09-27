@@ -1,0 +1,149 @@
+/* =========================================================================
+   DECISIONS (L3) — one pinned stage, four chapters
+   ========================================================================= */
+.decisions{position:relative}
+.dec-track{position:relative}
+.dec-pin{
+  position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
+  padding-top:calc(var(--nav-h) + 6px);overflow:hidden;
+}
+.dec-head{
+  display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:20px 40px;align-items:end;width:100%;
+  padding-bottom:18px;
+}
+.dec-head .layer{margin-bottom:14px}
+.dec-title{max-width:16ch}
+.dec-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.dec-tab{
+  position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;
+  padding:11px 12px 16px;border-radius:var(--r-sm);border:1px solid var(--hair);
+  background:rgba(8,10,13,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  transition:border-color .35s,background-color .35s;
+}
+.dec-tab:hover{border-color:var(--hair-3)}
+.dt-n{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--text-3);transition:color .3s}
+.dt-t{font-size:.86rem;font-weight:500;line-height:1.25;color:var(--text-2);transition:color .3s}
+.dt-k{font-family:var(--f-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.dt-bar{position:absolute;left:12px;right:12px;bottom:8px;height:1px;background:var(--hair-2);overflow:hidden}
+.fill{position:absolute;inset:0;background:var(--ember);transform-origin:left;transform:scaleX(0)}
+.dec-tab.on{border-color:rgba(var(--ember-rgb),.55);background:rgba(var(--ember-rgb),.07)}
+.dec-tab.on .dt-n{color:var(--ember)}
+.dec-tab.on .dt-t,.dec-tab.done .dt-t{color:var(--text)}
+.dec-tab.done .dt-n{color:var(--pass)}
+@media (max-width:1180px){.dec-head{grid-template-columns:1fr}.dec-title{max-width:none}}
+
+.dec-stage{position:relative;flex:1;width:100%;min-height:0}
+.dec-scene{
+  position:absolute;inset:0 var(--gut);display:flex;align-items:center;
+  opacity:0;transform:translate3d(0,34px,0);pointer-events:none;
+  transition:opacity .6s var(--ease-soft),transform .9s var(--ease-out);
+}
+.dec-scene.past{transform:translate3d(0,-34px,0)}
+.dec-scene.on{opacity:1;transform:none;pointer-events:auto;transition-delay:.12s}
+.dec-progress{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--hair)}
+
+/* ---- scene internals (shared by pinned + flat) ---- */
+.scene-wrap{
+  width:100%;display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+  gap:clamp(28px,4.5vw,72px);align-items:center;
+}
+.scene-copy{min-width:0}
+.scene-eyebrow{
+  display:flex;align-items:center;gap:10px;margin:0 0 14px;
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);
+}
+.scene-eyebrow::before{content:"";width:18px;height:1px;background:var(--ember)}
+.scene-h{
+  font-family:var(--f-display);font-stretch:106%;font-weight:620;
+  font-size:clamp(1.45rem,2.3vw,2.2rem);line-height:1.08;letter-spacing:-.03em;margin:0 0 14px;max-width:22ch;
+}
+.scene-body{color:var(--text-2);font-size:.97rem;line-height:1.6;max-width:50ch;margin:0 0 18px}
+.scene-body strong{color:var(--text);font-weight:500}
+.slab{
+  border:1px solid var(--hair-2);border-radius:var(--r-sm);
+  background:linear-gradient(180deg,rgba(var(--text-rgb),.03),transparent 60%),rgba(11,13,17,.85);
+  padding:14px 16px;font-family:var(--f-mono);font-size:11px;line-height:1.8;color:var(--text-2);overflow-x:auto;
+}
+.slab .c{color:var(--text-3)}
+.slab .k{color:var(--ember)}
+.slab .s{color:var(--cool)}
+.slab .r{color:var(--fail)}
+.scene-slab{margin:0 0 16px}
+.scene-readout{
+  font-family:var(--f-mono);font-size:11px;line-height:1.7;color:var(--text-2);
+  border-left:2px solid var(--hair-3);padding-left:14px;min-height:4.8em;
+  transition:border-color .35s var(--ease-soft);
+}
+.scene-readout.bad{border-color:var(--fail)}
+.scene-readout.good{border-color:var(--pass)}
+.scene-readout .attempt{display:block;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px}
+.scene-readout.bad .attempt{color:var(--fail)}
+.scene-readout.good .attempt{color:var(--pass)}
+
+.scene-stage{
+  position:relative;min-width:0;border:1px solid var(--hair-2);border-radius:var(--r-md);
+  background:rgba(8,10,13,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  padding:clamp(18px,2.6vw,34px);box-shadow:0 40px 100px rgba(0,0,0,.4);
+}
+.scene-svg{width:100%;height:auto;display:block;overflow:visible}
+.scene-evidence .scene-svg,.scene-stage .scene-svg[viewBox="0 0 560 400"]{max-height:min(46vh,380px);margin-inline:auto}
+.node rect{fill:var(--s2);stroke:var(--hair-3);stroke-width:1;transition:stroke .45s,fill .45s}
+.node text{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;fill:var(--text-2);text-transform:uppercase;transition:fill .45s}
+.node.act rect{stroke:var(--ember);fill:rgba(var(--ember-rgb),.1)}
+.node.act text{fill:var(--ember)}
+.node.bad rect{stroke:var(--fail);fill:rgba(var(--fail-rgb),.1)}
+.node.bad text{fill:var(--fail)}
+.node.good rect{stroke:var(--pass);fill:rgba(var(--pass-rgb),.1)}
+.node.good text{fill:var(--pass)}
+.node.pulsing rect{animation:nodePulse 1.2s ease-in-out infinite}
+@keyframes nodePulse{0%,100%{opacity:.55}50%{opacity:1}}
+.wire{fill:none;stroke:var(--hair-3);stroke-width:1.2}
+.flow{fill:none;stroke:var(--ember);stroke-width:1.8;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(var(--ember-rgb),.6))}
+.flow.rep{stroke:var(--fail);filter:drop-shadow(0 0 4px rgba(var(--fail-rgb),.6))}
+.flow.ok{stroke:var(--pass);filter:drop-shadow(0 0 4px rgba(var(--pass-rgb),.6))}
+.wire-lbl{font-family:var(--f-mono);font-size:8.5px;letter-spacing:.14em;fill:var(--text-3);text-transform:uppercase}
+.scene-badge{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
+.scene-badge.bad{fill:var(--fail)}
+.scene-progress{margin-top:20px;height:2px;background:var(--hair-2);border-radius:2px;overflow:hidden}
+.scene-progress span{display:block;height:100%;background:var(--ember);transform-origin:left;transform:scaleX(0)}
+.scene-note{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin:14px 0 0}
+.scene-bars{display:flex;align-items:flex-end;gap:6px;height:96px;margin-top:18px}
+.scene-bar{flex:1;background:linear-gradient(180deg,var(--ember),rgba(var(--ember-rgb),.35));border-radius:2px 2px 0 0;min-height:6px}
+.scene-drift-value{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.scene-drift-num{
+  font-family:var(--f-display);font-stretch:112%;font-weight:600;font-size:clamp(1.6rem,2.6vw,2.4rem);
+  letter-spacing:-.03em;line-height:1;color:var(--text);font-variant-numeric:tabular-nums;
+}
+.scene-drift-k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+
+@media (max-height:760px){
+  .scene-slab{display:none}
+  .scene-body{margin-bottom:12px}
+}
+
+/* ---- flat (small screens / reduced motion) ---- */
+.dec-flat{padding-block:clamp(96px,14vh,160px) 40px}
+.dec-flat .dec-title{margin-bottom:24px}
+.dec-flat-scene{padding:44px 0;border-top:1px solid var(--hair)}
+@media (max-width:900px){
+  .scene-wrap{grid-template-columns:1fr;gap:22px}
+  .scene-stage{padding:16px;overflow-x:auto;overscroll-behavior-x:contain}
+  /* keep diagram labels legible: the diagram keeps a minimum width and the
+     frame scrolls sideways instead of shrinking the text to nothing */
+  .scene-stage .scene-svg{min-width:720px}
+  .scene-stage .scene-svg[viewBox="0 0 560 400"]{min-width:520px;max-height:none}
+  .scene-stage .scene-svg[viewBox="0 0 720 260"],.scene-stage .scene-svg[viewBox="0 0 720 200"]{min-width:0}
+  .scene-stage:has(.scene-svg[viewBox="0 0 900 210"])::after,
+  .scene-stage:has(.scene-svg[viewBox="0 0 560 400"])::after{
+    content:"swipe the diagram →";display:block;margin-top:10px;
+    font-family:var(--f-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+    position:sticky;left:0;
+  }
+}
+
+/* ---- no JS: the chapters stack, nothing is pinned or hidden ---- */
+html:not(.js) .dec-track{height:auto!important}
+html:not(.js) .dec-pin{position:static;height:auto;overflow:visible}
+html:not(.js) .dec-stage{flex:none}
+html:not(.js) .dec-scene{position:relative;inset:auto;padding:40px var(--gut) 0;opacity:1;transform:none;pointer-events:auto}
+html:not(.js) .dec-tabs,html:not(.js) .dec-progress{display:none}

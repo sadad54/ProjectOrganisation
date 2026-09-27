@@ -89,6 +89,6 @@ export default {
   chips: ['Python', 'XGBoost', 'FastAPI', 'React', 'TypeScript', 'Recharts', 'Monte Carlo'],
   links: [
     { label: 'Repository', href: 'https://github.com/sadad54/worldcup_predictor' },
-    { label: 'The trade-off behind this', href: '#slide-sim', internal: true },
+    { label: 'The trade-off behind this', href: '#decisions', internal: true },
   ],
 };

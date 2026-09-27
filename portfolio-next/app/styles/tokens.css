@@ -1,0 +1,84 @@
+/* =========================================================================
+   TOKENS — "Activation"
+   One dark ground, one warm signal. The palette borrows its logic from an
+   activation map: almost everything sits cold and dim, and the few things
+   that are live (hovered, selected, firing, the number that matters) run
+   hot. Ember is the only UI accent. Cool is data-only (the neural field,
+   diagram structure). Pass / fail are diagram semantics, never chrome.
+
+   The JS-driven layers (neural field, denoise stage) read the same values
+   from app/lib/palette.js — keep the two in step.
+   ========================================================================= */
+:root{
+  color-scheme:dark;
+
+  /* ground + surfaces (cool graphite steps) */
+  --void:#050608;
+  --void-rgb:5,6,8;
+  --s1:#0B0D11;
+  --s2:#11141A;
+  --s3:#181C24;
+  --s4:#20252F;
+
+  /* text */
+  --text:#EEEBE4;
+  --text-rgb:238,235,228;
+  --text-2:#A6A39C;   /* ~8:1 on --void */
+  --text-3:#85837D;   /* ~5.3:1 on --void — the floor for small mono labels */
+
+  /* hairlines are neutral, never tinted */
+  --hair:rgba(238,235,228,.08);
+  --hair-2:rgba(238,235,228,.14);
+  --hair-3:rgba(238,235,228,.22);
+
+  /* the signal */
+  --ember:#FF6B3D;
+  --ember-rgb:255,107,61;
+  --ember-hi:#FF8A63;
+  --ember-lo:#E4521F;
+
+  /* data-only hues */
+  --cool:#A9BBFF;
+  --cool-rgb:169,187,255;
+  --pass:#52E3A8;
+  --pass-rgb:82,227,168;
+  --fail:#FF5470;
+  --fail-rgb:255,84,112;
+
+  /* type */
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-serif:"Instrument Serif",Georgia,"Times New Roman",serif;
+  --f-body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+
+  --fs-hero:clamp(2.55rem,5.7vw,6.5rem);
+  --fs-display:clamp(2.1rem,4.6vw,4.4rem);
+  --fs-h2:clamp(1.7rem,3vw,2.7rem);
+  --fs-h3:clamp(1.25rem,1.9vw,1.7rem);
+  --fs-lede:clamp(1.02rem,1.3vw,1.18rem);
+  --fs-body:clamp(15px,1.02vw,16.5px);
+  --fs-small:.9rem;
+  --fs-label:10.5px;
+  --fs-micro:9.5px;
+
+  /* layout */
+  --gut:clamp(18px,4.6vw,68px);
+  --maxw:1380px;
+  --nav-h:64px;
+  --r-xs:4px;
+  --r-sm:6px;
+  --r-md:10px;
+  --r-lg:16px;
+  --r-pill:999px;
+
+  /* motion */
+  --ease-out:cubic-bezier(.16,1,.3,1);      /* expo-ish: arrivals */
+  --ease-in-out:cubic-bezier(.76,0,.24,1);  /* quart: morphs, wipes */
+  --ease-soft:cubic-bezier(.4,0,.2,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --d-instant:90ms;
+  --d-quick:180ms;
+  --d-base:320ms;
+  --d-slow:620ms;
+  --d-scene:900ms;
+}

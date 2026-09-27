@@ -1,51 +1,65 @@
-import './globals.css';
+import './styles/tokens.css';
+import './styles/base.css';
+import './styles/chrome.css';
+import './styles/hero.css';
+import './styles/about.css';
+import './styles/decisions.css';
+import './styles/work.css';
+import './styles/research.css';
+import './styles/weights.css';
+import './styles/contact.css';
+import './styles/project.css';
+import Providers from './components/site/Providers';
 
 export const viewport = {
-  themeColor: '#F5F1E8', // paper — matches --ink on the bone palette
+  themeColor: '#050608',
 };
 
+// Share previews need absolute image URLs. Vercel supplies its own deployment
+// URL; anywhere else, set SITE_URL (e.g. https://your-domain.dev).
+const SITE_URL = process.env.SITE_URL;
+
 export const metadata = {
-  title: 'Adnan Mashrur Sadad - AI & Software Engineer',
-  description: 'AI and software engineer in Kuala Lumpur. I build LLM systems that check their own work.',
+  ...(SITE_URL && { metadataBase: new URL(SITE_URL) }),
+  title: 'Adnan Mashrur Sadad — AI & Software Engineer',
+  description:
+    'AI and software engineer in Kuala Lumpur. I build LLM systems that check their own work — validation, repair loops, eval harnesses, and deployments that actually run.',
+  // og/twitter title and description are inherited from each page's own, so a
+  // shared case-study link previews as that project, not as the homepage
   openGraph: {
-    title: 'Adnan Mashrur Sadad - AI & Software Engineer',
-    description: 'I build LLM systems that check their own work.',
-    type: 'website'
+    siteName: 'Adnan Mashrur Sadad',
+    type: 'website',
   },
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230B0B0D'/><text y='68' x='50' text-anchor='middle' font-size='52' font-family='monospace' font-weight='700' fill='%23FF6A3D'>A</text></svg>"
-  }
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23050608'/><path d='M14 44 L32 18 L50 44 M14 44 H50' stroke='%23FF6B3D' stroke-width='3' fill='none'/><circle cx='14' cy='44' r='5' fill='%23FF6B3D'/><circle cx='32' cy='18' r='5' fill='%23EEEBE4'/><circle cx='50' cy='44' r='5' fill='%23FF6B3D'/></svg>",
+  },
 };
+
+/* Runs before first paint:
+   - `js`   — reveal styles only ever hide content once JS is known to run
+   - `rm`   — the manual reduced-motion override from ⌘K, restored pre-paint
+   - `boot` — first visit this session, on the index, motion allowed → the
+              preloader covers the page from the very first frame */
+const PREPAINT =
+  "var d=document.documentElement;d.classList.add('js');" +
+  "try{if(localStorage.getItem('rm')==='1')d.classList.add('rm')}catch(e){}" +
+  "try{if(location.pathname==='/'&&!sessionStorage.getItem('booted')&&!d.classList.contains('rm')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('boot')}catch(e){}";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Pre-hydration: mark JS available, and re-apply a stored reduced-motion
-            override before first paint so it never flashes. The inline script
-            mutates <html>'s className before React hydrates, so the root element
-            is exempted from hydration attribute diffing. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "document.documentElement.classList.add('js');" +
-              "try{if(localStorage.getItem('rm')==='1')document.documentElement.classList.add('rm')}catch(e){}" +
-              // ?theme=acid|thermal, sticky across navigation; ?theme=sodium resets
-              // bone is the site palette; ?theme= still reaches the alternates
-              "try{var t=new URLSearchParams(location.search).get('theme');" +
-              "if(t){localStorage.setItem('theme',t)}else{t=localStorage.getItem('theme')}" +
-              "document.documentElement.dataset.theme=t||'bone'}catch(e){" +
-              "document.documentElement.dataset.theme='bone'}",
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: PREPAINT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Archivo:wght@600;700&family=Abril+Fatface&family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
