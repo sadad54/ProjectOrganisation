@@ -86,7 +86,6 @@ export default {
     'The GraphSAGE ensemble is built and measured but not wired into the live serving path — XGBoost alone serves.',
     'The k3d Kubernetes manifests cover only the scorer service, not the full pipeline.',
     'A fix for the single-uvicorn-worker liveness-probe failure under load was identified but not yet re-benchmarked.',
-    "No demo video has been recorded yet — this page's placeholder is exactly that gap.",
   ],
   screenshots: null,
   chips: [

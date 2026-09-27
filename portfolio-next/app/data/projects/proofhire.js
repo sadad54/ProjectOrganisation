@@ -84,6 +84,6 @@ export default {
   chips: ['Python', 'FastAPI', 'Next.js', 'React', 'TypeScript', 'PostgreSQL', 'pgvector', 'Redis', 'RAG', 'Docker', 'Playwright'],
   links: [
     { label: 'Repository', href: 'https://github.com/sadad54/ResumeGitProject' },
-    { label: 'Trace a claim', href: '#slide-proofhire', internal: true },
+    { label: 'Trace a claim', href: '#decisions', internal: true },
   ],
 };

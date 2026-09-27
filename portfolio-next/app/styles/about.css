@@ -1,0 +1,85 @@
+/* =========================================================================
+   ABOUT (L2) — the model card
+   ========================================================================= */
+.about-h{max-width:17ch;margin:0 0 clamp(44px,7vh,80px)}
+.about-grid{
+  display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,4vw,64px);align-items:start;
+}
+@media (max-width:960px){.about-grid{grid-template-columns:1fr}}
+
+/* photo + detector pass */
+.about-photo{margin:0;position:relative}
+.about-photo-in{position:relative;aspect-ratio:1/1;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--hair-2);background:var(--s1)}
+.about-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(1.04) brightness(.9);transform:scale(1.04);transition:transform 1.6s var(--ease-out),filter 1s}
+.about-photo[data-in] img{transform:none}
+.about-photo:hover img{filter:saturate(1) contrast(1.04) brightness(.97)}
+.scanline{
+  position:absolute;left:0;right:0;top:0;height:22%;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(var(--ember-rgb),.08) 70%,rgba(var(--ember-rgb),.5) 99%,transparent);
+  transform:translateY(-110%);opacity:0;
+}
+.about-photo[data-in] .scanline{animation:scan 1.5s var(--ease-in-out) .2s both}
+@keyframes scan{0%{transform:translateY(-110%);opacity:1}90%{opacity:1}100%{transform:translateY(480%);opacity:0}}
+.bbox{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.bb rect{fill:none;stroke:var(--cool);stroke-width:2.4;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
+.bb.hot rect{stroke:var(--ember)}
+.about-photo[data-in] .bb rect{animation:drawBox 1s var(--ease-out) both;animation-delay:calc(1.1s + var(--k) * .22s)}
+@keyframes drawBox{to{stroke-dashoffset:0}}
+.bb-tag{
+  position:absolute;transform:translateY(-100%);white-space:nowrap;
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:lowercase;
+  background:var(--cool);color:var(--void);padding:2px 6px;border-radius:2px 2px 0 0;
+  opacity:0;
+}
+.bb-tag b{font-weight:500;margin-left:4px}
+.bb-tag.hot{background:var(--ember)}
+.about-photo[data-in] .bb-tag{animation:tagIn .5s var(--ease-out) both;animation-delay:calc(1.55s + var(--k) * .22s)}
+@keyframes tagIn{from{opacity:0;transform:translateY(-60%)}to{opacity:1;transform:translateY(-100%)}}
+.about-cap{
+  display:flex;justify-content:space-between;gap:12px;margin-top:12px;
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+}
+.about-cap span:first-child{color:var(--text-2)}
+
+/* the card */
+.card{
+  position:relative;border:1px solid var(--hair-2);border-radius:var(--r-md);overflow:hidden;
+  background:linear-gradient(180deg,rgba(var(--text-rgb),.025),transparent 40%),rgba(11,13,17,.82);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+}
+.card::after{
+  /* indexing sweep when the card first reveals */
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--ember);
+  box-shadow:0 0 18px 2px rgba(var(--ember-rgb),.45);opacity:0;pointer-events:none;
+}
+.card[data-in]::after{animation:cardSweep 1.6s var(--ease-in-out) .35s both}
+@keyframes cardSweep{0%{opacity:1;transform:translateY(0)}92%{opacity:1}100%{opacity:0;transform:translateY(var(--card-h,620px))}}
+.card-head,.card-foot{
+  display:flex;justify-content:space-between;gap:12px;padding:14px 20px;
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+}
+.card-head{border-bottom:1px solid var(--hair)}
+.card-head b{font-weight:500;color:var(--ember)}
+.card-foot{border-top:1px solid var(--hair);justify-content:flex-start;gap:8px}
+.card-foot .ok{color:var(--pass)}
+.card-rows{margin:0;padding:6px 0}
+.card-row{
+  display:grid;grid-template-columns:128px minmax(0,1fr);gap:18px;padding:10px 20px;align-items:baseline;
+  border-bottom:1px dashed rgba(var(--text-rgb),.06);
+  transition:background-color .25s;
+}
+.card-row:last-child{border-bottom:0}
+.card-row:hover{background:rgba(var(--ember-rgb),.045)}
+.card-row dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);padding-top:2px}
+.card-row dd{margin:0;font-size:.95rem;line-height:1.45;color:var(--text)}
+.card-row:hover dt{color:var(--ember)}
+.js .card .card-row{opacity:0;transform:translate3d(-8px,0,0)}
+.card[data-in] .card-row{opacity:1;transform:none;transition:opacity .5s var(--ease-soft),transform .7s var(--ease-out),background-color .25s;transition-delay:calc(.45s + var(--r) * 70ms)}
+@media (max-width:560px){.card-row{grid-template-columns:1fr;gap:4px}}
+
+.about-bio{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,64px);margin-top:clamp(48px,7vh,80px);max-width:1100px}
+.about-bio p{color:var(--text-2);font-size:var(--fs-lede);line-height:1.6}
+.about-bio b{color:var(--text);font-weight:500}
+@media (max-width:760px){.about-bio{grid-template-columns:1fr}}
+html.rm .card .card-row{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .card .card-row{opacity:1;transform:none}}
