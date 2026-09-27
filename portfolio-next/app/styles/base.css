@@ -192,3 +192,8 @@ html.js:not(.hydrated) .hero-portrait,html.js:not(.hydrated) .hero-portrait-in{a
 html.rm *,html.rm *::before,html.rm *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 html.rm .rv,html.rm .rv-fade,html.rm .split .w>span,html.rm .rv-line{opacity:1!important;transform:none!important}
 html.rm .grain{animation:none}
+
+/* ---- 404 ---- */
+.nf{min-height:100svh;display:flex;align-items:center;padding-top:var(--nav-h)}
+.nf-h{max-width:14ch;margin-bottom:24px}
+.nf-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}

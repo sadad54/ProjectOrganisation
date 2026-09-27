@@ -202,3 +202,11 @@ html.no-webgl .field canvas{display:none}
 html.rm .thesis{height:auto}
 html.rm .thesis-pin{position:static;height:auto;padding:120px 0}
 @media (max-width:760px){.thesis{height:200vh}}
+
+/* reduced motion: the headline is simply there */
+@media (prefers-reduced-motion:reduce){
+  .js .hero .tok,.js .hero-status,.js .hero-foot,.js .hero-portrait,.js .hero-portrait-in,.js .hero-scroll,.js .hero-hud{opacity:1;transform:none;filter:none;clip-path:none}
+  .hero .tok::before,.hero .tok::after{display:none}
+}
+html.rm .hero .tok,html.rm .hero-status,html.rm .hero-foot,html.rm .hero-portrait,html.rm .hero-portrait-in,html.rm .hero-scroll,html.rm .hero-hud{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}
+html.rm .hero .tok::before,html.rm .hero .tok::after{display:none}

@@ -388,6 +388,27 @@ export default function Work() {
         </div>
       </div>
 
+      {/* Without JS the console can only show its first project, so the whole
+          index is also served as plain markup (readers and crawlers alike). */}
+      <noscript>
+        <div className="wrap ns-work">
+          {items.map((p) => (
+            <article key={p.slug}>
+              <h3>
+                {p.name} <span>{p.kind}</span>
+              </h3>
+              <p>{p.hook}</p>
+              <ul>
+                {p.notes.map((n, k) => (
+                  <li key={k} dangerouslySetInnerHTML={{ __html: n }} />
+                ))}
+              </ul>
+              {p.page && <a href={`/work/${p.slug}`}>Case study →</a>}
+            </article>
+          ))}
+        </div>
+      </noscript>
+
       <AnimatePresence>
         {mobile && sheet && (
           <motion.div

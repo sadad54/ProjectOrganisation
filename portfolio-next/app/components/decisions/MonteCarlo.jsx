@@ -57,7 +57,7 @@ function SceneInner({ p }) {
       </div>
 
       <div className="scene-stage">
-        <svg className="scene-svg" viewBox="0 0 720 200" role="img" aria-describedby="scene-sim-desc">
+        <svg className="scene-svg" viewBox="0 0 720 200" role="img" aria-label="Monte Carlo tournament simulation" aria-describedby="scene-sim-desc">
           {PATHS.map((d, i) => {
             const band = 0.05 + (i / PATHS.length) * 0.6;
             return <MCPath key={i} d={d} p={p} band={band} />;

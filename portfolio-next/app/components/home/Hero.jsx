@@ -48,6 +48,7 @@ export default function Hero() {
     const toks = Array.from(el.querySelectorAll('.tok'));
     const timers = [];
     if (reducedMotionNow()) {
+      toks.forEach((t) => t.classList.add('on'));
       el.classList.add('go', 'done');
       return;
     }

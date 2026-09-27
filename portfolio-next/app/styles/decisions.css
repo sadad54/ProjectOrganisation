@@ -140,3 +140,10 @@
     position:sticky;left:0;
   }
 }
+
+/* ---- no JS: the chapters stack, nothing is pinned or hidden ---- */
+html:not(.js) .dec-track{height:auto!important}
+html:not(.js) .dec-pin{position:static;height:auto;overflow:visible}
+html:not(.js) .dec-stage{flex:none}
+html:not(.js) .dec-scene{position:relative;inset:auto;padding:40px var(--gut) 0;opacity:1;transform:none;pointer-events:auto}
+html:not(.js) .dec-tabs,html:not(.js) .dec-progress{display:none}

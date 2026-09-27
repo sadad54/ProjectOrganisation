@@ -117,7 +117,7 @@ export default function Research() {
           <Split as="h2" id="research-h" className="display" text={['Research on knowing when an answer ', { t: 'shouldn’t be trusted.', em: true }]} />
           <p className="lede rv" style={{ '--d': 120 }}>
             First-author work on evaluating retrieval-augmented and Text-to-SQL systems — the same instinct as the
-            projects, pointed at the models themselves: an answer can be well-formed, cited and confident, and still
+            projects, pointed at the models themselves: an answer can be well-formed and cited, and still
             be wrong in a way nothing flags.
           </p>
         </div>

@@ -71,7 +71,7 @@ function SceneInner({ p }) {
           <span className="scene-drift-k">PR-AUC</span>
         </div>
 
-        <svg className="scene-svg" viewBox="0 0 720 260" role="img" aria-describedby="scene-drift-desc">
+        <svg className="scene-svg" viewBox="0 0 720 260" role="img" aria-label="PR-AUC over a six-month replay, with drift-triggered retraining" aria-describedby="scene-drift-desc">
           {/* baseline grid */}
           <line x1="40" y1={yOf(0.4761)} x2="700" y2={yOf(0.4761)} stroke="var(--hair-2)" strokeDasharray="3 5" />
           <text className="wire-lbl" x="696" y={yOf(0.4761) + 16} textAnchor="end">baseline 0.4761</text>

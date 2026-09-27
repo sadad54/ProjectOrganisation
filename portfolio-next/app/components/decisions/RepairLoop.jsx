@@ -81,7 +81,7 @@ function SceneInner({ p, phase, setPhase }) {
           className="scene-svg"
           viewBox="0 0 900 210"
           role="img"
-          aria-describedby="scene-repair-desc"
+          aria-label="Schema repair loop diagram" aria-describedby="scene-repair-desc"
         >
           <defs>
             <marker id="rlah" markerWidth="7" markerHeight="7" refX="6" refY="3.2" orient="auto">

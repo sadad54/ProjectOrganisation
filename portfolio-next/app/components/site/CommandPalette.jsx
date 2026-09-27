@@ -47,6 +47,7 @@ export default function CommandPalette() {
   const goSection = useCallback(
     (id) => {
       if (onHome) scrollToEl(document.getElementById(id));
+      else if (window.__ptGo) window.__ptGo(`/#${id}`, 'the index');
       else router.push(`/#${id}`);
     },
     [onHome, router]
@@ -62,7 +63,7 @@ export default function CommandPalette() {
       ['toolkit', 'Toolkit — skills graph'],
       ['contact', 'Contact'],
     ].forEach(([id, n]) => A.push({ g: 'Sections', n, h: 'Jump', go: () => goSection(id) }));
-    WORK.forEach((p) => {
+    WORK.forEach((p) =>
       A.push({
         g: 'Projects',
         n: p.name,
@@ -70,13 +71,20 @@ export default function CommandPalette() {
         go: () => {
           if (onHome) {
             window.dispatchEvent(new CustomEvent('work:select', { detail: { slug: p.slug } }));
-            scrollToEl(document.getElementById('work'), { offset: 0 });
-          } else router.push(`/#work`);
+            scrollToEl(document.querySelector('#work .console') || document.getElementById('work'), { offset: -90 });
+          } else if (window.__ptGo) window.__ptGo('/#work', 'the index');
+          else router.push('/#work');
         },
-      });
-      if (p.page)
-        A.push({ g: 'Case studies', n: `${p.name} — case study`, h: 'Page', go: () => router.push(`/work/${p.slug}`) });
-    });
+      })
+    );
+    WORK.filter((p) => p.page).forEach((p) =>
+      A.push({
+        g: 'Case studies',
+        n: `${p.name} — case study`,
+        h: 'Page',
+        go: () => (window.__ptGo ? window.__ptGo(`/work/${p.slug}`, p.name) : router.push(`/work/${p.slug}`)),
+      })
+    );
     A.push(
       { g: 'Contact', n: 'Copy email address', h: 'Copy', go: () => copyText(EMAIL, 'Email copied') },
       { g: 'Contact', n: 'Open GitHub', h: 'External', go: () => window.open('https://github.com/sadad54', '_blank', 'noopener') },

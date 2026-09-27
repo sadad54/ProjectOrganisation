@@ -18,10 +18,12 @@ const CARD = [
   ['License', 'Open — good conversations about interesting work are reason enough'],
 ];
 
+// labels only — no confidence scores: nothing was actually run on the photo,
+// and the site doesn't print numbers that weren't measured
 const BOXES = [
-  { x: 318, y: 262, w: 482, h: 818, label: 'person', conf: '0.98', hot: true },
-  { x: 458, y: 270, w: 178, h: 240, label: 'face', conf: '0.97' },
-  { x: 566, y: 84, w: 88, h: 230, label: 'landmark · KLCC', conf: '0.91' },
+  { x: 318, y: 262, w: 482, h: 818, label: 'person · adnan', hot: true },
+  { x: 458, y: 270, w: 178, h: 240, label: 'face' },
+  { x: 566, y: 84, w: 88, h: 230, label: 'landmark · KLCC' },
 ];
 
 export default function About() {
@@ -62,12 +64,12 @@ export default function About() {
                   style={{ left: `${(b.x / 1080) * 100}%`, top: `${(b.y / 1080) * 100}%`, '--k': i }}
                   aria-hidden="true"
                 >
-                  {b.label} <b>{b.conf}</b>
+                  {b.label}
                 </span>
               ))}
             </div>
             <figcaption className="about-cap">
-              <span>detector pass</span>
+              <span>detector pass · illustrative</span>
               <span>3 objects · KL 2026</span>
             </figcaption>
           </figure>

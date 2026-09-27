@@ -39,28 +39,36 @@ export default function PageTransition() {
   const lastPath = useRef(pathname);
 
   useEffect(() => {
-    function onClick(e) {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      const a = e.target.closest?.('a[data-pt]');
-      if (!a) return;
-      const href = a.getAttribute('href');
-      if (!href || href.startsWith('http') || a.target === '_blank') return;
+    function go(href, text = '') {
       const url = new URL(href, location.href);
-      if (url.pathname === location.pathname) return; // same page: let anchors work
-      e.preventDefault();
+      if (url.pathname === location.pathname) return false;
       if (reducedMotionNow()) {
         router.push(href);
-        return;
+        return true;
       }
       window.__ptBusy = true;
       pending.current = url;
-      setLabel(a.getAttribute('data-pt') || '');
+      setLabel(text);
       setPhase('cover');
       router.prefetch(url.pathname);
       setTimeout(() => {
         setPhase('covered');
         router.push(href, { scroll: false });
       }, COVER_MS);
+      return true;
+    }
+    // programmatic entry point (command palette, etc.)
+    window.__ptGo = go;
+
+    function onClick(e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target.closest?.('a[data-pt]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('http') || a.target === '_blank') return;
+      if (new URL(href, location.href).pathname === location.pathname) return; // same page: let anchors work
+      e.preventDefault();
+      go(href, a.getAttribute('data-pt') || '');
     }
     function onEnter(e) {
       const a = e.target.closest?.('a[data-pt]');
@@ -73,6 +81,7 @@ export default function PageTransition() {
     return () => {
       document.removeEventListener('click', onClick);
       document.removeEventListener('pointerover', onEnter);
+      if (window.__ptGo === go) delete window.__ptGo;
     };
   }, [router]);
 

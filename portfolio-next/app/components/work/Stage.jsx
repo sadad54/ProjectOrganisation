@@ -69,9 +69,14 @@ export default function Stage({ project: p, index, total, neighbours, onSelect, 
             </motion.p>
 
             <motion.h3 className="st-name" variants={chars} aria-label={p.name}>
-              {[...p.name].map((c, i) => (
-                <span className="st-ch" key={i} aria-hidden="true">
-                  <motion.span variants={char}>{c === ' ' ? ' ' : c}</motion.span>
+              {p.name.split(' ').map((w, wi, arr) => (
+                <span className="st-word" key={wi} aria-hidden="true">
+                  {[...w].map((c, ci) => (
+                    <span className="st-ch" key={ci}>
+                      <motion.span variants={char}>{c}</motion.span>
+                    </span>
+                  ))}
+                  {wi < arr.length - 1 && <span className="st-ch">{'\u00A0'}</span>}
                 </span>
               ))}
             </motion.h3>

@@ -15,8 +15,9 @@
 .cs-dom{color:var(--dc)}
 .cs-name{
   font-family:var(--f-display);font-stretch:115%;font-weight:640;
-  font-size:clamp(3rem,10vw,9.5rem);line-height:.9;letter-spacing:-.05em;margin:0 0 22px;
+  font-size:clamp(2.8rem,8.6vw,8.6rem);line-height:.92;letter-spacing:-.05em;margin:0 0 22px;
 }
+.cs-word{display:inline-block;white-space:nowrap}
 .cs-ch{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.05em;margin-bottom:-.05em}
 .cs-ch>span{display:inline-block}
 .js .cs-hero .cs-ch>span{transform:translate3d(0,105%,0)}

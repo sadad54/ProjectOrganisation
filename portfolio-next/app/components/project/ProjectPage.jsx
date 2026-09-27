@@ -77,11 +77,20 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
           )}
         </p>
         <h1 className="cs-name" aria-label={p.name}>
-          {[...p.name].map((c, i) => (
-            <span className="cs-ch" key={i} aria-hidden="true">
-              <span style={{ '--i': i }}>{c === ' ' ? ' ' : c}</span>
-            </span>
-          ))}
+          {(() => {
+            let i = 0;
+            // words stay whole: a line may break between words, never inside one
+            return p.name.split(' ').map((w, wi, arr) => (
+              <span className="cs-word" key={wi} aria-hidden="true">
+                {[...w].map((c) => (
+                  <span className="cs-ch" key={i}>
+                    <span style={{ '--i': i++ }}>{c}</span>
+                  </span>
+                ))}
+                {wi < arr.length - 1 && <span className="cs-ch">{'\u00A0'}</span>}
+              </span>
+            ));
+          })()}
         </h1>
         <p className="cs-hook">{p.hook}</p>
         <div className="cs-hero-row">

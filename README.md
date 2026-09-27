@@ -1,105 +1,89 @@
 # adnan.dev — portfolio
 
-Single-file site. No build step, no dependencies, no framework. `index.html` contains the
-markup, CSS, WebGL shaders and JS; your photo is embedded as base64 so the file is portable.
-
-## Deploy
-
-Drop both files in a repo root and point any static host at it.
-
-- **GitHub Pages** — push to `main`, then Settings → Pages → deploy from `main` / root.
-- **Vercel / Netlify** — drag the folder onto the dashboard. No build command, no output dir.
-- **Cloudflare Pages** — same, framework preset "None".
-
-Files:
+A Next.js site that reads like a model's forward pass. Every section is a layer, and a single WebGL
+"neural field" behind the page re-forms as you move through them.
 
 ```
-index.html     the whole site
-resume.pdf     served by the "Résumé" link and the ⌘K "Download résumé" action
+portfolio-next/     the site (Next.js App Router)
 ```
 
-## Before you publish — placeholders
+## Run it
 
-The site now has all 7 builds (InterviewPilot, WC26 Predictor, Fraud Detection, Mindhive
-Chatbot, ExpenSense, Aura, FinScout), each with a screenshot slot and a repo + demo link pair.
-GitHub links are filled in wherever the repo is public; what's left:
+```bash
+cd portfolio-next
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # production build (all case-study pages prerender)
+```
 
-| Placeholder | Appears in | What to do |
+Deploy `portfolio-next/` to Vercel (framework preset: Next.js), or any Node host that runs `next start`.
+
+## Add a project
+
+Add one object to **`portfolio-next/app/data/work.js`**. That's the whole change. The work console's
+index, its search engine, the similarity map, the command palette (⌘K) and the skills graph all read
+from that array. The schema is documented at the top of the file:
+
+- `tier: 'case'`: flagship. Walkthrough video at `public/assets/walkthroughs/<slug>.mp4` (+ `<slug>_thumbnail.jpg`)
+  and a case-study page; add `app/data/projects/<slug>.js` and register it in `app/data/projects/index.js`.
+- `tier: 'build'`: screenshots listed in `media.files` (`frame: 'desktop'` for browser frames, `'phone'` for a device fan).
+- `tier: 'archive'`: text only. The stage draws a generative "fingerprint" seeded from the slug.
+
+The console is a fixed-height instrument, so the page never gets longer as projects are added.
+
+Skills for the toolkit graph live in `app/data/skills.js`. Each skill lists the stack names it matches,
+and edges are derived from each project's `stack`.
+
+## What's where
+
+| Layer | Section | Component |
 |---|---|---|
-| `YOUR-REPO-LINK-FRAUD-DETECTION` | Fraud Detection repo link | The fraud detection code isn't on GitHub yet (it's local at `D:\RAG\fraud_detection`) — push it, then paste the URL |
-| `YOUR-DEMO-LINK-INTERVIEWPILOT` | InterviewPilot demo button | Paste a live URL once deployed, or delete the `<a class="lnk demo">` tag if you'd rather not show a broken link |
-| `YOUR-DEMO-LINK-WC26` | WC26 Predictor demo button | Same as above |
-| `YOUR-DEMO-LINK-FRAUD-DETECTION` | Fraud Detection demo button | Same as above |
-| `YOUR-DEMO-LINK-MINDHIVE` | Mindhive Chatbot demo button | This repo already has a `vercel.json` — probably the fastest one to deploy |
-| `YOUR-DEMO-LINK-EXPENSENSE` | ExpenSense demo button | Flutter mobile app — you may not have a web demo for this one; delete the button if so |
-| `YOUR-DEMO-LINK-AURA` | Aura demo button | Also worth deciding whether to make `sadad54/AuraFinalPF` public first |
+| L0 Input | Hero: token-streamed headline, rim-lit portrait | `components/home/Hero.jsx` |
+| L1 Thesis | Scroll-lit statement | `components/home/Thesis.jsx` |
+| L2 Model card | About, written as an ML model card, with a detector pass on the photo | `components/home/About.jsx` |
+| L3 Attention | Four engineering decisions in one pinned, scroll-drawn stage | `components/decisions/` |
+| L4 Retrieval | The work console: index, stage, map | `components/work/` |
+| L5 Evaluation | Research | `components/home/Research.jsx` |
+| L6 Weights | Skills × projects graph | `components/home/Weights.jsx` |
+| Out | Contact composer | `components/home/Contact.jsx` |
 
-Search for `YOUR-` and you'll catch all of them.
+Persistent across routes (in the root layout, `components/site/Providers.jsx`): Lenis smooth scroll,
+the neural field, the cursor, the route-transition wipe, the boot sequence and the ⌘K palette.
 
-**Screenshots.** Each project card has a dashed placeholder box (`.shot`). Drop an image at
-the path named inside it — e.g. `assets/screenshots/interviewpilot.png` — and it swaps in
-automatically (no HTML edit needed; the placeholder text is just an `onerror` fallback). Create
-the `assets/screenshots/` folder next to `index.html`. Suggested shot: one clean, representative
-screen per project — a dashboard, the chat UI, the mobile app's main screen, etc. 16:10 aspect
-ratio fits the layout best.
+### The neural field (`app/lib/neural/`)
 
-Two repos are currently private and won't resolve for a visitor until you flip them public:
-`sadad54/AuraFinalPF` and `sadad54/chatbotZUS` (the ZUS/Mindhive chatbot — code lives locally
-at `D:\RAG\chatbot`).
+One Three.js context. About 16k particles (8k on small or low-core devices) carry a position for each of
+six formations: a 7-layer network with flowing synapses, attention arcs, a clustered hypersphere, a
+wireframe loss landscape with a real gradient-descent run, semantic clusters, and a stacked weight
+tensor. The vertex shader blends between formations, so a morph costs one uniform write per frame.
+Sections pick a formation with `data-field="<n>"` (and optionally `data-field-dim`). The pointer is a
+query ray, and clicks send a shockwave. Frame times are monitored and quality drops once if a device
+struggles. The field pauses when the tab is hidden.
 
-Also worth a look:
+### The work console (`components/work/`)
 
-- **The visa paragraph** in the contact section. It's honest and it saves a recruiter a
-  round-trip, but delete the `<div class="visa">` block if you'd rather raise it in
-  conversation instead.
-- **`<title>` and the OG tags** in `<head>` if you want a custom link preview.
+- `retrieval.js`: TF-IDF with query expansion and prefix matching, cosine ranking, nearest
+  neighbours, and a seeded force layout for the map.
+- `board.js`: composes a project's media into one bitmap (poster, browser window, phone fan or
+  generated fingerprint).
+- `denoise.js`: the stage transition, a diffusion-style forward-noise / stepped-denoise pass in raw WebGL.
 
-## The Approach section is now a 4-slide carousel
+## Accessibility and fallbacks
 
-`#loop` used to be one static diagram (the InterviewPilot schema-repair loop). It's now a
-horizontally-swipeable carousel with four real engineering decisions, one per slide, so the
-section didn't grow taller:
+- `prefers-reduced-motion` (or ⌘K → "Reduce motion") shows a still field and no preloader. Pinned
+  sections unpin into a static layout, autoplay and token streaming stop, and content is shown in its
+  final state.
+- Without WebGL, a CSS gradient replaces the field. Without JS, all content is server-rendered and
+  readable, and the work index falls back to a plain list.
+- The console is a keyboard tablist (arrows, Home/End). The palette traps focus and returns it on close.
+- axe-core reports no violations on the homepage or a case study.
 
-1. **Schema repair** (InterviewPilot) — the original animated diagram, unchanged, still
-   auto-plays once on scroll-into-view and has its own Replay button.
-2. **Imbalanced classification** (Fraud Detection) — the accuracy-trap vs PR-AUC comparison,
-   reusing the same count-up number animation as the metrics elsewhere on the site.
-3. **Simulated uncertainty** (WC26 Predictor) — the 10,000-run Monte Carlo + predicted-vs-actual
-   audit, as a flow diagram.
-4. **Adaptive follow-up depth** (InterviewPilot, the other half of that project) — the
-   probe-deeper-or-move-on decision the follow-up agent makes.
+## Before you publish
 
-Navigate it by: dragging with a mouse, swiping on touch, trackpad horizontal scroll, the
-arrow buttons, the dot indicators, or arrow keys while hovering the carousel. All four work off
-`scroll-snap`, so there's no dependency on JS for the core scrolling — the buttons/dots/keys are
-progressive enhancement on top.
-
-To add a fifth slide later: copy one `<div class="loop-slide" id="...">…</div>` block, drop it
-inside `#loopTrack`, and the dot indicators + arrow buttons pick it up automatically (they're
-generated from however many `.loop-slide` elements exist — no JS array to edit).
-
-## How the hero works
-
-A curl-noise velocity field advects a colour buffer on the GPU, ping-ponging between two
-framebuffers at ~44% resolution. Your pointer injects dye along the segment between the last
-two positions, so fast movement leaves a longer streak. Four ambient emitters keep the field
-alive when nobody's touching it, and the field is pre-seeded with 120 simulation steps on
-first paint so it's never blank.
-
-It only runs while the canvas is on screen (IntersectionObserver), falls back to an animated
-CSS gradient if WebGL is unavailable, and is disabled entirely under
-`prefers-reduced-motion`.
-
-## Tweaking
-
-Everything visual is a CSS custom property at the top of the `<style>` block:
-
-```css
---sodium: #FF6A3D;   /* primary accent — orange */
---signal: #FF6A3D;   /* secondary, currently same as primary */
---rose:   #E5484D;   /* used sparingly */
---ink:    #0B0B0D;   /* base */
-```
-
-The fluid palette lives separately in the `SIM` shader string (`warm`, `cool`, `rose` as
-normalised vec3s) — change those to match if you retheme.
+- Demo links: none of the projects has a live demo URL yet. When one is deployed, add it to that
+  project's `links` in `app/data/work.js`.
+- `sadad54/AuraFinalPF` and `sadad54/chatbotZUS` are private, so their repo links won't resolve for a
+  visitor until they're public. The Fraud Detection project has no public repo yet, so it has no
+  repository link.
+- ProofHire screenshots: `public/assets/screenshots/proofhire/` is empty, so the case study simply
+  has no gallery until files are added. The page lists what's on disk at build time.
