@@ -15,6 +15,8 @@ const TEXT = [
   { t: 'a number that says whether it got better.', hot: true },
 ];
 
+const WORDS = TEXT.reduce((n, seg) => n + seg.t.split(' ').length, 0);
+
 export default function Thesis() {
   const sec = useRef(null);
   const txt = useRef(null);
@@ -27,12 +29,17 @@ export default function Thesis() {
       return;
     }
     let raf = 0;
+    // each hot phrase fires the field once as it lights (scrolling forward)
+    const hotEnds = [19.5, 25.5, 34.5].map((w) => w / (WORDS + 3));
+    let lastP = 0;
     const update = () => {
       raf = 0;
       const r = s.getBoundingClientRect();
       const span = r.height - window.innerHeight;
       const p = Math.min(1, Math.max(0, (-r.top + window.innerHeight * 0.15) / Math.max(1, span * 0.78)));
       t.style.setProperty('--p', p.toFixed(4));
+      if (p > lastP && hotEnds.some((h) => lastP < h && p >= h)) window.__field?.pulse();
+      lastP = p;
     };
     const on = () => {
       if (!raf) raf = requestAnimationFrame(update);

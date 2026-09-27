@@ -80,6 +80,9 @@ struggles. The field pauses when the tab is hidden.
 
 ## Before you publish
 
+- Share previews: `app/opengraph-image.jpg` (and the matching `twitter-image.jpg`) is a 1200×630
+  capture of the real hero. On Vercel the image URLs resolve by themselves. On any other host, set
+  `SITE_URL=https://your-domain` at build time. If the hero copy changes, re-capture the image.
 - Demo links: none of the projects has a live demo URL yet. When one is deployed, add it to that
   project's `links` in `app/data/work.js`.
 - `sadad54/AuraFinalPF` and `sadad54/chatbotZUS` are private, so their repo links won't resolve for a

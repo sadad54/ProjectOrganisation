@@ -43,10 +43,12 @@ export default function Nav() {
   const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState('top');
   const [kbd, setKbd] = useState('⌘');
+  const [touch, setTouch] = useState(false);
   const lastY = useRef(0);
 
   useEffect(() => {
     if (/Win|Linux/i.test(navigator.platform || '')) setKbd('Ctrl');
+    setTouch(window.matchMedia('(pointer: coarse)').matches);
     lastY.current = window.scrollY;
     let ticking = false;
     function onScroll() {
@@ -111,8 +113,14 @@ export default function Nav() {
             </a>
           ))}
           <button className="nav-kbd" id="cmdk-open" type="button" aria-label="Open command menu" data-cursor="Menu">
-            <span>{kbd}</span>
-            <span>K</span>
+            {touch ? (
+              <span>Menu</span>
+            ) : (
+              <>
+                <span>{kbd}</span>
+                <span>K</span>
+              </>
+            )}
           </button>
         </nav>
       </header>

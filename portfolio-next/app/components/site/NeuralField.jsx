@@ -54,7 +54,11 @@ export default function NeuralField() {
       e.setTarget(s.m);
       e.setDim(s.dim);
     };
+    let lastY = window.scrollY;
     const onScroll = () => {
+      const y = window.scrollY;
+      engine.current?.setVelocity(y - lastY);
+      lastY = y;
       if (!raf) raf = requestAnimationFrame(sync);
     };
 

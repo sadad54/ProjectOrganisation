@@ -21,6 +21,7 @@ uniform vec3 uRayD;
 uniform float uHover;
 uniform vec3 uShockO;
 uniform float uShockT;
+uniform float uVel;
 attribute vec3 aA2;
 attribute vec3 aB;
 attribute vec3 aC;
@@ -77,6 +78,9 @@ void main(){
 
   // breathing
   p += 0.03 * vec3(sin(uTime * 0.9 + aR.x * 40.0), cos(uTime * 0.7 + aR.x * 31.0), sin(uTime * 0.8 + aR.x * 23.0));
+
+  // scroll velocity smears the field vertically, like a long exposure
+  p.y += uVel * (aR.w - 0.5) * 0.9;
 
   vec4 wp = modelMatrix * vec4(p, 1.0);
 
@@ -225,6 +229,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uHover: { value: 0 },
     uShockO: { value: new THREE.Vector3(0, 0, 0) },
     uShockT: { value: 1 },
+    uVel: { value: 0 },
     uCool: { value: new THREE.Color(...unit(PALETTE.cool)) },
     uEmber: { value: new THREE.Color(...unit(PALETTE.ember)) },
     uWhite: { value: new THREE.Color(1, 0.96, 0.9) },
@@ -304,6 +309,8 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     hoverTarget: 0,
     lastMove: 0,
     shockT: 1,
+    vel: 0,
+    velTarget: 0,
     t: 0,
     running: false,
     raf: 0,
@@ -362,6 +369,9 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     group.updateMatrixWorld();
 
     if (S.shockT < 1) S.shockT = Math.min(1, S.shockT + dt / 1.5);
+    S.vel += (S.velTarget - S.vel) * (1 - Math.exp(-dt * 6));
+    S.velTarget *= Math.exp(-dt * 5);
+    uniforms.uVel.value = S.vel;
 
     uniforms.uTime.value = S.t;
     uniforms.uMorph.value = S.morph;
@@ -474,6 +484,11 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
       if (reduced) {
         S.morph = S.target;
       }
+    },
+    /** scroll velocity in px/frame (Lenis), mapped to a small smear */
+    setVelocity(v) {
+      if (reduced) return;
+      S.velTarget = Math.max(-1, Math.min(1, v / 60));
     },
     /** 0..1 page-level dimming multiplier */
     setDim(v) {

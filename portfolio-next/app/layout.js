@@ -15,13 +15,19 @@ export const viewport = {
   themeColor: '#050608',
 };
 
+// Share previews need absolute image URLs. Vercel supplies its own deployment
+// URL; anywhere else, set SITE_URL (e.g. https://your-domain.dev).
+const SITE_URL = process.env.SITE_URL;
+
 export const metadata = {
+  ...(SITE_URL && { metadataBase: new URL(SITE_URL) }),
   title: 'Adnan Mashrur Sadad — AI & Software Engineer',
   description:
     'AI and software engineer in Kuala Lumpur. I build LLM systems that check their own work — validation, repair loops, eval harnesses, and deployments that actually run.',
+  // og/twitter title and description are inherited from each page's own, so a
+  // shared case-study link previews as that project, not as the homepage
   openGraph: {
-    title: 'Adnan Mashrur Sadad — AI & Software Engineer',
-    description: 'I build LLM systems that check their own work.',
+    siteName: 'Adnan Mashrur Sadad',
     type: 'website',
   },
   icons: {
