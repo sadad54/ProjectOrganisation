@@ -162,6 +162,77 @@ void main(){
 }
 `;
 
+/* Glass pass. The field renders offscreen, then one full-screen quad looks
+   at it through a sheet of fluted (reeded) glass: every vertical flute is a
+   half-cylinder lens, so the sample shifts sideways with the slope of the
+   lens profile — a compressed, repeated image near each edge, true near the
+   centre. R/G/B shift by slightly different amounts (dispersion), and a
+   soft aurora sits behind the particles so the flutes have something
+   blurred to bend; points alone just double. uGlass (0..1) scales the whole
+   effect and follows the page's data-field-dim. */
+const GLASS_VERT = /* glsl */ `
+varying vec2 vUv;
+void main(){
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}
+`;
+const GLASS_FRAG = /* glsl */ `
+precision highp float;
+uniform sampler2D uTex;
+uniform float uFlutes;
+uniform float uGlass;
+uniform float uTime;
+uniform float uAspect;
+uniform vec3 uCool;
+uniform vec3 uEmber;
+uniform vec3 uWhite;
+varying vec2 vUv;
+
+vec4 aurora(vec2 uv){
+  // a blue column falling from the top, hottest just right of centre (the
+  // type pocket is on the left), with a cantaloupe core pooling at the base
+  float cx = 0.6 + 0.02 * sin(uTime * 0.11);
+  // never narrower than square, or a portrait phone becomes one blue slab
+  float dx = (uv.x - cx) * max(uAspect, 1.0);
+  float breathe = 0.92 + 0.08 * sin(uTime * 0.37);
+  float column = exp(-dx * dx / 0.22) * smoothstep(-0.1, 1.0, uv.y);
+  float wash = exp(-dx * dx / 1.4) * 0.35;
+  float cy = uv.y - 0.1;
+  float core = exp(-dx * dx / 0.07) * exp(-cy * cy / 0.035);
+  float b = (column * 0.6 + wash * 0.22) * breathe;
+  float w = core * 0.5 * breathe;
+  vec3 col = uCool * b + uEmber * w;
+  return vec4(col, max(b, w));
+}
+
+void main(){
+  float f = fract(vUv.x * uFlutes);
+  float c = f * 2.0 - 1.0;
+  // slope of a half-cylinder profile, clamped so the edges stay legible
+  float slope = c / sqrt(max(1.0 - c * c * 0.9, 0.1));
+  float off = slope * 0.27 * uGlass / uFlutes;
+
+  vec2 uvG = vec2(vUv.x + off, vUv.y);
+  vec4 sG = texture2D(uTex, uvG);
+  float r = texture2D(uTex, vec2(vUv.x + off * 1.12, vUv.y)).r;
+  float b = texture2D(uTex, vec2(vUv.x + off * 0.88, vUv.y)).b;
+  vec3 col = vec3(r, sG.g, b);
+  float a = sG.a;
+
+  // the aurora is refracted too — that is what draws the vertical streaks
+  vec4 glow = aurora(uvG) * uGlass;
+  // each flute darkens toward one edge and catches light on the other
+  float lum = dot(glow.rgb + col, vec3(0.3, 0.59, 0.11));
+  float shade = 1.0 - 0.105 * uGlass * smoothstep(0.2, 1.0, -c);
+  float ridge = smoothstep(0.9, 1.0, f) * (0.0035 + lum * 0.26) * uGlass;
+
+  col = (col + glow.rgb) * shade + uWhite * ridge;
+  a = clamp(a + glow.a + ridge, 0.0, 1.0);
+  gl_FragColor = vec4(col, a);
+}
+`;
+
 const lerp = (a, b, t) => a + (b - a) * t;
 
 function lookAt(m) {
@@ -232,7 +303,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uVel: { value: 0 },
     uCool: { value: new THREE.Color(...unit(PALETTE.cool)) },
     uEmber: { value: new THREE.Color(...unit(PALETTE.ember)) },
-    uWhite: { value: new THREE.Color(1, 0.96, 0.9) },
+    uWhite: { value: new THREE.Color(0.94, 0.97, 1) },
   };
   const mat = new THREE.ShaderMaterial({
     vertexShader: VERT,
@@ -290,6 +361,33 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
   group.add(points);
   scene.add(group);
 
+  // the field draws into this, the glass pass draws it to the screen
+  const target = new THREE.WebGLRenderTarget(1, 1, { depthBuffer: false });
+  const glassU = {
+    uTex: { value: target.texture },
+    uFlutes: { value: 40 },
+    uGlass: { value: 1 },
+    uTime: { value: 0 },
+    uAspect: { value: 1 },
+    uCool: uniforms.uCool,
+    uEmber: uniforms.uEmber,
+    uWhite: uniforms.uWhite,
+  };
+  const glassMat = new THREE.ShaderMaterial({
+    vertexShader: GLASS_VERT,
+    fragmentShader: GLASS_FRAG,
+    uniforms: glassU,
+    depthWrite: false,
+    depthTest: false,
+    blending: THREE.NoBlending,
+  });
+  const glassGeo = new THREE.PlaneGeometry(2, 2);
+  const glassScene = new THREE.Scene();
+  glassScene.add(new THREE.Mesh(glassGeo, glassMat));
+  const glassCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  // flute width in CSS px: wider on small screens so the image survives
+  const fluteW = small ? 38 : 26;
+
   // each line set belongs to its formation(s) and fades with distance to it
   const near = (m, k) => Math.max(0, 1 - Math.abs(m - k) * 1.8);
   const synapseAlpha = (m) => near(m, 0) + near(m, 6);
@@ -329,6 +427,9 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     // keep the formations' horizontal extent on narrow screens
     camera.position.z = camera.aspect < 1 ? 10 + (1 - camera.aspect) * 9 : 10;
     camera.updateProjectionMatrix();
+    target.setSize(Math.round(w * dpr), Math.round(h * dpr));
+    glassU.uFlutes.value = w / fluteW;
+    glassU.uAspect.value = camera.aspect;
   }
   resize();
 
@@ -342,7 +443,11 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
   }
 
   function render() {
+    renderer.setRenderTarget(target);
+    renderer.clear();
     renderer.render(scene, camera);
+    renderer.setRenderTarget(null);
+    renderer.render(glassScene, glassCam);
   }
 
   function frame(now) {
@@ -374,6 +479,8 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uniforms.uVel.value = S.vel;
 
     uniforms.uTime.value = S.t;
+    glassU.uTime.value = S.t;
+    glassU.uGlass.value = S.dimMul;
     uniforms.uMorph.value = S.morph;
     uniforms.uDim.value = look.dim * S.dimMul;
     synapseU.uA.value = synapseAlpha(S.morph) * look.dim * S.dimMul;
@@ -418,6 +525,8 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     synapseU.uA.value = synapseAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
     landU.uA.value = landAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
     uniforms.uTime.value = 2;
+    glassU.uTime.value = 2;
+    glassU.uGlass.value = 0.7 * S.dimTarget;
     uniforms.uHover.value = 0;
     render();
   }
@@ -519,6 +628,9 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
         g.dispose();
         m.dispose();
       });
+      target.dispose();
+      glassGeo.dispose();
+      glassMat.dispose();
       renderer.dispose();
     },
   };
