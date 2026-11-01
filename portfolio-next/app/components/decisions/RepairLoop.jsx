@@ -85,7 +85,7 @@ function SceneInner({ p, phase, setPhase }) {
         >
           <defs>
             <marker id="rlah" markerWidth="7" markerHeight="7" refX="6" refY="3.2" orient="auto">
-              <path d="M0 0 L6.4 3.2 L0 6.4 z" fill="rgba(237,234,227,.28)" />
+              <path d="M0 0 L6.4 3.2 L0 6.4 z" style={{ fill: 'rgba(var(--text-rgb),.28)' }} />
             </marker>
           </defs>
 

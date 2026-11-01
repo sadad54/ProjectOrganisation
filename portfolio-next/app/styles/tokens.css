@@ -1,9 +1,10 @@
 /* =========================================================================
    TOKENS — "Activation"
-   One dark ground, one warm signal. The palette borrows its logic from an
-   activation map: almost everything sits cold and dim, and the few things
-   that are live (hovered, selected, firing, the number that matters) run
-   hot. Ember is the only UI accent. Cool is data-only (the neural field,
+   Midnight ground, electric-blue atmosphere, one warm signal. The palette
+   borrows its logic from an activation map: almost everything sits cold
+   and blue, and the few things that are live (hovered, selected, firing,
+   the number that matters) run hot. Ember is the only UI accent and should
+   stay rare — blue owns the room. Cool is data-only (the neural field,
    diagram structure). Pass / fail are diagram semantics, never chrome.
 
    The JS-driven layers (neural field, denoise stage) read the same values
@@ -12,34 +13,38 @@
 :root{
   color-scheme:dark;
 
-  /* ground + surfaces (cool graphite steps) */
-  --void:#050608;
-  --void-rgb:5,6,8;
-  --s1:#0B0D11;
-  --s2:#11141A;
-  --s3:#181C24;
-  --s4:#20252F;
+  /* ground + surfaces (midnight steps, faintly blue) */
+  --void:#02070A;
+  --void-rgb:2,7,10;
+  --s1:#08111A;
+  --s1-rgb:8,17,26;
+  --s2:#0D1722;
+  --s2-rgb:13,23,34;
+  --s3:#131F2B;
+  --s4:#1A2734;
+  /* translucent panel fill over the field (cards, consoles, composer) */
+  --panel-rgb:5,12,18;
 
-  /* text */
-  --text:#EEEBE4;
-  --text-rgb:238,235,228;
-  --text-2:#A6A39C;   /* ~8:1 on --void */
-  --text-3:#85837D;   /* ~5.3:1 on --void — the floor for small mono labels */
+  /* text (cool white — no warm cream) */
+  --text:#EAF1F6;
+  --text-rgb:234,241,246;
+  --text-2:#9DA9B4;   /* ~8:1 on --void */
+  --text-3:#7C8894;   /* ~5.3:1 on --void — the floor for small mono labels */
 
   /* hairlines are neutral, never tinted */
-  --hair:rgba(238,235,228,.08);
-  --hair-2:rgba(238,235,228,.14);
-  --hair-3:rgba(238,235,228,.22);
+  --hair:rgba(234,241,246,.08);
+  --hair-2:rgba(234,241,246,.14);
+  --hair-3:rgba(234,241,246,.22);
 
-  /* the signal */
-  --ember:#FF6B3D;
-  --ember-rgb:255,107,61;
-  --ember-hi:#FF8A63;
-  --ember-lo:#E4521F;
+  /* the signal (cantaloupe) */
+  --ember:#FC734D;
+  --ember-rgb:252,115,77;
+  --ember-hi:#FF9270;
+  --ember-lo:#E2572F;
 
   /* data-only hues */
-  --cool:#A9BBFF;
-  --cool-rgb:169,187,255;
+  --cool:#0297DE;
+  --cool-rgb:2,151,222;
   --pass:#52E3A8;
   --pass-rgb:82,227,168;
   --sun:#F2C14E;      /* client web domain */

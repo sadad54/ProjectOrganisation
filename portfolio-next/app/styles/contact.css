@@ -9,7 +9,7 @@
 
 .composer{
   border:1px solid var(--hair-2);border-radius:var(--r-lg);overflow:hidden;
-  background:rgba(8,10,13,.85);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  background:rgba(var(--panel-rgb),.85);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
   transition:border-color .3s,box-shadow .3s;
 }
 .composer:focus-within{border-color:rgba(var(--ember-rgb),.6);box-shadow:0 0 0 4px rgba(var(--ember-rgb),.08),0 30px 80px rgba(0,0,0,.4)}

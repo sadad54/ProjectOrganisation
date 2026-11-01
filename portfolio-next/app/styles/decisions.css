@@ -17,7 +17,7 @@
 .dec-tab{
   position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;
   padding:11px 12px 16px;border-radius:var(--r-sm);border:1px solid var(--hair);
-  background:rgba(8,10,13,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  background:rgba(var(--panel-rgb),.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   transition:border-color .35s,background-color .35s;
 }
 .dec-tab:hover{border-color:var(--hair-3)}
@@ -61,7 +61,7 @@
 .scene-body strong{color:var(--text);font-weight:500}
 .slab{
   border:1px solid var(--hair-2);border-radius:var(--r-sm);
-  background:linear-gradient(180deg,rgba(var(--text-rgb),.03),transparent 60%),rgba(11,13,17,.85);
+  background:linear-gradient(180deg,rgba(var(--text-rgb),.03),transparent 60%),rgba(var(--s1-rgb),.85);
   padding:14px 16px;font-family:var(--f-mono);font-size:11px;line-height:1.8;color:var(--text-2);overflow-x:auto;
 }
 .slab .c{color:var(--text-3)}
@@ -82,7 +82,7 @@
 
 .scene-stage{
   position:relative;min-width:0;border:1px solid var(--hair-2);border-radius:var(--r-md);
-  background:rgba(8,10,13,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  background:rgba(var(--panel-rgb),.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   padding:clamp(18px,2.6vw,34px);box-shadow:0 40px 100px rgba(0,0,0,.4);
 }
 .scene-svg{width:100%;height:auto;display:block;overflow:visible}

@@ -42,15 +42,15 @@ function cover(ctx, img, x, y, w, h, align = 0.5) {
 }
 
 function ground(ctx, W, H) {
-  ctx.fillStyle = '#0B0D11';
+  ctx.fillStyle = rgba(PALETTE.s1, 1);
   ctx.fillRect(0, 0, W, H);
   const g = ctx.createRadialGradient(W * 0.5, H * 0.35, 0, W * 0.5, H * 0.35, Math.max(W, H) * 0.75);
-  g.addColorStop(0, 'rgba(255,107,61,0.07)');
-  g.addColorStop(1, 'rgba(255,107,61,0)');
+  g.addColorStop(0, rgba(PALETTE.cool, 0.07));
+  g.addColorStop(1, rgba(PALETTE.cool, 0));
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
   // dot grid
-  ctx.fillStyle = 'rgba(238,235,228,0.05)';
+  ctx.fillStyle = rgba(PALETTE.text, 0.05);
   const step = Math.round(Math.min(W, H) / 18);
   for (let y = step / 2; y < H; y += step) for (let x = step / 2; x < W; x += step) ctx.fillRect(x, y, 1.5, 1.5);
 }
@@ -67,13 +67,13 @@ function browser(ctx, img, W, H, u) {
   ctx.shadowBlur = 40 * u;
   ctx.shadowOffsetY = 18 * u;
   rr(ctx, x, y, w, h + 30 * u, 10 * u);
-  ctx.fillStyle = '#11141A';
+  ctx.fillStyle = rgba(PALETTE.s2, 1);
   ctx.fill();
   ctx.restore();
   ctx.save();
   rr(ctx, x, y, w, h + 30 * u, 10 * u);
   ctx.clip();
-  ctx.fillStyle = '#181C24';
+  ctx.fillStyle = rgba(PALETTE.s3, 1);
   ctx.fillRect(x, y, w, bar);
   ['#FF5F57', '#FEBC2E', '#28C840'].forEach((c, i) => {
     ctx.fillStyle = c;
@@ -83,12 +83,12 @@ function browser(ctx, img, W, H, u) {
     ctx.fill();
   });
   ctx.globalAlpha = 1;
-  ctx.fillStyle = 'rgba(238,235,228,0.07)';
+  ctx.fillStyle = rgba(PALETTE.text, 0.07);
   rr(ctx, x + w * 0.3, y + bar * 0.22, w * 0.4, bar * 0.56, bar * 0.28);
   ctx.fill();
   cover(ctx, img, x, y + bar, w, h + 30 * u - bar, 0);
   ctx.restore();
-  ctx.strokeStyle = 'rgba(238,235,228,0.12)';
+  ctx.strokeStyle = rgba(PALETTE.text, 0.12);
   ctx.lineWidth = u;
   rr(ctx, x + 0.5, y + 0.5, w - 1, h + 30 * u - 1, 10 * u);
   ctx.stroke();
@@ -105,7 +105,7 @@ function phone(ctx, img, cx, cy, ph, u, alpha) {
   ctx.shadowBlur = 36 * u;
   ctx.shadowOffsetY = 16 * u;
   rr(ctx, x, y, pw, ph, r);
-  ctx.fillStyle = '#050608';
+  ctx.fillStyle = rgba(PALETTE.void, 1);
   ctx.fill();
   ctx.restore();
   ctx.save();
@@ -117,10 +117,10 @@ function phone(ctx, img, cx, cy, ph, u, alpha) {
   ctx.restore();
   ctx.save();
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = '#050608';
+  ctx.fillStyle = rgba(PALETTE.void, 1);
   rr(ctx, cx - pw * 0.13, y + b + 5 * u, pw * 0.26, 11 * u, 6 * u);
   ctx.fill();
-  ctx.strokeStyle = 'rgba(238,235,228,0.16)';
+  ctx.strokeStyle = rgba(PALETTE.text, 0.16);
   ctx.lineWidth = u;
   rr(ctx, x + 0.5, y + 0.5, pw - 1, ph - 1, r);
   ctx.stroke();
@@ -164,7 +164,7 @@ function fingerprint(ctx, slug, W, H, u) {
       ctx.fillStyle = g;
       ctx.fillRect(nd.x - r * 5, nd.y - r * 5, r * 10, r * 10);
     }
-    ctx.fillStyle = nd.hot ? rgba(PALETTE.ember, 1) : '#0B0D11';
+    ctx.fillStyle = nd.hot ? rgba(PALETTE.ember, 1) : rgba(PALETTE.s1, 1);
     ctx.strokeStyle = nd.hot ? rgba(PALETTE.ember, 1) : rgba(PALETTE.cool, 0.7);
     ctx.lineWidth = 1.4 * u;
     ctx.beginPath();
@@ -172,7 +172,7 @@ function fingerprint(ctx, slug, W, H, u) {
     ctx.fill();
     ctx.stroke();
   });
-  ctx.fillStyle = 'rgba(238,235,228,0.42)';
+  ctx.fillStyle = rgba(PALETTE.text, 0.42);
   ctx.font = `${10 * u}px "Geist Mono", ui-monospace, monospace`;
   ctx.textAlign = 'center';
   ctx.fillText(`FINGERPRINT · ${slug.toUpperCase()} · NO SCREENSHOTS ON FILE`, W / 2, H - 22 * u);
@@ -205,8 +205,8 @@ export async function composeBoard(p, i, W, H, u) {
     cover(ctx, img, 0, 0, W, H);
     // a quiet scrim at the bottom for the overlay label
     const g = ctx.createLinearGradient(0, H * 0.7, 0, H);
-    g.addColorStop(0, 'rgba(5,6,8,0)');
-    g.addColorStop(1, 'rgba(5,6,8,0.55)');
+    g.addColorStop(0, rgba(PALETTE.void, 0));
+    g.addColorStop(1, rgba(PALETTE.void, 0.55));
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, H);
     return cv;
