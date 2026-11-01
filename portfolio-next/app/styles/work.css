@@ -5,6 +5,7 @@
 .d-ml{--dc:var(--cool);--dc-rgb:var(--cool-rgb)}
 .d-mobile{--dc:var(--pass);--dc-rgb:var(--pass-rgb)}
 .d-systems{--dc:var(--text-2);--dc-rgb:var(--text-rgb)}
+.d-web{--dc:var(--sun);--dc-rgb:var(--sun-rgb)}
 
 .work-head{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);gap:28px clamp(28px,5vw,80px);

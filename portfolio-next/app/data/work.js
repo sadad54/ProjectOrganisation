@@ -10,12 +10,13 @@
      name:    'My Project'
      year:    '2026'                 optional
      kind:    'RAG + evaluation'     one-line category
-     domain:  'llm' | 'ml' | 'mobile' | 'systems'   (see DOMAINS)
+     domain:  'llm' | 'ml' | 'mobile' | 'systems' | 'web'   (see DOMAINS)
      tier:    'case' | 'build' | 'archive'
               case    — flagship, has a walkthrough video + case-study page
               build   — shipped project, screenshots, no dedicated page
               archive — smaller build, text only (gets a generated glyph)
      hook:    one sentence, the reason to care
+     badge:   'Gold Award · NALI 2026'   optional award line, shown beside the year
      metric:  { value: '0.89', label: 'PR-AUC at a 0.17% fraud rate' }  optional
      media:   { type: 'video', slug }                                     case studies
               { type: 'shots', dir, files: [...], frame: 'desktop' | 'phone' }
@@ -35,6 +36,7 @@ export const DOMAINS = {
   ml: { label: 'ML & data', short: 'ML' },
   mobile: { label: 'Mobile & vision', short: 'Mobile' },
   systems: { label: 'Systems & search', short: 'Systems' },
+  web: { label: 'Client web', short: 'Web' },
 };
 
 const shots = (dir, n) => Array.from({ length: n }, (_, i) => `/assets/screenshots/${dir}/${String(i + 1).padStart(2, '0')}.png`);
@@ -76,6 +78,36 @@ export const WORK = [
     ],
     stack: ['Python', 'Redpanda', 'PyFlink', 'Feast', 'XGBoost', 'PyTorch Geometric', 'FastAPI', 'ONNX Runtime', 'MLflow', 'Kubernetes', 'Prometheus / Grafana', 'Google Cloud'],
     links: [{ label: 'Repository', href: 'https://github.com/sadad54/driftline' }],
+    page: true,
+  },
+  {
+    slug: 'learn2unlock',
+    name: 'Learn2Unlock',
+    year: '2026',
+    kind: 'Human-in-the-loop LLM · mobile',
+    domain: 'llm',
+    tier: 'case',
+    badge: 'Gold Award · NALI 2026',
+    hook: 'The AI drafts. A parent decides. Server code keeps score.',
+    metric: { value: '0', label: 'minutes of screen time the model can award' },
+    media: {
+      type: 'shots',
+      frame: 'phone',
+      files: [
+        '/assets/screenshots/learn2unlock/02-child-restriction.webp',
+        '/assets/screenshots/learn2unlock/06-parent-ai-review.webp',
+        '/assets/screenshots/learn2unlock/03-child-challenge.webp',
+        '/assets/screenshots/learn2unlock/05-parent-generate.webp',
+      ],
+      alt: 'Learn2Unlock screens: the child’s challenge offer, a quiz question, AI question generation and the parent review queue',
+    },
+    notes: [
+      'Kids earn screen time by answering short questions aligned to Malaysia’s <b>KSSR</b> primary curriculum — Years 1–6, Maths, Science, Bahasa Melayu and English. Parents set the rules.',
+      '<b>Human-in-the-loop by design:</b> the LLM only drafts. Drafts arrive as schema-checked JSON, a deterministic server-side filter rejects unsafe, broken or duplicate ones, and a parent approves every survivor.',
+      'Scoring, rewards and rules run in server code the model can’t reach — the phone only sends chosen answers. A working prototype: device pairing, app blocking and reports are still simulated.',
+    ],
+    stack: ['TypeScript', 'React Native', 'Expo', 'Node.js', 'SQLite', 'Zod', 'Groq', 'pnpm'],
+    links: [{ label: 'Repository', href: 'https://github.com/sadad54/Learn2Unlock' }],
     page: true,
   },
   {
@@ -244,6 +276,78 @@ export const WORK = [
     ],
     stack: ['Flutter', 'Dart', 'FastAPI', 'Supabase', 'Groq API', 'Hugging Face'],
     links: [],
+  },
+  {
+    slug: 'gravity-digital',
+    name: 'Gravity Digital',
+    year: '2026',
+    kind: 'Client web · Next.js + WebGL',
+    domain: 'web',
+    tier: 'build',
+    hook: 'An agency site whose 3D scene steps down a quality tier before a slow device drops frames.',
+    metric: { value: '74', label: 'Vitest tests across 11 suites' },
+    media: {
+      type: 'shots',
+      frame: 'desktop',
+      files: ['/assets/screenshots/gravity-digital/01-home.webp'],
+      alt: 'Gravity Digital homepage: “Perfectly gravitalized.” beside a 3D logo mark over a planet horizon',
+    },
+    notes: [
+      'Full rebuild of a Dhaka creative and digital agency’s site on <b>Next.js 16</b> (App Router), React 19 and TypeScript — statically pre-rendered work and service pages, sitemap, robots and metadata.',
+      'A <b>Three.js / WebGL</b> scene picks a quality tier (high / medium / low / off) per device from WebGL support, reduced motion, CPU cores, pointer type and viewport width, and <b>downgrades itself at runtime</b> when average frame time exceeds 22 ms over a 60-frame window.',
+      'Lazy-loaded <b>Matter.js physics</b> that stops off-screen, <b>GSAP</b> scroll animation (ScrollTrigger, Flip, SplitText), a page-transition state machine, accessible Radix UI dialogs and reduced-motion fallbacks.',
+    ],
+    stack: ['Next.js', 'React', 'TypeScript', 'Three.js', 'GSAP', 'Matter.js', 'Radix UI', 'Vitest', 'Vercel'],
+    links: [
+      { label: 'Live site', href: 'https://gravitydigitalbd.com' },
+      { label: 'Repository', href: 'https://github.com/sadad54/gravity-digital-nextjs' },
+    ],
+  },
+  {
+    slug: 'modelznet',
+    name: 'ModelzNet',
+    year: '2026',
+    kind: 'Client web · booking flows',
+    domain: 'web',
+    tier: 'build',
+    hook: 'Booking, registration and a session archive for a Kuala Lumpur model network.',
+    metric: { value: '564', label: 'photos in the session archive · 12 portfolios' },
+    media: {
+      type: 'shots',
+      frame: 'desktop',
+      files: ['/assets/screenshots/modelznet/01-home.webp'],
+      alt: 'ModelzNet homepage: “Real models. Real portfolios.” with Book a spot and Register buttons',
+    },
+    notes: [
+      'Next.js site for a Kuala Lumpur model network, with a <b>4-step booking flow</b> and a <b>5-step registration flow</b> that both take bank-transfer receipt uploads.',
+      'A guest directory filterable by session date, and a <b>564-photo session archive</b> across 12 portfolios.',
+      'A partnership-message composer and a referral programme section.',
+    ],
+    stack: ['Next.js', 'React', 'TypeScript', 'Vercel'],
+    links: [{ label: 'Live site', href: 'https://www.modelznet.com' }],
+  },
+  {
+    slug: 'loop-and-lug',
+    name: 'Loop & Lug',
+    year: '2026',
+    kind: 'Client web · retail',
+    domain: 'web',
+    tier: 'build',
+    hook: 'New and pre-owned watches in Dhaka and Kuala Lumpur, with the inspection laid out step by step.',
+    metric: { value: '10', label: 'point inspection, walked through interactively' },
+    media: {
+      type: 'shots',
+      frame: 'desktop',
+      files: ['/assets/screenshots/loop-and-lug/01-home.webp'],
+      alt: 'Loop & Lug homepage: “Watches, examined.” beside a close-up of a steel dress watch',
+    },
+    notes: [
+      'Site for an independent new and pre-owned watch dealer in <b>Dhaka and Kuala Lumpur</b>.',
+      'An interactive <b>10-point inspection walkthrough</b>, budget-based sourcing enquiries and a <b>WhatsApp</b> sell / trade-in path.',
+      'SEO metadata — Open Graph and indexing — so shared links and search results read properly.',
+    ],
+    stack: ['Next.js', 'Vercel'],
+    links: [{ label: 'Live site', href: 'https://loop-and-lug.vercel.app' }],
   },
   {
     slug: 'ai-eye',
