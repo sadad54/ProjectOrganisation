@@ -7,7 +7,7 @@ const COL_H = 130;
 const GAP = 60;
 const PAD = 20;
 
-export default function CompareDiagram({ before, after, diffLabel, title }) {
+export default function CompareDiagram({ before, after, diffLabel, arrow = true, title }) {
   const uid = useId();
   const arrowId = `dg-arrow-compare-${uid}`;
   const width = PAD * 2 + COL_W * 2 + GAP;
@@ -39,7 +39,8 @@ export default function CompareDiagram({ before, after, diffLabel, title }) {
           </g>
         );
       })}
-      <line
+      {/* arrow: false — the two columns are deliberately unconnected */}
+      {arrow && <line
         x1={PAD + COL_W}
         y1={PAD + COL_H / 2}
         x2={PAD + COL_W + GAP}
@@ -47,7 +48,7 @@ export default function CompareDiagram({ before, after, diffLabel, title }) {
         className="dg-line"
         strokeWidth="1.5"
         markerEnd={`url(#${arrowId})`}
-      />
+      />}
       {diffLabel && (
         <text x={PAD + COL_W + GAP / 2} y={PAD + COL_H / 2 - 10} className="dg-accent" fontSize="12" textAnchor="middle">
           {diffLabel}
