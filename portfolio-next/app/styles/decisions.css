@@ -1,5 +1,5 @@
 /* =========================================================================
-   DECISIONS (L3) — one pinned stage, four chapters
+   DECISIONS (L3) — one pinned stage, one chapter per decision
    ========================================================================= */
 .decisions{position:relative}
 .dec-track{position:relative}
@@ -13,7 +13,7 @@
 }
 .dec-head .layer{margin-bottom:14px}
 .dec-title{max-width:16ch}
-.dec-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.dec-tabs{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:8px}
 .dec-tab{
   position:relative;display:flex;flex-direction:column;gap:4px;text-align:left;
   padding:11px 12px 16px;border-radius:var(--r-sm);border:1px solid var(--hair);

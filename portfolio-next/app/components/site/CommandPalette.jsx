@@ -59,7 +59,7 @@ export default function CommandPalette() {
       ['work', 'Selected work'],
       ['research', 'Research'],
       ['about', 'About — the model card'],
-      ['decisions', 'Four decisions I’d defend'],
+      ['decisions', 'The decisions I’d defend'],
       ['toolkit', 'Toolkit — skills graph'],
       ['contact', 'Contact'],
     ].forEach(([id, n]) => A.push({ g: 'Sections', n, h: 'Jump', go: () => goSection(id) }));
