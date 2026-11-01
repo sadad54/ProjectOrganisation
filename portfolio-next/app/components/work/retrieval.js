@@ -59,8 +59,8 @@ const SYN = {
   kafka: 'redpanda streaming pyflink',
   drift: 'psi ks retrain retraining decay',
   mlops: 'mlflow drift retrain kubernetes onnx monitoring',
-  mobile: 'flutter dart app phone',
-  app: 'flutter mobile react',
+  mobile: 'flutter dart app phone react native expo',
+  app: 'flutter mobile react native expo',
   vision: 'ocr cnn image camera computer try-on',
   cv: 'ocr cnn image vision computer',
   ocr: 'vision receipt text recognition',
@@ -69,6 +69,16 @@ const SYN = {
   sql: 'text2sql postgresql sqlalchemy mysql database query',
   database: 'sql postgresql pgvector redis mysql supabase firebase',
   frontend: 'react typescript next.js vite ui recharts',
+  web: 'next.js react website client vercel frontend',
+  website: 'next.js react web client vercel',
+  client: 'website web freelance next.js',
+  '3d': 'three.js webgl scene',
+  webgl: 'three.js 3d scene',
+  animation: 'gsap three.js motion scroll',
+  physics: 'matter.js simulation',
+  human: 'parent approval review human-in-the-loop',
+  education: 'kssr curriculum question child learning',
+  kids: 'child parent screen time kssr',
   backend: 'fastapi api spring redis worker pydantic',
   api: 'fastapi openapi rest endpoint',
   deploy: 'docker kubernetes ci github actions onnx cloud',
@@ -163,8 +173,11 @@ export function search(index, q) {
   return index.vecs
     .map((dv, i) => {
       let score = dot(qv, dv);
-      // a query naming the project outright should win
-      if (index.names[i].some((n) => qt.includes(n))) score += 0.35;
+      // a query naming the project outright should win; a query that only
+      // shares one word of a longer name ("loop" in "Loop & Lug") gets a share
+      const nm = index.names[i];
+      const named = nm.filter((n) => qt.includes(n)).length;
+      if (named) score += (0.35 * named) / nm.length;
       return { i, score: Math.min(1, score) };
     })
     .sort((a, b) => b.score - a.score || a.i - b.i);

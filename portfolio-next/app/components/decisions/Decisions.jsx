@@ -6,6 +6,7 @@ import RepairLoop from './RepairLoop';
 import Drift from './Drift';
 import MonteCarlo from './MonteCarlo';
 import Evidence from './Evidence';
+import Draft from './Draft';
 import Split from '../site/Split';
 import { scrollToEl } from '../site/SmoothScroll';
 import { reducedMotionNow, useMedia } from '../../lib/motion';
@@ -15,10 +16,12 @@ const CHAPTERS = [
   { C: Drift, t: 'Notice the decay first', k: 'Driftline' },
   { C: MonteCarlo, t: 'Simulate, don’t guess', k: 'WC26 Predictor' },
   { C: Evidence, t: 'No source, no claim', k: 'ProofHire' },
+  { C: Draft, t: 'Let the model draft, never decide', k: 'Learn2Unlock' },
 ];
+const COUNT = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'][CHAPTERS.length];
 const PER = 125; // vh of scroll per chapter
 
-/* L3 — four real engineering decisions in one pinned stage. Scroll drives a
+/* L3 — real engineering decisions in one pinned stage. Scroll drives a
    single progress value; each chapter gets its own slice of it, so its
    diagram draws itself (and un-draws on the way back) while the chapter is
    on stage. On small screens or with reduced motion there's no pin: the
@@ -38,6 +41,7 @@ function Pinned() {
     useTransform(scrollYProgress, (v) => Math.min(1, Math.max(0, (v * n - 1) * 1.12))),
     useTransform(scrollYProgress, (v) => Math.min(1, Math.max(0, (v * n - 2) * 1.12))),
     useTransform(scrollYProgress, (v) => Math.min(1, Math.max(0, (v * n - 3) * 1.12))),
+    useTransform(scrollYProgress, (v) => Math.min(1, Math.max(0, (v * n - 4) * 1.12))),
   ];
   const bar = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
@@ -63,9 +67,9 @@ function Pinned() {
               </span>
               <b>L3</b> Attention <span className="rule" aria-hidden="true" /> the decisions I’d defend
             </p>
-            <Split as="h2" className="h2 dec-title" text={['Four trade-offs, ', { t: 'drawn as you scroll.', em: true }]} />
+            <Split as="h2" className="h2 dec-title" text={[`${COUNT} trade-offs, `, { t: 'drawn as you scroll.', em: true }]} />
           </div>
-          <nav className="dec-tabs" aria-label="Decisions">
+          <nav className="dec-tabs" aria-label="Decisions" style={{ '--n': n }}>
             {CHAPTERS.map((c, k) => (
               <button
                 type="button"
@@ -152,7 +156,7 @@ export default function Decisions() {
             </span>
             <b>L3</b> Attention <span className="rule" aria-hidden="true" /> the decisions I’d defend
           </p>
-          <Split as="h2" className="h2 dec-title" text={['Four trade-offs, ', { t: 'drawn as they play.', em: true }]} />
+          <Split as="h2" className="h2 dec-title" text={[`${COUNT} trade-offs, `, { t: 'drawn as they play.', em: true }]} />
           {CHAPTERS.map((c) => (
             <PlayOnView key={c.k} C={c.C} still={rm} />
           ))}

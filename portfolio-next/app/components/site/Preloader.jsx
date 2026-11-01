@@ -118,7 +118,7 @@ export default function Preloader() {
       <div className="boot-in">
         <div className="boot-top">
           <span>adnan.model</span>
-          <span>rev 2026.09</span>
+          <span>rev 2026.11</span>
         </div>
         <div className="boot-mid">
           <span className="boot-pct">{String(pct).padStart(3, '0')}</span>

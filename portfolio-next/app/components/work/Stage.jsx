@@ -65,6 +65,7 @@ export default function Stage({ project: p, index, total, neighbours, onSelect, 
               </span>
               <span className={`st-tier t-${p.tier}`}>{TIER_LABEL[p.tier]}</span>
               {p.year && <span>{p.year}</span>}
+              {p.badge && <span className="st-tier">{p.badge}</span>}
               <span className={`st-dom d-${p.domain}`}>{DOMAINS[p.domain].label}</span>
             </motion.p>
 

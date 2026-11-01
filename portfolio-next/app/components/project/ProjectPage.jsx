@@ -49,9 +49,10 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
   }, []);
 
   const domain = entry ? DOMAINS[entry.domain].label : null;
-  const video = { slug: p.slug, name: p.name, media: { type: 'video', slug: p.slug } };
+  // a case study without a walkthrough yet samples its own screens in instead
+  const video = { slug: p.slug, name: p.name, media: p.media || { type: 'video', slug: p.slug } };
   const gallery = shots.length
-    ? { slug: `${p.slug}-screens`, name: p.name, media: { type: 'shots', frame: 'desktop', files: shots, alt: p.screenshots?.alt || `${p.name} screenshots` } }
+    ? { slug: `${p.slug}-screens`, name: p.name, media: { type: 'shots', frame: p.screenshots?.frame || 'desktop', files: shots, alt: p.screenshots?.alt || `${p.name} screenshots` } }
     : null;
 
   return (
@@ -69,6 +70,12 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
           <span>{p.year}</span>
           <span className="sep">·</span>
           <span>{p.kind}</span>
+          {p.badge && (
+            <>
+              <span className="sep">·</span>
+              <span>{p.badge}</span>
+            </>
+          )}
           {domain && (
             <>
               <span className="sep">·</span>
