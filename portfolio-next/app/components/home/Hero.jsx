@@ -101,7 +101,7 @@ export default function Hero() {
           <span className="sep" aria-hidden="true">
             /
           </span>
-          <span>Kuala Lumpur, MY</span>
+          <span>Kuala Lumpur, MY · open to relocation</span>
         </p>
 
         <h1 className="hero-h" id="hero-h">

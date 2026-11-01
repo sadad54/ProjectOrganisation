@@ -125,8 +125,8 @@ export default function Research() {
         <div className="papers">
           <article className="paper rv" ref={r1}>
             <div className="pp-tags">
-              <span className="pp-status review">
-                <i /> Under review · ALTA 2026
+              <span className="pp-status done">
+                <i /> Manuscript complete
               </span>
               <span>First author</span>
               <span>2025 – 2026</span>
@@ -146,7 +146,7 @@ export default function Research() {
                 <span className="pp-lbl">wrong-scope grounding rate, across 200 annotated items</span>
               </div>
             </div>
-            <p className="pp-foot">Short paper · under review</p>
+            <p className="pp-foot">Manuscript complete · not yet submitted</p>
           </article>
 
           <article className="paper rv" ref={r2} style={{ '--d': 120 }}>
