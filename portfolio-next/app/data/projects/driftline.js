@@ -3,18 +3,19 @@ export default {
   name: 'Driftline',
   year: '2026',
   kind: 'Streaming ML / MLOps',
-  hook: 'Six months of silent model decay, caught and reversed by the pipeline itself.',
+  hook: 'A model decays in silence. The retrain has to beat it on the same holdout to ship.',
   headline: {
-    metric: '+97.8%',
-    label: 'PR-AUC recovered after drift',
+    metric: '0.4802',
+    label: 'candidate PR-AUC vs 0.2811 incumbent, same holdout',
   },
   overview: {
     summary:
-      'Driftline replays six months of real IEEE-CIS transaction data through a Kafka-API broker and a stateful stream processor, scores it with a fraud model, and automatically detects and recovers from performance drift with a shadow-scored, gated retraining loop.',
+      'Driftline replays 590K real IEEE-CIS transactions through a Kafka-API broker and a stateful stream processor, scores it with a fraud model, and automatically detects and recovers from performance drift with a shadow-scored, gated retraining loop.',
     bullets: [
-      'Reproduced a real, un-injected performance decay — PR-AUC <b>0.4761 → 0.3680</b> over six months, a 22.7% relative decline — by replaying real IEEE-CIS transactions through a live-shaped streaming pipeline instead of a static notebook.',
-      'Recovered a mid-replay collapse from <b>PR-AUC 0.2635 to 0.5211</b> (week 14 → 15) by building a PSI/KS drift monitor that triggers shadow-scored, gated retraining.',
-      'Found and quantified a real feature-store skew — <b>8.66%</b> of sampled (card1, window) pairs disagreed between the Redis and Parquet write paths — by testing them against each other instead of assuming consistency.',
+      'Replayed <b>590K transactions</b> through Redpanda/PyFlink and built GraphSAGE over a <b>605K-node graph</b> with unit-tested leakage controls.',
+      'Measured XGBoost honestly: PR-AUC <b>0.4751 on a chronological split</b> versus 0.6974 on a random split that lets the future leak into training.',
+      'Drift-triggered retraining behind a promotion gate: the candidate scored <b>PR-AUC 0.4802 versus 0.2811</b> for the incumbent on the same holdout.',
+      'Served XGBoost via ONNX/FastAPI on Google Cloud: <b>10,018 requests, zero failures, 380 ms p95</b> at 50 concurrent users on a 4-vCPU VM.',
     ],
   },
   story: {
@@ -23,7 +24,7 @@ export default {
     task:
       "Build something that reproduces real drift, catches it automatically, and proves the recovery with a gate that can't be gamed by evaluating on the future.",
     action:
-      'Replayed real IEEE-CIS data through Redpanda/PyFlink for stateful 1h/24h/7d velocity features, trained a GraphSAGE entity-graph model (605K nodes, ~8M edges) alongside XGBoost with a tested leakage boundary, then wired PSI/KS drift detection to a retrain → shadow-score → promotion-gate loop logged to MLflow. Documented failures as deliverables, not embarrassments: the GraphSAGE+XGBoost ensemble never beat XGBoost alone (root-caused to naive equal-weight averaging and a genuinely undertrained 5-epoch CPU-only GNN); a random 80/20 split inflated PR-AUC by +0.2222 versus the honest time-ordered split; a load test against the k3d deployment produced a real HPA scale event (2→4 replicas) and a real kubelet-triggered restart from liveness probes failing under saturation. Several infra bugs were found by actually running things: a Parquet-durability bug under SIGTERM, a silently-dropped column, an orphaned JVM process outliving `timeout` by about an hour, a graph node-id collision, CI disk exhaustion from an unscoped CUDA torch install, and a silent numpy upgrade breaking XGBoost\'s np.NaN usage.',
+      'Replayed real IEEE-CIS data through Redpanda/PyFlink for stateful 1h/24h/7d velocity features, trained a GraphSAGE entity-graph model over a 605K-node graph alongside XGBoost with unit-tested leakage controls, then wired PSI/KS drift detection to a retrain → shadow-score → promotion-gate loop logged to MLflow. Documented failures as deliverables, not embarrassments: the GraphSAGE+XGBoost ensemble never beat XGBoost alone (root-caused to naive equal-weight averaging and a genuinely undertrained 5-epoch CPU-only GNN); a random split scored XGBoost at PR-AUC 0.6974 against 0.4751 on the honest chronological split; a load test against the k3d deployment produced a real HPA scale event (2→4 replicas) and a real kubelet-triggered restart from liveness probes failing under saturation. Several infra bugs were found by actually running things: a Parquet-durability bug under SIGTERM, a silently-dropped column, an orphaned JVM process outliving `timeout` by about an hour, a graph node-id collision, CI disk exhaustion from an unscoped CUDA torch install, and a silent numpy upgrade breaking XGBoost\'s np.NaN usage.',
     result:
       'A project whose central claim — everything here is either real and measured or explicitly labeled simulated — held up under its own scrutiny, including when that scrutiny produced a negative result (the ensemble) instead of a positive one.',
   },
@@ -48,7 +49,7 @@ export default {
     {
       title: 'Drift-triggered retrain, shadow-scored and gated',
       caption:
-        'Recovered PR-AUC from <b>0.2635 to 0.5211</b> by gating every retrain behind a causal shadow-score comparison against the incumbent, so a bad candidate can never self-promote.',
+        'Every retrain is shadow-scored against the incumbent on the same holdout before it can ship: the first candidate scored <b>0.4802 PR-AUC against 0.2811</b>, so a bad candidate can never self-promote.',
       diagram: {
         type: 'loop',
         nodes: [
@@ -61,22 +62,21 @@ export default {
       },
     },
     {
-      title: 'The online/offline skew that would have gone unnoticed',
+      title: 'The split that flatters, and the one that ships',
       caption:
-        "Found a real <b>8.66%</b> mismatch between the online and offline feature stores by testing Feast's two write paths against each other instead of assuming consistency.",
+        'A random split scored XGBoost at <b>0.6974</b> PR-AUC. The chronological split — train on the past, test on the future, the way the model is actually used — scored <b>0.4751</b>. The lower number is the one reported.',
       diagram: {
         type: 'compare',
         before: {
-          eyebrow: 'Redis (online)',
-          label: 'Per-event write',
-          lines: ['Writes on every event', 'Briefly ahead of offline'],
+          eyebrow: 'Random split',
+          label: 'PR-AUC 0.6974',
+          lines: ['Future rows leak into training', 'Flatters the model'],
         },
         after: {
-          eyebrow: 'Parquet (offline)',
-          label: '200-row buffered flush',
-          lines: ['Batches before flush', 'Durability-vs-latency tradeoff'],
+          eyebrow: 'Chronological split',
+          label: 'PR-AUC 0.4751',
+          lines: ['Trains on the past only', 'The number reported'],
         },
-        diffLabel: '8.66% mismatch',
       },
     },
   ],
