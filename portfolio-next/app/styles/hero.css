@@ -9,10 +9,13 @@
     radial-gradient(125% 100% at 50% 45%,transparent 60%,rgba(var(--void-rgb),.72) 100%),
     linear-gradient(180deg,rgba(var(--void-rgb),.35),transparent 18%,transparent 82%,rgba(var(--void-rgb),.5));
 }
+/* no WebGL: the same aurora, with the flutes as a static stripe overlay */
 html.no-webgl .field{
   background:
-    radial-gradient(40% 50% at 72% 38%,rgba(var(--ember-rgb),.16),transparent 70%),
-    radial-gradient(50% 60% at 22% 70%,rgba(var(--cool-rgb),.10),transparent 70%);
+    repeating-linear-gradient(90deg,transparent 0 22px,rgba(var(--text-rgb),.025) 25px,rgba(var(--void-rgb),.12) 26px),
+    radial-gradient(22% 22% at 60% 92%,rgba(var(--ember-rgb),.28),transparent 70%),
+    radial-gradient(30% 85% at 60% 0%,rgba(var(--cool-rgb),.34),transparent 75%),
+    radial-gradient(70% 70% at 60% 30%,rgba(var(--cool-rgb),.08),transparent 80%);
 }
 html.no-webgl .field canvas{display:none}
 

@@ -2,11 +2,14 @@
    generative fingerprints). CSS owns the same values as custom properties in
    app/styles/tokens.css — keep the two in step. */
 export const PALETTE = {
-  void: [5, 6, 8],
-  text: [238, 235, 228],
-  ember: [255, 107, 61],
-  emberHi: [255, 138, 99],
-  cool: [169, 187, 255],
+  void: [2, 7, 10],
+  s1: [8, 17, 26],
+  s2: [13, 23, 34],
+  s3: [19, 31, 43],
+  text: [234, 241, 246],
+  ember: [252, 115, 77],
+  emberHi: [255, 146, 112],
+  cool: [2, 151, 222],
   pass: [82, 227, 168],
   fail: [255, 84, 112],
 };

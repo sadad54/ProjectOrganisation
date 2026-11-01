@@ -175,7 +175,7 @@ html.boot .boot-ov,.boot-ov[data-phase="reveal"]{display:block}
 
 /* ---- command palette ---- */
 .cmdk{position:fixed;inset:0;z-index:160;display:flex;justify-content:center;padding-top:13vh}
-.cmdk-bg{position:absolute;inset:0;background:rgba(2,3,4,.66);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.cmdk-bg{position:absolute;inset:0;background:rgba(var(--void-rgb),.66);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .cmdk-box{
   position:relative;width:min(600px,92vw);height:max-content;max-height:74vh;display:flex;flex-direction:column;
   background:var(--s2);border:1px solid var(--hair-2);border-radius:var(--r-md);overflow:hidden;
