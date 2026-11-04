@@ -7,8 +7,12 @@ import { WORK } from '../../data/work';
 import { scrollToEl } from './SmoothScroll';
 import { toast, copyText } from '../../lib/toast';
 import { EASE_OUT, reducedMotionNow, useReducedMotionPref } from '../../lib/motion';
+import AskPanel from '../ask/AskPanel';
 
 const EMAIL = 'adnanmashrursadad@gmail.com';
+
+// typed something that reads as a question, not a command
+const QUESTION = /\?\s*$|^(how|what|why|which|who|where|when|has|have|is|are|does|did|do|can|could|tell|show|explain)\b/i;
 
 function readRM() {
   try {
@@ -39,6 +43,8 @@ export default function CommandPalette() {
   const [sel, setSel] = useState(0);
   const [rmOn, setRmOn] = useState(false);
   const [hint, setHint] = useState(false);
+  const [mode, setMode] = useState('cmd'); // 'cmd' | 'ask'
+  const [askQ, setAskQ] = useState(null); // { q, k } — k remounts the panel
   const inputRef = useRef(null);
   const boxRef = useRef(null);
   const listRef = useRef(null);
@@ -122,24 +128,57 @@ export default function CommandPalette() {
   }, [goSection, onHome, router, rmOn]);
 
   const filtered = useMemo(() => {
-    const q = query.toLowerCase().trim();
+    const raw = query.trim();
+    const q = raw.toLowerCase();
     if (!q) return actions;
-    return actions.filter((a) => `${a.n} ${a.h} ${a.g}`.toLowerCase().includes(q));
+    const hits = actions.filter((a) => `${a.n} ${a.h} ${a.g}`.toLowerCase().includes(q));
+    // a question goes to the model: first when it reads like one, last otherwise
+    const ask = raw.length > 3 && { g: 'Ask the model', n: `Ask: “${raw}”`, h: 'Answers from this site', ask: raw };
+    if (!ask) return hits;
+    return QUESTION.test(raw) || !hits.length ? [ask, ...hits] : [...hits, ask];
   }, [actions, query]);
 
-  const show = useCallback(() => {
-    triggerRef.current = document.activeElement;
+  const show = useCallback((m = 'cmd', q = null) => {
+    if (!document.querySelector('.cmdk')) triggerRef.current = document.activeElement;
     setQuery('');
     setSel(0);
+    setMode(m);
+    setAskQ(q ? { q, k: Date.now() } : null);
     setOpen(true);
   }, []);
   const hide = useCallback(() => setOpen(false), []);
 
+  function toAsk(q = null) {
+    setMode('ask');
+    setAskQ(q ? { q, k: Date.now() } : null);
+  }
+
   function fire(i) {
     const a = filtered[i];
     if (!a) return;
+    if (a.ask) return toAsk(a.ask);
     hide();
     setTimeout(a.go, 80);
+  }
+
+  // hand the question over to the contact composer, wherever it lives
+  function toContact(q) {
+    const draft = { s: 'Following up from your site', t: `Hi Adnan — I asked the assistant on your site “${q}” and wanted to follow up: ` };
+    hide();
+    setTimeout(() => {
+      if (onHome) {
+        scrollToEl(document.getElementById('contact'));
+        window.dispatchEvent(new CustomEvent('contact:prefill', { detail: draft }));
+      } else {
+        try {
+          sessionStorage.setItem('contact:prefill', JSON.stringify(draft));
+        } catch {
+          /* ignore */
+        }
+        if (window.__ptGo) window.__ptGo('/#contact', 'the index');
+        else router.push('/#contact');
+      }
+    }, 80);
   }
 
   useEffect(() => {
@@ -193,6 +232,11 @@ export default function CommandPalette() {
     listRef.current?.querySelector('li.sel')?.scrollIntoView({ block: 'nearest' });
   }, [sel]);
 
+  // switching modes moves focus to that mode's input
+  useEffect(() => {
+    if (open) requestAnimationFrame(() => inputRef.current?.focus());
+  }, [mode, open]);
+
   useEffect(() => {
     function onKey(e) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -202,6 +246,8 @@ export default function CommandPalette() {
             triggerRef.current = document.activeElement;
             setQuery('');
             setSel(0);
+            setMode('cmd');
+            setAskQ(null);
           }
           return !o;
         });
@@ -211,6 +257,8 @@ export default function CommandPalette() {
       if (e.key === 'Escape') {
         e.preventDefault();
         hide();
+      } else if (mode === 'ask' && e.key !== 'Tab') {
+        // the ask panel's own form and buttons handle the rest
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         setSel((s) => Math.min(s + 1, filtered.length - 1));
@@ -221,7 +269,7 @@ export default function CommandPalette() {
         e.preventDefault();
         fire(sel);
       } else if (e.key === 'Tab') {
-        const f = boxRef.current?.querySelectorAll('input, button');
+        const f = boxRef.current?.querySelectorAll('input, button:not([disabled]), a[href]');
         if (!f?.length) return;
         const first = f[0],
           last = f[f.length - 1];
@@ -241,9 +289,19 @@ export default function CommandPalette() {
   useEffect(() => {
     const onClick = (e) => {
       if (e.target.closest?.('#cmdk-open')) show();
+      else if (e.target.closest?.('[data-ask]')) {
+        e.preventDefault();
+        show('ask', e.target.closest('[data-ask]').getAttribute('data-ask') || null);
+      }
     };
+    // anything else on the site can open the assistant, optionally with a question
+    const onAsk = (e) => show('ask', e.detail?.q || null);
     document.addEventListener('click', onClick);
-    return () => document.removeEventListener('click', onClick);
+    window.addEventListener('ask:open', onAsk);
+    return () => {
+      document.removeEventListener('click', onClick);
+      window.removeEventListener('ask:open', onAsk);
+    };
   }, [show]);
 
   let lastGroup = null;
@@ -277,7 +335,7 @@ export default function CommandPalette() {
             className="cmdk"
             role="dialog"
             aria-modal="true"
-            aria-label="Command menu"
+            aria-label={mode === 'ask' ? 'Ask the model' : 'Command menu'}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -286,12 +344,26 @@ export default function CommandPalette() {
             <div className="cmdk-bg" onClick={hide} />
             <motion.div
               ref={boxRef}
-              className="cmdk-box"
+              className={`cmdk-box${mode === 'ask' ? ' is-ask' : ''}`}
               initial={{ opacity: 0, y: -12, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.98 }}
               transition={{ duration: 0.28 * dur, ease: EASE_OUT }}
             >
+              {mode === 'ask' ? (
+                <AskPanel key={askQ?.k || 'ask'} initial={askQ?.q} inputRef={inputRef} onCommands={() => setMode('cmd')} onContact={toContact} />
+              ) : (
+              <>
+              <div className="ask-top">
+                <div className="ask-tabs" role="tablist" aria-label="Mode">
+                  <span role="tab" aria-selected="true" className="tab on">
+                    Commands
+                  </span>
+                  <button type="button" role="tab" aria-selected="false" className="tab" onClick={() => toAsk(query.trim().length > 3 ? query.trim() : null)}>
+                    Ask
+                  </button>
+                </div>
+              </div>
               <div className="cmdk-in">
                 <span className="pr" aria-hidden="true">
                   &gt;
@@ -299,7 +371,7 @@ export default function CommandPalette() {
                 <input
                   ref={inputRef}
                   type="text"
-                  placeholder="Jump to a section, open a project, copy an address…"
+                  placeholder="Jump anywhere — or ask a question…"
                   autoComplete="off"
                   spellCheck="false"
                   value={query}
@@ -317,7 +389,7 @@ export default function CommandPalette() {
                     const head = a.g !== lastGroup ? a.g : null;
                     lastGroup = a.g;
                     return (
-                      <li key={a.g + a.n} className={i === sel ? 'sel' : undefined}>
+                      <li key={a.g + a.n} className={[i === sel && 'sel', a.ask && 'is-ask'].filter(Boolean).join(' ') || undefined}>
                         {head && <p className="cmdk-group">{head}</p>}
                         <button type="button" onClick={() => fire(i)} onMouseMove={() => setSel(i)}>
                           <span className="nm">{a.n}</span>
@@ -337,6 +409,8 @@ export default function CommandPalette() {
                 <span>↵ Select</span>
                 <span>Esc Close</span>
               </div>
+              </>
+              )}
             </motion.div>
           </motion.div>
         )}
