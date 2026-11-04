@@ -112,6 +112,10 @@ export default function Nav() {
               {label}
             </a>
           ))}
+          <button className="nav-kbd nav-ask" type="button" data-ask="" aria-label="Ask the model about Adnan's work" data-cursor="Ask">
+            <span className="nav-ask-dot" aria-hidden="true" />
+            <span>Ask</span>
+          </button>
           <button className="nav-kbd" id="cmdk-open" type="button" aria-label="Open command menu" data-cursor="Menu">
             {touch ? (
               <span>Menu</span>

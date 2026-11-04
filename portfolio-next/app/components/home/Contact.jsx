@@ -75,6 +75,31 @@ export default function Contact() {
   }
   useEffect(() => () => clearTimeout(timer.current), []);
 
+  // the assistant's hand-off: "Message Adnan about this" lands here with a
+  // draft. An event when already on the page; sessionStorage after a route change.
+  useEffect(() => {
+    const take = (d) => d && setTimeout(() => stream(d), 450);
+    try {
+      const saved = sessionStorage.getItem('contact:prefill');
+      if (saved) {
+        sessionStorage.removeItem('contact:prefill');
+        take(JSON.parse(saved));
+      }
+    } catch {
+      /* ignore */
+    }
+    const on = (e) => {
+      try {
+        sessionStorage.removeItem('contact:prefill');
+      } catch {
+        /* ignore */
+      }
+      take(e.detail);
+    };
+    window.addEventListener('contact:prefill', on);
+    return () => window.removeEventListener('contact:prefill', on);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(msg)}`;
 
   return (

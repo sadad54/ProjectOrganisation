@@ -1,0 +1,135 @@
+/* =========================================================================
+   ASK — "Ask the model", the command palette's second mode. Same surface,
+   mono chrome, one accent; the answer cites the site and the field behind
+   the scrim fires with each citation.
+   ========================================================================= */
+.cmdk-box.is-ask{width:min(720px,94vw);max-height:82vh;border-radius:var(--r-lg)}
+.cmdk:has(.is-ask) .cmdk-bg{background:rgba(var(--void-rgb),.42);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.cmdk-list li.is-ask .nm{color:var(--cool)}
+.cmdk-list li.is-ask.sel button{background:rgba(var(--cool-rgb),.12)}
+.cmdk-list li.is-ask.sel .nm{color:var(--text)}
+.nav-ask{gap:7px;margin-right:6px}
+.nav-ask-dot{width:6px;height:6px;border-radius:50%;background:var(--cool);box-shadow:0 0 8px rgba(var(--cool-rgb),.8)}
+.nav-ask:hover{border-color:var(--cool);color:var(--text);background:rgba(var(--cool-rgb),.08)}
+.ask-beta{font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
+.ask-note{margin:12px 0 4px;font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+.ask-miss.err{border-style:solid;border-color:rgba(var(--ember-rgb),.4)}
+.ask-foot-r{margin-left:auto}
+.cmdk-box > .ask-top{padding-bottom:10px;border-bottom:1px solid var(--hair)}
+.cmdk-box > .ask-top + .cmdk-in{border-top:0}
+
+.ask-top{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 0 16px}
+.ask-tabs{display:flex;gap:4px;padding:3px;border:1px solid var(--hair);border-radius:var(--r-pill)}
+.ask-tabs .tab{
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+  padding:6px 12px;border-radius:var(--r-pill);
+}
+.ask-tabs .tab.on{color:var(--text);background:rgba(var(--cool-rgb),.16)}
+.ask-tabs button.tab:hover{color:var(--text)}
+.ask-x{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);padding:6px 8px}
+.ask-x:hover{color:var(--text)}
+
+.ask-q{padding:18px 20px 0;font-family:var(--f-mono);font-size:13px;color:var(--text);letter-spacing:.01em}
+
+.ask-body{padding:6px 20px 4px;overflow-y:auto;overscroll-behavior:contain}
+.ask-label{font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin:16px 0 8px}
+
+.ask-empty .ask-group ul{display:flex;flex-direction:column;gap:2px}
+.ask-empty .ask-group button{
+  width:100%;display:flex;justify-content:space-between;gap:14px;text-align:left;
+  padding:11px 12px;border-radius:var(--r-sm);font-size:.97rem;transition:background-color .15s;
+}
+.ask-empty .ask-group button:hover,.ask-empty .ask-group button:focus-visible{background:rgba(var(--cool-rgb),.1)}
+.ask-empty .go{font-family:var(--f-mono);color:var(--text-3);font-size:12px}
+
+/* the forward pass: the preloader's step list, reused */
+.ask-pass{margin:14px 0 4px;display:flex;flex-direction:column;gap:5px}
+.ask-pass li{
+  display:flex;gap:10px;align-items:baseline;
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+}
+.ask-pass .dots{flex:1;border-bottom:1px dotted var(--hair-3);transform:translateY(-3px)}
+.ask-pass li.ok{color:var(--text-2)}
+.ask-pass li.ok span:last-child{color:var(--pass)}
+.ask-pass li.run span:last-child{color:var(--cool);animation:blink 1s steps(1) infinite}
+.ask-pass li.stop span:last-child{color:var(--text-3)}
+.ask-pass li.miss{color:var(--text-2)}
+.ask-pass li.miss span:last-child{color:var(--text)}
+
+.ask-text{margin:16px 0 4px;font-size:1.04rem;line-height:1.72;color:var(--text)}
+.ask-cite{
+  display:inline-flex;align-items:center;justify-content:center;vertical-align:2px;
+  min-width:18px;height:18px;margin:0 2px;padding:0 5px;border-radius:5px;
+  font-family:var(--f-mono);font-size:10px;color:var(--cool);
+  background:rgba(var(--cool-rgb),.14);border:1px solid rgba(var(--cool-rgb),.3);
+  transition:background-color var(--d-quick),color var(--d-quick),box-shadow var(--d-base);
+}
+.ask-cite:hover,.ask-cite.on{background:var(--ember);border-color:var(--ember);color:var(--void);box-shadow:0 0 14px rgba(var(--ember-rgb),.55)}
+
+.ask-miss{margin:16px 0 4px;padding:16px 18px;border-radius:var(--r-md);border:1px dashed var(--hair-3);color:var(--text-2)}
+.ask-miss-h{color:var(--text);font-weight:500;margin-bottom:4px}
+
+.ask-sources{margin-top:14px;display:grid;gap:6px}
+.ask-sources a{
+  display:flex;gap:12px;align-items:flex-start;padding:11px 12px;border-radius:var(--r-sm);
+  border:1px solid var(--hair);background:rgba(var(--panel-rgb),.5);
+  transition:border-color var(--d-quick),background-color var(--d-quick);
+}
+.ask-sources li.on a,.ask-sources a:hover{border-color:rgba(var(--ember-rgb),.5);background:rgba(var(--ember-rgb),.06)}
+.ask-sources .n{flex:none;font-family:var(--f-mono);font-size:10px;color:var(--cool);width:18px;height:18px;border-radius:5px;display:grid;place-items:center;background:rgba(var(--cool-rgb),.14)}
+.ask-sources li.on .n{background:var(--ember);color:var(--void)}
+.ask-sources .src{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ask-sources b{font-weight:600;font-size:.92rem}
+.ask-sources .where{font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
+.ask-sources .snip{font-size:.85rem;color:var(--text-2);margin-top:3px}
+.ask-sources .arr{color:var(--text-3);font-size:12px}
+
+.ask-acts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 6px}
+.ask-btn{
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  padding:10px 14px;border-radius:var(--r-pill);border:1px solid var(--hair-2);color:var(--text-2);
+  transition:color var(--d-quick),border-color var(--d-quick),background-color var(--d-quick);
+}
+.ask-btn:hover{color:var(--text);border-color:var(--hair-3)}
+.ask-btn.hot{background:var(--ember);border-color:var(--ember);color:var(--void)}
+.ask-btn.hot:hover{background:var(--ember-hi);color:var(--void)}
+.ask-btn.ghost{border-color:transparent}
+
+.ask-trace{margin:10px 0 8px;padding:4px 14px 12px;border-radius:var(--r-md);background:rgba(var(--void-rgb),.55);border:1px solid var(--hair)}
+.ask-trace ul{display:grid;gap:6px}
+.ask-trace li{
+  display:grid;grid-template-columns:minmax(0,1.4fr) 1fr 38px 44px;gap:10px;align-items:center;
+  font-family:var(--f-mono);font-size:10.5px;color:var(--text-3);
+}
+.ask-trace li.used{color:var(--text-2)}
+.ask-trace .id{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ask-trace .bar{height:4px;border-radius:2px;background:var(--hair)}
+.ask-trace .bar i{display:block;height:100%;border-radius:2px;background:rgba(var(--cool-rgb),.45)}
+.ask-trace li.used .bar i{background:var(--cool)}
+.ask-trace .u{text-align:right}
+.ask-trace li.used .u{color:var(--pass)}
+.ask-meta{margin-top:10px;font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+
+.ask-in{display:flex;align-items:center;gap:12px;padding:6px 8px 6px 20px;border-top:1px solid var(--hair);margin-top:8px}
+.ask-in input{flex:1;min-width:0;background:none;border:0;padding:14px 0;font-family:var(--f-mono);font-size:13px;letter-spacing:.02em}
+.ask-in input::placeholder{color:var(--text-3)}
+.ask-in input:focus{outline:none}
+.ask-send{
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  padding:9px 14px;border-radius:var(--r-pill);background:rgba(var(--cool-rgb),.16);color:var(--text);
+}
+.ask-send:disabled{opacity:.4;cursor:default}
+.ask-foot{
+  border-top:1px solid var(--hair);padding:9px 20px;display:flex;justify-content:space-between;gap:18px;
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+}
+
+/* phones: a bottom sheet, thumb-reachable input */
+@media (max-width:640px){
+  .cmdk:has(.is-ask){align-items:flex-end;padding-top:0}
+  .cmdk-box.is-ask{width:100%;max-height:88svh;border-radius:var(--r-lg) var(--r-lg) 0 0}
+  .ask-beta{display:none}
+  .ask-trace li{grid-template-columns:minmax(0,1fr) 60px 34px}
+  .ask-trace .u{display:none}
+  .is-ask .ask-foot-r{display:none}
+}
