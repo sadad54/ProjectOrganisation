@@ -65,7 +65,11 @@
   transition:background-color .4s,border-color .4s,transform .5s var(--ease-spring),box-shadow .4s;
 }
 .rail-node.past .rail-dot{border-color:var(--ember);background:var(--ember)}
-.rail-node.on .rail-dot{border-color:var(--ember);background:var(--ember);transform:scale(1.35);box-shadow:0 0 0 4px rgba(var(--ember-rgb),.16),0 0 16px rgba(var(--ember-rgb),.6)}
+.rail-node.on .rail-dot{
+  border-color:var(--ember-lit-b);transform:scale(1.4);
+  background:radial-gradient(circle at 36% 34%,#FFE2C2 0%,var(--ember-lit-b) 30%,var(--ember) 62%,var(--ember-lit-a) 100%);
+  box-shadow:0 0 0 4px rgba(var(--ember-rgb),.18),0 0 12px rgba(255,140,60,.85),0 0 28px rgba(var(--ember-rgb),.45);
+}
 .rail-lbl{
   font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
   opacity:0;transform:translateX(6px);transition:opacity .3s var(--ease-soft),transform .4s var(--ease-out),color .3s;

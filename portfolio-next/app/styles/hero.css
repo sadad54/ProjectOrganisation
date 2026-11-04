@@ -59,6 +59,16 @@ html.no-webgl .field canvas{display:none}
   font-family:var(--f-serif);font-style:italic;font-weight:400;font-stretch:100%;
   letter-spacing:-.018em;color:var(--ember);font-size:1.1em;line-height:.8;
 }
+/* lit: Hero measures each line of the italic run and hands every token its
+   slice of one gradient (--lw run width, --lx offset), so the light sweeps
+   deep orange → amber across the phrase instead of restarting per word */
+.hero-h.lit .tok.em{
+  color:transparent;-webkit-background-clip:text;background-clip:text;
+  background-image:linear-gradient(100deg,var(--ember-lit-a) 0%,var(--ember) 42%,var(--ember-lit-b) 100%);
+  background-size:var(--lw,100%) 100%;background-position:calc(var(--lx,0px) * -1) 0;background-repeat:no-repeat;
+  text-shadow:0 0 .32em rgba(var(--ember-rgb),.38);
+}
+@media (forced-colors:active){.hero-h.lit .tok.em{color:CanvasText;background:none;text-shadow:none}}
 /* token chip: the highlight a tokenizer view would draw, flashing as the
    token is emitted and cooling off afterwards */
 .tok::before{

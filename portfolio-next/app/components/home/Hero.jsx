@@ -79,6 +79,36 @@ export default function Hero() {
     };
   }, []);
 
+  // the italic run's gradient: one sweep per visual line, sliced per token
+  useEffect(() => {
+    const h = root.current.querySelector('.hero-h');
+    const measure = () => {
+      const em = Array.from(h.querySelectorAll('.tok.em'));
+      if (!em.length) return;
+      const lines = new Map();
+      em.forEach((t) => {
+        const k = Math.round(t.offsetTop);
+        if (!lines.has(k)) lines.set(k, []);
+        lines.get(k).push(t);
+      });
+      lines.forEach((run) => {
+        const x0 = run[0].offsetLeft;
+        const last = run[run.length - 1];
+        const w = last.offsetLeft + last.offsetWidth - x0;
+        run.forEach((t) => {
+          t.style.setProperty('--lw', `${w}px`);
+          t.style.setProperty('--lx', `${t.offsetLeft - x0}px`);
+        });
+      });
+      h.classList.add('lit');
+    };
+    measure();
+    document.fonts?.ready.then(measure);
+    const ro = new ResizeObserver(measure);
+    ro.observe(h);
+    return () => ro.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!window.matchMedia('(min-width: 1100px) and (pointer: fine)').matches) return;
     const read = () => {

@@ -36,11 +36,15 @@
   --hair-2:rgba(234,241,246,.14);
   --hair-3:rgba(234,241,246,.22);
 
-  /* the signal (cantaloupe) */
-  --ember:#FC734D;
-  --ember-rgb:252,115,77;
-  --ember-hi:#FF9270;
-  --ember-lo:#E2572F;
+  /* the signal (ignition orange): a true orange, not coral, so it holds
+     its own against the electric blue. The lit pair is for the two places
+     that glow: the headline's italic and the active rail node. */
+  --ember:#FF6A2B;
+  --ember-rgb:255,106,43;
+  --ember-hi:#FF8A4C;
+  --ember-lo:#E5521A;
+  --ember-lit-a:#FF5A1F;
+  --ember-lit-b:#FFB25C;
 
   /* data-only hues */
   --cool:#0297DE;
