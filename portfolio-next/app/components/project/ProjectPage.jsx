@@ -106,6 +106,10 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
             <span>{p.headline.label}</span>
           </div>
           <div className="cs-links">
+            <button type="button" className="btn ask-btn-cs" data-ask={`What problem does ${p.name} solve, and what are its limits?`}>
+              <span className="ask-lnk-dot" aria-hidden="true" />
+              Ask about {p.name}
+            </button>
             {p.links
               .filter((l) => !l.internal)
               .map((l) => (

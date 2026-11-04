@@ -8,6 +8,7 @@ import { scrollToEl } from './SmoothScroll';
 import { toast, copyText } from '../../lib/toast';
 import { EASE_OUT, reducedMotionNow, useReducedMotionPref } from '../../lib/motion';
 import AskPanel from '../ask/AskPanel';
+import AskFloat from '../ask/AskFloat';
 
 const EMAIL = 'adnanmashrursadad@gmail.com';
 
@@ -185,7 +186,7 @@ export default function CommandPalette() {
     setRmOn(readRM());
     let seen = true;
     try {
-      seen = localStorage.getItem('kbdHintSeen') === '1';
+      seen = localStorage.getItem('askHintSeen') === '1';
     } catch {
       /* ignore */
     }
@@ -194,7 +195,7 @@ export default function CommandPalette() {
     const r = setTimeout(() => {
       setHint(false);
       try {
-        localStorage.setItem('kbdHintSeen', '1');
+        localStorage.setItem('askHintSeen', '1');
       } catch {
         /* ignore */
       }
@@ -208,7 +209,7 @@ export default function CommandPalette() {
   function dismissHint() {
     setHint(false);
     try {
-      localStorage.setItem('kbdHintSeen', '1');
+      localStorage.setItem('askHintSeen', '1');
     } catch {
       /* ignore */
     }
@@ -314,20 +315,33 @@ export default function CommandPalette() {
           <motion.button
             type="button"
             className="kbd-hint"
-            onClick={dismissHint}
+            onClick={() => {
+              dismissHint();
+              show('ask');
+            }}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.3 * dur, ease: EASE_OUT }}
           >
-            Press <b>{typeof navigator !== 'undefined' && /Win|Linux/i.test(navigator.platform) ? 'Ctrl' : '⌘'} K</b> to
-            jump anywhere
-            <span className="kbd-hint-x" aria-hidden="true">
+            <span className="nav-ask-dot" aria-hidden="true" />
+            Ask anything about my work <b>{typeof navigator !== 'undefined' && /Win|Linux/i.test(navigator.platform) ? 'Ctrl' : '⌘'} K</b>
+            <span
+              className="kbd-hint-x"
+              role="button"
+              aria-label="Dismiss"
+              onClick={(e) => {
+                e.stopPropagation();
+                dismissHint();
+              }}
+            >
               ×
             </span>
           </motion.button>
         )}
       </AnimatePresence>
+
+      <AskFloat hidden={open} />
 
       <AnimatePresence>
         {open && (

@@ -100,6 +100,10 @@ export default function Stage({ project: p, index, total, neighbours, onSelect, 
                   Case study <span className="arw">→</span>
                 </a>
               )}
+              <button type="button" className="lnk ask-lnk" data-ask={`What problem does ${p.name} solve, and what are its limits?`}>
+                <span className="ask-lnk-dot" aria-hidden="true" />
+                Ask about {p.name}
+              </button>
               {p.links.map((l) => (
                 <a className="lnk" key={l.href} href={l.href} target="_blank" rel="noopener noreferrer">
                   {l.label} ↗
