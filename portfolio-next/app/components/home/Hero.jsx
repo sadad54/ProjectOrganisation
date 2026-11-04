@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Magnetic from '../site/Magnetic';
+import HeroAsk from '../ask/HeroAsk';
 import { whenStageReady } from '../../lib/stage';
 import { reducedMotionNow } from '../../lib/motion';
 
@@ -134,6 +135,7 @@ export default function Hero() {
             </Magnetic>
           </div>
         </div>
+        <HeroAsk />
       </div>
 
       <figure className="hero-portrait" aria-hidden="false">

@@ -81,7 +81,12 @@ function checkCites(text, n) {
 /* gpt-oss sometimes cites in its own house style, 【3】 or 【3†L4-L9】:
    rewrite to [3]. `settled` is the text safe to show mid-stream — a mark
    that hasn't closed yet is held back until it has. */
-const norm = (s) => s.replace(/[【［]\s*(\d+(?:\s*,\s*\d+)*)[^】］\]]*[】］]/g, '[$1]');
+// …and typographic spaces/hyphens (U+202F, U+2011) the site's fonts lack
+const norm = (s) =>
+  s
+    .replace(/[【［]\s*(\d+(?:\s*,\s*\d+)*)[^】］\]]*[】］]/g, '[$1]')
+    .replace(/[   ]/g, ' ')
+    .replace(/[‐‑]/g, '-');
 function settled(s) {
   const open = Math.max(s.lastIndexOf('【'), s.lastIndexOf('［'));
   const cut = open > -1 && !/[】］]/.test(s.slice(open)) ? s.slice(0, open) : s;

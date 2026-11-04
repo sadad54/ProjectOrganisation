@@ -133,3 +133,111 @@
   .ask-trace .u{display:none}
   .is-ask .ask-foot-r{display:none}
 }
+
+/* =========================================================================
+   DISCOVERY — the ways in: the hero's prompt line, the nav pill that grows
+   a label past the hero, the first-visit hint, a phone thumb-zone pill and
+   "Ask about X" on every project.
+   ========================================================================= */
+.hero-ask{margin-top:clamp(26px,4vh,40px);width:min(640px,100%)}
+.js .hero-ask{opacity:0;transform:translate3d(0,18px,0)}
+.hero.done .hero-ask{opacity:1;transform:none;transition:opacity .8s var(--ease-soft) .25s,transform 1s var(--ease-out) .25s}
+html.rm .hero-ask{opacity:1!important;transform:none!important}
+@media (prefers-reduced-motion:reduce){.js .hero-ask{opacity:1;transform:none}}
+
+.ha-bar{
+  position:relative;display:flex;align-items:center;gap:14px;height:60px;padding:0 7px 0 22px;
+  border-radius:var(--r-pill);background:rgba(var(--panel-rgb),.62);border:1px solid rgba(var(--cool-rgb),.32);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:0 0 0 0 rgba(var(--cool-rgb),0),0 24px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);
+  transition:border-color var(--d-quick) var(--ease-soft),box-shadow var(--d-base) var(--ease-out),background-color var(--d-base);
+}
+/* a slow scan of light around the rim: "this one is live" */
+.ha-bar::before{
+  content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;
+  background:conic-gradient(from var(--ha-a,0deg),transparent 0 70%,rgba(var(--cool-rgb),.9) 82%,rgba(var(--ember-rgb),.8) 88%,transparent 96%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  animation:ha-scan 6s linear infinite;opacity:.85;
+}
+@property --ha-a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes ha-scan{to{--ha-a:360deg}}
+.ha-bar:hover{border-color:rgba(var(--cool-rgb),.55)}
+.hero-ask.on .ha-bar{
+  border-color:var(--cool);background:rgba(var(--s2-rgb),.9);
+  box-shadow:0 0 0 6px rgba(var(--cool-rgb),.1),0 0 60px rgba(var(--cool-rgb),.22),0 24px 70px rgba(0,0,0,.45);
+}
+.hero-ask.on .ha-bar::before{opacity:0}
+.ha-pr{font-family:var(--f-mono);color:var(--ember);font-size:15px}
+.ha-field{position:relative;flex:1;min-width:0;height:100%;display:flex;align-items:center}
+.ha-field input{
+  position:relative;z-index:1;width:100%;background:none;border:0;padding:0;height:100%;
+  font-family:var(--f-mono);font-size:14px;letter-spacing:.01em;color:var(--text);
+}
+.ha-field input:focus{outline:none}
+.hero-ask:has(input:focus-visible) .ha-bar{outline:2px solid var(--cool);outline-offset:3px}
+.ha-ph{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);pointer-events:none;
+  font-family:var(--f-mono);font-size:14px;letter-spacing:.01em;color:var(--text-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hero-ask.on .ha-ph{color:var(--text-3)}
+.ha-caret{display:inline-block;width:7px;height:15px;margin-left:2px;vertical-align:-2px;background:var(--cool);animation:blink 1.05s steps(1) infinite}
+.ha-ph.typing .ha-caret{animation:none}
+.ha-go{
+  flex:none;display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 18px;border-radius:var(--r-pill);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--cool);color:var(--void);font-weight:500;
+  transition:background-color var(--d-quick),box-shadow var(--d-base);
+}
+.ha-go:hover{background:var(--text);box-shadow:0 0 24px rgba(var(--cool-rgb),.5)}
+.ha-note{
+  margin-top:12px;padding-left:22px;display:flex;align-items:center;gap:9px;
+  font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--text-3);
+}
+.ha-dot,.nav-ask-dot,.ask-lnk-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--cool);box-shadow:0 0 8px rgba(var(--cool-rgb),.8)}
+.ha-dot{animation:ha-breathe 2.4s var(--ease-soft) infinite}
+@keyframes ha-breathe{50%{box-shadow:0 0 0 5px rgba(var(--cool-rgb),0),0 0 14px rgba(var(--cool-rgb),.9);transform:scale(1.25)}}
+
+/* nav: the pill names itself once the hero is gone */
+.nav-ask-more{display:inline-block;max-width:0;overflow:hidden;white-space:pre;vertical-align:bottom;transition:max-width .5s var(--ease-out)}
+.nav.past .nav-ask-more{max-width:9em}
+.nav.past .nav-ask{border-color:rgba(var(--cool-rgb),.45);color:var(--text)}
+.nav.past .nav-ask-dot{animation:ha-breathe 2.4s var(--ease-soft) infinite}
+@media (max-width:760px){.nav-ask-more{display:none}}
+
+/* the first-visit hint, now an invitation */
+.kbd-hint .nav-ask-dot{margin-right:2px}
+.kbd-hint{cursor:pointer}
+.kbd-hint:hover{border-color:rgba(var(--cool-rgb),.5);color:var(--text)}
+
+/* phones: thumb-zone pill */
+.ask-float{
+  position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:95;display:none;
+  align-items:center;gap:9px;height:44px;padding:0 18px 0 16px;border-radius:var(--r-pill);
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text);
+  background:rgba(var(--s2-rgb),.92);border:1px solid rgba(var(--cool-rgb),.45);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:0 14px 40px rgba(0,0,0,.5),0 0 24px rgba(var(--cool-rgb),.15);
+  opacity:0;transform:translate3d(0,14px,0) scale(.96);pointer-events:none;
+  transition:opacity .3s var(--ease-soft),transform .45s var(--ease-out);
+}
+.ask-float.on{opacity:1;transform:none;pointer-events:auto}
+@media (max-width:760px),(pointer:coarse){.ask-float{display:inline-flex}}
+@media (pointer:fine) and (min-width:761px){.ask-float{display:none}}
+
+/* "Ask about X" on project surfaces */
+.ask-lnk{display:inline-flex;align-items:center;gap:8px;color:var(--cool)}
+.ask-lnk:hover{color:var(--text)}
+.ask-btn-cs{gap:10px;border-color:rgba(var(--cool-rgb),.45)}
+.ask-btn-cs:hover{border-color:var(--cool);background:rgba(var(--cool-rgb),.08)}
+
+@media (max-width:760px){
+  .hero-ask{margin-top:22px}
+  .ha-bar{height:54px;padding-left:18px;gap:10px}
+  .ha-ph,.ha-field input{font-size:13px}
+  .ha-go{height:42px;padding:0 14px}
+  .ha-go-k{display:none}
+  .ha-note{padding-left:18px;letter-spacing:.1em}
+}
+@media (prefers-reduced-motion:reduce){.ha-bar::before,.ha-dot,.nav.past .nav-ask-dot,.ha-caret{animation:none}}
+html.rm .ha-bar::before,html.rm .ha-dot,html.rm .nav.past .nav-ask-dot,html.rm .ha-caret{animation:none}

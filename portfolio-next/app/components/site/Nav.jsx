@@ -41,6 +41,7 @@ export default function Nav() {
   const onHome = pathname === '/';
   const [stuck, setStuck] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [past, setPast] = useState(false);
   const [active, setActive] = useState('top');
   const [kbd, setKbd] = useState('⌘');
   const [touch, setTouch] = useState(false);
@@ -57,6 +58,7 @@ export default function Nav() {
       requestAnimationFrame(() => {
         const y = window.scrollY;
         setStuck(y > 40);
+        setPast(y > window.innerHeight * 0.8);
         if (y > 420 && y > lastY.current + 6) setHidden(true);
         else if (y < lastY.current - 6 || y <= 420) setHidden(false);
         lastY.current = y;
@@ -94,7 +96,7 @@ export default function Nav() {
 
   return (
     <>
-      <header className={`nav${stuck ? ' stuck' : ''}${hidden ? ' hide' : ''}`}>
+      <header className={`nav${stuck ? ' stuck' : ''}${hidden ? ' hide' : ''}${past || !onHome ? ' past' : ''}`}>
         <a className="nav-mark" href={onHome ? '#top' : '/'} data-pt={onHome ? undefined : ''} aria-label="Adnan Mashrur Sadad — home">
           <Glyph />
           <span className="nav-name">Adnan M. Sadad</span>
@@ -115,6 +117,7 @@ export default function Nav() {
           <button className="nav-kbd nav-ask" type="button" data-ask="" aria-label="Ask the model about Adnan's work" data-cursor="Ask">
             <span className="nav-ask-dot" aria-hidden="true" />
             <span>Ask</span>
+            <span className="nav-ask-more"> the model</span>
           </button>
           <button className="nav-kbd" id="cmdk-open" type="button" aria-label="Open command menu" data-cursor="Menu">
             {touch ? (
