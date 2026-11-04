@@ -24,12 +24,14 @@ export default function HeroAsk() {
   const [focus, setFocus] = useState(false);
   const [qi, setQi] = useState(0);
   const [shown, setShown] = useState(QS[0]);
-  const [typing, setTyping] = useState(false);
+  const [phase, setPhase] = useState('hold'); // hold | out | stream
   const input = useRef(null);
   const wrap = useRef(null);
 
-  // the typed placeholder: type, hold, erase, next — paused while the
-  // visitor is in the field or the bar is off screen
+  // the placeholder streams questions in word by word, the way the headline
+  // was generated — never a lone letter on screen — holds each long enough
+  // to read, then fades it and streams the next. Paused while the visitor
+  // is in the field or the bar is off screen.
   useEffect(() => {
     if (reducedMotionNow()) return;
     let on = true;
@@ -40,41 +42,40 @@ export default function HeroAsk() {
     });
     if (wrap.current) io.observe(wrap.current);
     let i = 0;
-    let n = QS[0].length;
-    let phase = 'hold';
+    let words = [];
+    let n = 0;
+    let step = 'hold';
     const tick = () => {
       if (!on) return;
       if (!vis || document.activeElement === input.current) {
         t = setTimeout(tick, 400);
         return;
       }
-      const q = QS[i];
-      if (phase === 'hold') {
-        phase = 'erase';
-        t = setTimeout(tick, 2600);
-        setTyping(false);
+      if (step === 'hold') {
+        step = 'out';
+        setPhase('out');
+        t = setTimeout(tick, 280);
         return;
       }
-      if (phase === 'erase') {
-        n = Math.max(0, n - 3);
-        setShown(q.slice(0, n));
-        setTyping(true);
-        if (!n) {
-          i = (i + 1) % QS.length;
-          setQi(i);
-          phase = 'type';
-        }
-        t = setTimeout(tick, 16);
-        return;
+      if (step === 'out') {
+        i = (i + 1) % QS.length;
+        setQi(i);
+        words = QS[i].match(/\S+\s*/g);
+        n = 0;
+        step = 'stream';
+        setPhase('stream');
       }
-      const next = QS[i];
       n++;
-      setShown(next.slice(0, n));
-      if (n >= next.length) phase = 'hold';
-      t = setTimeout(tick, n >= next.length ? 0 : 34 + Math.random() * 40);
+      setShown(words.slice(0, n).join(''));
+      if (n >= words.length) {
+        step = 'hold';
+        setPhase('hold');
+        t = setTimeout(tick, 3400);
+      } else t = setTimeout(tick, 70 + Math.random() * 60);
     };
-    // let the headline finish generating before the bar starts talking
-    t = setTimeout(tick, 4200);
+    // the first question is there from the start; it only moves on once
+    // the headline has finished generating and it has been readable a while
+    t = setTimeout(tick, 7000);
     return () => {
       on = false;
       clearTimeout(t);
@@ -114,7 +115,7 @@ export default function HeroAsk() {
             enterKeyHint="send"
           />
           {!v && (
-            <span className={`ha-ph${typing ? ' typing' : ''}`} aria-hidden="true">
+            <span className={`ha-ph is-${focus ? 'hold' : phase}`} aria-hidden="true">
               {focus ? QS[qi] : shown}
               {!focus && <i className="ha-caret" />}
             </span>
