@@ -50,7 +50,7 @@ function EvidenceStory({ p }) {
             <rect x="8" y="50" width="118" height="52" rx="6" /><text x="67" y="81" textAnchor="middle">Source files</text>
             <rect x="8" y="122" width="118" height="52" rx="6" /><text x="67" y="153" textAnchor="middle">Commits</text>
           </g>
-          <g stroke={phase >= 1 ? 'var(--ember)' : 'var(--hair-2)'} fill="var(--void)">
+          <g stroke={phase >= 1 ? 'var(--signal)' : 'var(--hair-2)'} fill="var(--void)">
             <path d="M193 76 L233 40 L274 76 L248 122 L193 76 L233 40 L248 122 M193 76 H274" fill="none" />
             {[[193,76],[233,40],[274,76],[248,122]].map(([x,y]) => <circle key={x} cx={x} cy={y} r="7" />)}
           </g>

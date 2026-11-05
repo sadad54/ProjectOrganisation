@@ -32,7 +32,7 @@ export const metadata = {
     type: 'website',
   },
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2302070A'/><path d='M14 44 L32 18 L50 44 M14 44 H50' stroke='%23FF6A2B' stroke-width='3' fill='none'/><circle cx='14' cy='44' r='5' fill='%23FF6A2B'/><circle cx='32' cy='18' r='5' fill='%23EAF1F6'/><circle cx='50' cy='44' r='5' fill='%23FF6A2B'/></svg>",
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2302070A'/><path d='M14 44 L32 18 L50 44 M14 44 H50' stroke='%2338B4FF' stroke-width='3' fill='none'/><circle cx='14' cy='44' r='5' fill='%238B7BFF'/><circle cx='32' cy='18' r='5' fill='%23EAF1F6'/><circle cx='50' cy='44' r='5' fill='%2352FFA5'/></svg>",
   },
 };
 
@@ -54,7 +54,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
       </head>

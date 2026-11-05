@@ -31,7 +31,7 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 ## Capabilities and Constraints
 
 - One persistent Three.js "neural field" (hand-written GLSL, ~16k particles; 8k on small/low-core devices) behind every page, re-forming per section; adaptive quality, paused when hidden, a still frame under reduced motion, a CSS gradient without WebGL.
-- Hero portrait is `assets/portrait-hero-rim-light.webp` (the orange rim-lit plate — lit for a dark ground), blended with `lighten` so the field shows through its black backdrop. `bobblehead.webp` and `adnan-headshot.webp` remain on disk but unused.
+- Hero portrait is `assets/portrait-hero-rim-light-cyan.webp` (the rim-lit plate recoloured: light-blue rim, indigo spill — lit for a dark ground; the original orange plate stays on disk), blended with `lighten` so the field shows through its black backdrop. `bobblehead.webp` and `adnan-headshot.webp` remain on disk but unused.
 - Case studies (`/work/[slug]`) exist for ProofHire, Driftline, InterviewPilot, WC26 Predictor and Mindhive; each has a walkthrough video. Screenshot galleries are listed from disk at build time (ProofHire's folder is still empty, so it has none).
 - Demo links: none published yet. Two backing repos (`AuraFinalPF`, `chatbotZUS`) are private; Fraud Detection has no public repo.
 - The Contact section's visa/sponsorship disclosure and phone number were deliberately removed (2026-08-06). Do not reintroduce either without being explicitly asked again.
@@ -39,7 +39,7 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 ## Brand Commitments
 
 - Name/byline: "ADNAN M. SADAD" / "AI / Data / Full Stack".
-- Visual system: see `DESIGN.md` ("Activation", 2026-09-27) — near-black `#050608` ground, one ember signal `#FF6B3D`, cool/pass/fail reserved for data, Archivo + Instrument Serif italic + Instrument Sans + Geist Mono.
+- Visual system: see `DESIGN.md` ("Activation", revised 2026-11-05) — midnight `#02070A` ground, monochrome chrome, light-blue signal `#38B4FF`, indigo `#582EFF` as atmosphere, mint `#52FFA5` for live and measured, a per-layer depth ramp; Archivo (condensed cut for the accent clause) + Instrument Sans + Geist Mono.
 - Contact: adnanmashrursadad@gmail.com, LinkedIn (`adnan-mashrur-sadad-87a45b237`), GitHub (`sadad54`). Phone number removed from the site (2026-08-06).
 
 ## Evidence on Hand

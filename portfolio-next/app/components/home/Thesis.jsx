@@ -6,7 +6,7 @@ import { reducedMotionNow } from '../../lib/motion';
 /* The thesis reads itself in as you scroll: one progress value (--p) is
    written to the container, and every word derives its own brightness from
    it in CSS — no per-word listeners. The three phrases that carry the
-   argument burn ember once they're lit. */
+   argument burn the signal colour once they're lit. */
 const TEXT = [
   { t: 'The model call is the easy part. What I find interesting is everything wrapped around it:' },
   { t: 'output you can trust,', hot: true },

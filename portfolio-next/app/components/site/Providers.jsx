@@ -6,6 +6,7 @@ import { useReducedMotionPref } from '../../lib/motion';
 import SmoothScroll from './SmoothScroll';
 import NeuralField from './NeuralField';
 import Cursor from './Cursor';
+import RimLight from './RimLight';
 import PageTransition from './PageTransition';
 import Preloader from './Preloader';
 import RevealObserver from './RevealObserver';
@@ -34,6 +35,7 @@ export default function Providers({ children }) {
         {children}
         <CommandPalette />
         <Cursor />
+        <RimLight />
         <PageTransition />
         <Preloader />
         <RevealObserver />

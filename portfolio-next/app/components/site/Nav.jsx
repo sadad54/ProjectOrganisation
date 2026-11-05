@@ -135,7 +135,7 @@ export default function Nav() {
       {onHome && (
         <nav className={`rail${stuck ? ' on' : ''}`} aria-label="Sections">
           <span className="rail-line" aria-hidden="true">
-            <span className="rail-fill" style={{ transform: `scaleY(${activeIdx / (LAYERS.length - 1)})` }} />
+            <span className="rail-fill" style={{ '--p': activeIdx / (LAYERS.length - 1) }} />
           </span>
           {LAYERS.map((l, i) => (
             <a
@@ -144,6 +144,7 @@ export default function Nav() {
               className={`rail-node${i === activeIdx ? ' on' : ''}${i < activeIdx ? ' past' : ''}`}
               aria-current={i === activeIdx ? 'true' : undefined}
               aria-label={`${l.n} ${l.name}`}
+              style={{ '--lc': `var(--d${i})` }}
             >
               <span className="rail-lbl">
                 <b>{l.n}</b> {l.name}

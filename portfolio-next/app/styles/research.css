@@ -16,7 +16,7 @@
 .paper:hover{border-color:var(--hair-3)}
 .paper::before{
   content:"";position:absolute;left:0;top:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(var(--ember-rgb),.7),transparent);opacity:0;transition:opacity .5s;
+  background:linear-gradient(90deg,transparent,rgba(var(--signal-rgb),.7),transparent);opacity:0;transition:opacity .5s;
 }
 .paper:hover::before{opacity:1}
 .pp-tags{
@@ -25,9 +25,9 @@
 }
 .pp-status{display:inline-flex;align-items:center;gap:8px;padding:5px 10px;border-radius:var(--r-pill);border:1px solid}
 .pp-status i{width:6px;height:6px;border-radius:50%}
-.pp-status.review{color:var(--ember);border-color:rgba(var(--ember-rgb),.45)}
-.pp-status.review i{background:var(--ember);animation:livePingE 2.2s var(--ease-out) infinite}
-@keyframes livePingE{0%{box-shadow:0 0 0 0 rgba(var(--ember-rgb),.6)}70%,100%{box-shadow:0 0 0 8px rgba(var(--ember-rgb),0)}}
+.pp-status.review{color:var(--signal);border-color:rgba(var(--signal-rgb),.45)}
+.pp-status.review i{background:var(--signal);animation:livePingE 2.2s var(--ease-out) infinite}
+@keyframes livePingE{0%{box-shadow:0 0 0 0 rgba(var(--signal-rgb),.6)}70%,100%{box-shadow:0 0 0 8px rgba(var(--signal-rgb),0)}}
 .pp-status.done{color:var(--pass);border-color:rgba(var(--pass-rgb),.4)}
 .pp-status.done i{background:var(--pass)}
 .pp-title{

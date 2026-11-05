@@ -1,11 +1,17 @@
 /* =========================================================================
    TOKENS — "Activation"
-   Midnight ground, electric-blue atmosphere, one warm signal. The palette
-   borrows its logic from an activation map: almost everything sits cold
-   and blue, and the few things that are live (hovered, selected, firing,
-   the number that matters) run hot. Ember is the only UI accent and should
-   stay rare — blue owns the room. Cool is data-only (the neural field,
-   diagram structure). Pass / fail are diagram semantics, never chrome.
+   Midnight ground, light as the only colour. The palette borrows its logic
+   from an activation map read by brightness, not temperature: the chrome is
+   monochrome (white, black, neutral hairlines), and colour appears only
+   where something emits light or reports a real result.
+     signal (light blue) — the one UI accent: focus, selection, live marks
+     indigo              — atmosphere only (field, blooms, spill); never text
+     mint                — the brightest thing on screen: live, passing, and
+                           the numbers that came out of an eval
+     lit gradient        — indigo → blue → mint, for the few things that glow
+     depth ramp --d0..7  — the forward pass in colour: each layer's tag and
+                           rail node walks from indigo (input) to mint (output)
+   Pass / fail are diagram semantics, never chrome.
 
    The JS-driven layers (neural field, denoise stage) read the same values
    from app/lib/palette.js — keep the two in step.
@@ -36,21 +42,40 @@
   --hair-2:rgba(234,241,246,.14);
   --hair-3:rgba(234,241,246,.22);
 
-  /* the signal (ignition orange): a true orange, not coral, so it holds
-     its own against the electric blue. The lit pair is for the two places
-     that glow: the headline's italic and the active rail node. */
-  --ember:#FF6A2B;
-  --ember-rgb:255,106,43;
-  --ember-hi:#FF8A4C;
-  --ember-lo:#E5521A;
-  --ember-lit-a:#FF5A1F;
-  --ember-lit-b:#FFB25C;
+  /* the signal (light blue): the UI accent, ~8.8:1 on --void */
+  --signal:#38B4FF;
+  --signal-rgb:56,180,255;
+  --signal-hi:#6CC8FF;
+  --signal-lo:#1E9BEA;
+  /* the lit gradient: --lit-a → --signal → --lit-b. Only the headline's
+     emphasised clause, the active rail node and the brightest particles */
+  --lit-a:#7A5CFF;
+  --lit-b:#52FFA5;
+
+  /* atmosphere: raw indigo is light, never text (~3:1) */
+  --indigo:#582EFF;
+  --indigo-rgb:88,46,255;
+  /* text-safe indigo (~6:1): the Ask the model surfaces, ML domain */
+  --cool:#8B7BFF;
+  --cool-rgb:139,123,255;
+
+  /* mint: live, passing, measured */
+  --mint:#52FFA5;
+  --mint-rgb:82,255,165;
+
+  /* depth ramp, OKLab-even, every step >= 6:1 on --void */
+  --d0:#8B7BFF;
+  --d1:#7F8AFF;
+  --d2:#6F99FF;
+  --d3:#5AA7FF;
+  --d4:#38B4FF;
+  --d5:#3ACFE6;
+  --d6:#43E8C9;
+  --d7:#52FFA5;
 
   /* data-only hues */
-  --cool:#0297DE;
-  --cool-rgb:2,151,222;
-  --pass:#52E3A8;
-  --pass-rgb:82,227,168;
+  --pass:#52FFA5;
+  --pass-rgb:82,255,165;
   --sun:#F2C14E;      /* client web domain */
   --sun-rgb:242,193,78;
   --fail:#FF5470;
@@ -58,7 +83,6 @@
 
   /* type */
   --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --f-serif:"Instrument Serif",Georgia,"Times New Roman",serif;
   --f-body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
   --f-mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 

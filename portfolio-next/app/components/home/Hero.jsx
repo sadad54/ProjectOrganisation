@@ -171,8 +171,8 @@ export default function Hero() {
       <figure className="hero-portrait" aria-hidden="false">
         <div className="hero-portrait-in">
           <img
-            src="/assets/portrait-hero-rim-light.webp"
-            alt="Portrait of Adnan Mashrur Sadad, lit from one side by a warm rim light"
+            src="/assets/portrait-hero-rim-light-cyan.webp"
+            alt="Portrait of Adnan Mashrur Sadad, lit from one side by a cool blue rim light"
             width="1000"
             height="1339"
             fetchPriority="high"

@@ -12,7 +12,7 @@
      6  NETWORK    contact     back where it started (shares slot 0)
 
    Heat (0..1) is art direction per formation: 0 renders cool and dim, 1
-   renders ember and larger. Everything is seeded — the same field every load.
+   renders hot (signal → mint) and larger. Everything is seeded — the same field every load.
    ========================================================================= */
 import { prng } from '../motion';
 

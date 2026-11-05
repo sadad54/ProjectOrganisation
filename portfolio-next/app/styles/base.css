@@ -23,8 +23,8 @@ input,textarea{font:inherit;color:inherit}
 p{margin:0}
 h1,h2,h3,h4{margin:0;font-weight:inherit}
 ul,ol{margin:0;padding:0;list-style:none}
-::selection{background:var(--ember);color:var(--void)}
-:focus-visible{outline:2px solid var(--ember);outline-offset:3px;border-radius:3px}
+::selection{background:var(--signal);color:var(--void)}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:3px}
 
 .sr-only{
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
@@ -52,11 +52,16 @@ section{position:relative}
   font-family:var(--f-display);font-stretch:108%;font-weight:640;
   font-size:var(--fs-display);line-height:.98;letter-spacing:-.035em;
 }
-.display em,.h2 em,.serif{
-  font-family:var(--f-serif);font-style:italic;font-weight:400;
-  letter-spacing:-.01em;font-stretch:100%;
+.display em,.h2 em,.accent{
+  font-family:var(--f-display);font-style:normal;font-weight:500;
+  letter-spacing:-.022em;font-stretch:62%;
 }
-.display em{color:var(--ember)}
+/* idea 1: a heading's emphasis takes its layer's colour from the depth ramp */
+.display em{color:var(--lc,var(--signal))}
+/* the emphasis arrives wide and draws in to its condensed cut as the words
+   rise; only the em's own words reflow, and it settles before they land */
+.js .split em{font-stretch:92%;transition:font-stretch 1.3s var(--ease-out) .25s}
+.js .split[data-in] em{font-stretch:62%}
 .h2{
   font-family:var(--f-display);font-stretch:106%;font-weight:620;
   font-size:var(--fs-h2);line-height:1.04;letter-spacing:-.03em;
@@ -75,10 +80,10 @@ section{position:relative}
   font-family:var(--f-mono);font-size:var(--fs-label);letter-spacing:.18em;text-transform:uppercase;
   color:var(--text-3);
 }
-.layer b{font-weight:500;color:var(--ember)}
+.layer b{font-weight:500;color:var(--lc,var(--signal))}
 .layer .bars{display:inline-flex;align-items:flex-end;gap:2px;height:11px}
 .layer .bars i{
-  display:block;width:2px;height:100%;background:var(--ember);border-radius:1px;
+  display:block;width:2px;height:100%;background:var(--lc,var(--signal));border-radius:1px;
   transform-origin:bottom;transform:scaleY(.25);
 }
 [data-in] .layer .bars i,.layer[data-in] .bars i{animation:layerBars 1.8s var(--ease-soft) infinite}
@@ -86,6 +91,18 @@ section{position:relative}
 .layer .bars i:nth-child(3){animation-delay:.36s!important}
 @keyframes layerBars{0%,100%{transform:scaleY(.25)}35%{transform:scaleY(1)}70%{transform:scaleY(.5)}}
 .layer .rule{width:34px;height:1px;background:var(--hair-3)}
+
+/* Depth ramp per layer (idea 1): each section carries its colour as --lc,
+   which its layer tag, its heading emphasis and its rail node all read.
+   Input is indigo, the middle of the pass is light blue, output is mint. */
+#top{--lc:var(--d0)}
+#thesis{--lc:var(--d1)}
+#about{--lc:var(--d2)}
+#decisions{--lc:var(--d3)}
+#work{--lc:var(--d4)}
+#research{--lc:var(--d5)}
+#toolkit{--lc:var(--d6)}
+#contact{--lc:var(--d7)}
 
 /* ---- buttons ---- */
 .btn{
@@ -107,9 +124,9 @@ section{position:relative}
 .btn:hover .arw{transform:translateX(4px)}
 .btn .arw.down{transition:transform .45s var(--ease-out)}
 .btn:hover .arw.down{transform:translateY(3px)}
-.btn-solid{background:var(--ember);border-color:var(--ember);color:var(--void)}
-.btn-solid::before{background:var(--text)}
-.btn-solid:hover{border-color:var(--text)}
+.btn-solid{background:var(--text);border-color:var(--text);color:var(--void)}
+.btn-solid::before{background:var(--void)}
+.btn-solid:hover{color:var(--text);border-color:var(--hair-3)}
 .btn:active{transform:scale(.97)}
 
 .lnk{
@@ -121,8 +138,8 @@ section{position:relative}
   content:"";position:absolute;left:0;right:0;bottom:2px;height:1px;background:var(--hair-3);
   transform-origin:right;transition:transform .5s var(--ease-out),background-color .3s;
 }
-.lnk:hover{color:var(--ember)}
-.lnk:hover::after{background:var(--ember);animation:lnkSweep .6s var(--ease-out)}
+.lnk:hover{color:var(--text)}
+.lnk:hover::after{background:var(--signal);animation:lnkSweep .6s var(--ease-out)}
 @keyframes lnkSweep{0%{transform:scaleX(1);transform-origin:right}45%{transform:scaleX(0);transform-origin:right}46%{transform-origin:left}100%{transform:scaleX(1);transform-origin:left}}
 
 .chips{display:flex;flex-wrap:wrap;gap:6px}
