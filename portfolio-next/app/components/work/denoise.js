@@ -37,8 +37,8 @@ void main(){
   vec3 img = mix(texture2D(uA, uv).rgb, texture2D(uB, uv).rgb, uMix);
   vec3 x0 = img * 2.0 - 1.0;
   vec3 eps = gauss(floor(px / uGrain));
-  // a touch of the palette in the noise: cool-biased static, ember speckle
-  eps += vec3(0.12, 0.0, -0.06) * step(0.985, h(floor(px / uGrain) + 5.0)) * 6.0;
+  // a touch of the palette in the noise: indigo-biased static, signal speckle
+  eps += vec3(-0.05, 0.04, 0.12) * step(0.985, h(floor(px / uGrain) + 5.0)) * 6.0;
   float s = uSigma;
   vec3 xt = sqrt(max(0.0, 1.0 - s * s)) * x0 + s * eps * 0.62;
   gl_FragColor = vec4(clamp(xt * 0.5 + 0.5, 0.0, 1.0), 1.0);

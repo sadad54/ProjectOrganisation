@@ -35,6 +35,18 @@ function readPage() {
   };
 }
 
+/* Phones and low-power devices get a still of the field instead of the live
+   one: no three.js download, no GPU work, no jank. A live field that stutters
+   reads worse than a still one that doesn't. */
+function wantsStill() {
+  const c = navigator.connection;
+  if (c && (c.saveData || /(^|-)2g$/.test(c.effectiveType || ''))) return true;
+  if (window.matchMedia('(prefers-reduced-data: reduce)').matches) return true;
+  if ((navigator.deviceMemory || 8) <= 4 || (navigator.hardwareConcurrency || 8) <= 4) return true;
+  const phone = window.matchMedia('(pointer: coarse)').matches && Math.min(window.innerWidth, window.innerHeight) < 820;
+  return phone;
+}
+
 export default function NeuralField() {
   const ref = useRef(null);
   const engine = useRef(null);
@@ -61,6 +73,15 @@ export default function NeuralField() {
       lastY = y;
       if (!raf) raf = requestAnimationFrame(sync);
     };
+
+    if (wantsStill()) {
+      document.documentElement.classList.add('field-still');
+      window.__fieldReady = true;
+      window.dispatchEvent(new Event('field:ready'));
+      return () => {
+        cancelled = true;
+      };
+    }
 
     import('../../lib/neural/engine').then(({ createNeuralField }) => {
       if (cancelled || !ref.current) return;

@@ -1,7 +1,7 @@
 /* Word-split text for mask reveals.
 
    `text` is a string, or an array of segments: strings, or { t, em } objects
-   for the serif-italic accent. Screen readers get the sentence once, from an
+   for the condensed accent clause. Screen readers get the sentence once, from an
    sr-only copy; the animated word spans are aria-hidden so they're never read
    word-by-word. The reveal itself is CSS (.split.in, see base.css) driven by
    the shared IntersectionObserver in RevealObserver.jsx. */

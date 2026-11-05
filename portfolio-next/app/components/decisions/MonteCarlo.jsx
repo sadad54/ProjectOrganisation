@@ -99,7 +99,7 @@ function MCPath({ d, p, band }) {
     <motion.path
       d={d}
       fill="none"
-      stroke="var(--ember)"
+      stroke="var(--signal)"
       strokeWidth="1"
       pathLength={1}
       style={{ opacity, pathLength: len }}

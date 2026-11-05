@@ -28,8 +28,11 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
 
   useEffect(() => {
     const el = hero.current;
-    if (reducedMotionNow()) {
+    // arriving through the shared-element transition: the title is already
+    // in flight from the work stage, so the hero is set, not revealed
+    if (reducedMotionNow() || window.__vtArrive) {
       el.classList.add('go');
+      if (window.__vtArrive) el.classList.add('vt');
       return;
     }
     return whenStageReady(() => el.classList.add('go'));
@@ -49,6 +52,9 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
   }, []);
 
   const domain = entry ? DOMAINS[entry.domain].label : null;
+  // figures are numbered in reading order, the way a report numbers them
+  let fig = 0;
+  const nextFig = () => ++fig;
   // a case study without a walkthrough yet samples its own screens in instead
   const video = { slug: p.slug, name: p.name, media: p.media || { type: 'video', slug: p.slug } };
   const gallery = shots.length
@@ -144,6 +150,11 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
             <h2 className="cs-h">
               <span>01</span> Overview
             </h2>
+            <aside className="cs-side rv" aria-label="Headline result">
+              <span className="cs-side-k">Headline result</span>
+              <b className="cs-side-v">{p.headline.metric}</b>
+              <span>{p.headline.label}</span>
+            </aside>
             <p className="cs-lede rv">{p.overview.summary}</p>
             <ul className="cs-results">
               {p.overview.bullets.map((b, i) => (
@@ -179,9 +190,12 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
               <span>03</span> How it works
             </h2>
             <p className="cs-lede rv">{p.architecture.summary}</p>
-            <div className="rv" data-reveal>
+            <figure className="cs-fig rv" data-reveal>
               <DiagramRenderer diagram={p.architecture.diagram} title={`${p.name} architecture`} />
-            </div>
+              <figcaption>
+                <b>Fig. {nextFig()}</b> {p.name} architecture, end to end.
+              </figcaption>
+            </figure>
           </section>
 
           {p.highlights?.length > 0 && (
@@ -193,8 +207,12 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
                 {p.highlights.map((h) => (
                   <article key={h.title} className="rv">
                     <h3>{h.title}</h3>
-                    <DiagramRenderer diagram={h.diagram} title={h.title} />
-                    <p dangerouslySetInnerHTML={{ __html: h.caption }} />
+                    <figure className="cs-fig">
+                      <DiagramRenderer diagram={h.diagram} title={h.title} />
+                      <figcaption>
+                        <b>Fig. {nextFig()}</b> <span dangerouslySetInnerHTML={{ __html: h.caption }} />
+                      </figcaption>
+                    </figure>
                   </article>
                 ))}
               </div>
@@ -206,7 +224,7 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
               <h2 className="cs-h">
                 <span>{String(sections.findIndex((s) => s[0] === 'limits') + 1).padStart(2, '0')}</span> Known limitations
               </h2>
-              <p className="cs-note rv">Written the way a model card lists them: what isn’t measured, isn’t built, or isn’t true yet.</p>
+              <aside className="cs-side cs-note rv">Written the way a model card lists them: what isn’t measured, isn’t built, or isn’t true yet.</aside>
               <ul className="limits">
                 {p.limitations.map((l, i) => (
                   <li key={i} className="rv" style={{ '--d': i * 60 }}>
@@ -223,9 +241,12 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
               <h2 className="cs-h">
                 <span>{String(sections.findIndex((s) => s[0] === 'screens') + 1).padStart(2, '0')}</span> Screens
               </h2>
-              <div className="cs-gallery">
+              <figure className="cs-gallery cs-fig">
                 <Media project={gallery} />
-              </div>
+                <figcaption>
+                  <b>Fig. {nextFig()}</b> {gallery.media.alt}.{shots.length > 1 ? ` ${shots.length} screens — use the arrows to step through them.` : ''}
+                </figcaption>
+              </figure>
             </section>
           )}
 

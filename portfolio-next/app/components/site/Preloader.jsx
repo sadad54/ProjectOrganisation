@@ -51,7 +51,7 @@ export default function Preloader() {
     window.addEventListener('field:ready', onField);
     if (window.__fieldReady) onField();
     const img = new Image();
-    img.src = '/assets/portrait-hero-rim-light.webp';
+    img.src = '/assets/portrait-hero-base.webp';
     (img.decode ? img.decode() : Promise.resolve())
       .catch(() => {})
       .then(() => {

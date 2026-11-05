@@ -79,7 +79,7 @@ function SceneInner({ p }) {
           <motion.path
             d={LINE}
             fill="none"
-            stroke="var(--ember)"
+            stroke="var(--signal)"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -97,7 +97,7 @@ function SceneInner({ p }) {
                   cx={pt.x}
                   cy={yOf(pt.v)}
                   r={lit ? 5 : 3}
-                  fill={isRecovery && phase >= 2 ? 'var(--pass)' : isCollapse && phase >= 1 ? 'var(--fail)' : lit ? 'var(--ember)' : 'var(--s3)'}
+                  fill={isRecovery && phase >= 2 ? 'var(--pass)' : isCollapse && phase >= 1 ? 'var(--fail)' : lit ? 'var(--signal)' : 'var(--s3)'}
                   stroke={lit ? 'var(--void)' : 'var(--hair-2)'}
                   strokeWidth="2"
                 />

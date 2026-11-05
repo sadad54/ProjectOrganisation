@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Magnetic from '../site/Magnetic';
 import HeroAsk from '../ask/HeroAsk';
 import { whenStageReady } from '../../lib/stage';
@@ -16,33 +16,47 @@ const LINES = [
   [{ t: 'that' }, { t: 'check', em: true }, { t: 'their', em: true }, { t: 'own', em: true }, { t: 'work.', em: true }],
 ];
 
-function useFps(on) {
-  const [fps, setFps] = useState(null);
+/* The portrait is two plates: the subject (base) and the light that falls on
+   it (rim), which add back up to the photograph. The rim's strength follows
+   the pointer: bring the cursor toward the light, off the subject's left
+   shoulder, and the edge burns brighter; move away and it falls to a glint.
+   Fine pointers only; everyone else sees the photograph as shot. */
+function useRimLight(fig) {
   useEffect(() => {
-    if (!on) return;
-    let raf = 0,
-      n = 0,
-      t0 = performance.now();
-    const loop = (now) => {
-      n++;
-      if (now - t0 >= 1000) {
-        setFps(Math.round((n * 1000) / (now - t0)));
-        n = 0;
-        t0 = now;
-      }
-      raf = requestAnimationFrame(loop);
+    const el = fig.current;
+    if (!el || !window.matchMedia('(hover: hover) and (pointer: fine)').matches || reducedMotionNow()) return;
+    let target = 1,
+      cur = 1,
+      raf = 0;
+    const tick = () => {
+      cur += (target - cur) * 0.08;
+      el.style.setProperty('--rim', cur.toFixed(3));
+      raf = Math.abs(target - cur) > 0.004 ? requestAnimationFrame(tick) : 0;
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [on]);
-  return fps;
+    const onMove = (e) => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0) return;
+      // the key light sits off the left edge, a third of the way down
+      const lx = r.left + r.width * 0.05,
+        ly = r.top + r.height * 0.38;
+      const d = Math.hypot(e.clientX - lx, e.clientY - ly) / Math.max(window.innerWidth, 1);
+      const near = Math.max(0, 1 - d / 0.8);
+      // a glint at the far side of the screen, a burn right beside the light
+      target = 0.22 + 1.7 * Math.pow(near, 1.5);
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, [fig]);
 }
 
 export default function Hero() {
   const root = useRef(null);
-  const [hud, setHud] = useState(false);
-  const [particles, setParticles] = useState(null);
-  const fps = useFps(hud);
+  const fig = useRef(null);
+  useRimLight(fig);
 
   useEffect(() => {
     const el = root.current;
@@ -109,30 +123,14 @@ export default function Hero() {
     return () => ro.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!window.matchMedia('(min-width: 1100px) and (pointer: fine)').matches) return;
-    const read = () => {
-      if (window.__field) setParticles(window.__field.stats.particles);
-    };
-    read();
-    window.addEventListener('field:ready', read);
-    setHud(true);
-    return () => window.removeEventListener('field:ready', read);
-  }, []);
-
   let i = 0;
   return (
     <section className="hero" id="top" ref={root} data-field="0" aria-labelledby="hero-h">
       <div className="hero-in wrap">
+        {/* on wide screens this lives in the nav; here it is for phones */}
         <p className="hero-status">
-          <span className="hero-open">
-            <span className="hero-dot" aria-hidden="true" />
-            Open to AI engineering, data science &amp; full-stack roles
-          </span>
-          <span className="sep" aria-hidden="true">
-            /
-          </span>
-          <span>Kuala Lumpur, MY · open to relocation</span>
+          <span className="hero-dot" aria-hidden="true" />
+          Open to AI/ML &amp; full-stack roles · open to relocation
         </p>
 
         <h1 className="hero-h" id="hero-h">
@@ -153,52 +151,43 @@ export default function Hero() {
 
         <div className="hero-foot">
           <p className="hero-sub">
-            Software engineer working on applied AI. I care about the part after the model call:{' '}
-            <b>schema validation, repair paths, eval harnesses, and a Docker image that actually runs.</b>
+            Applied-AI engineer. I work on the part after the model call: <b>validation, repair loops, evals, and deploys that run.</b>
           </p>
-          <div className="hero-cta">
-            <Magnetic className="btn btn-solid" href="#work" data-cursor="Explore">
-              See the work <span className="arw">→</span>
-            </Magnetic>
-            <Magnetic className="btn" href="#research">
-              Research <span className="arw down">↓</span>
-            </Magnetic>
-          </div>
+          <Magnetic className="btn btn-solid" href="#work" data-cursor="Explore">
+            See the work <span className="arw">→</span>
+          </Magnetic>
         </div>
         <HeroAsk />
       </div>
 
-      <figure className="hero-portrait" aria-hidden="false">
+      <figure className="hero-portrait" ref={fig}>
         <div className="hero-portrait-in">
           <img
-            src="/assets/portrait-hero-rim-light.webp"
-            alt="Portrait of Adnan Mashrur Sadad, lit from one side by a warm rim light"
+            className="hp-base"
+            src="/assets/portrait-hero-base.webp"
+            srcSet="/assets/portrait-hero-base-640.webp 640w, /assets/portrait-hero-base.webp 1000w"
+            sizes="(max-width: 760px) 50vh, (max-width: 1100px) 54vh, 66vh"
+            alt="Portrait of Adnan Mashrur Sadad, lit from one side by a cool blue rim light"
             width="1000"
             height="1339"
             fetchPriority="high"
+          />
+          <img
+            className="hp-rim"
+            src="/assets/portrait-hero-rim.webp"
+            srcSet="/assets/portrait-hero-rim-640.webp 640w, /assets/portrait-hero-rim.webp 1000w"
+            sizes="(max-width: 760px) 50vh, (max-width: 1100px) 54vh, 66vh"
+            alt=""
+            aria-hidden="true"
+            width="1000"
+            height="1339"
           />
         </div>
         <span className="hp-bracket tl" aria-hidden="true" />
         <span className="hp-bracket tr" aria-hidden="true" />
         <span className="hp-bracket bl" aria-hidden="true" />
         <span className="hp-bracket br" aria-hidden="true" />
-        <figcaption className="hp-cap">
-          <span>subject</span> Adnan M. Sadad <span className="sep">·</span> KL 2026
-        </figcaption>
       </figure>
-
-      <a className="hero-scroll" href="#thesis">
-        <span className="hs-line" aria-hidden="true" />
-        Scroll <span className="sep">·</span> run the forward pass
-      </a>
-
-      {hud && (
-        <p className="hero-hud" aria-hidden="true">
-          <span>field</span> {particles ? particles.toLocaleString('en-US') : '—'} particles
-          <span className="sep">·</span>
-          {fps ?? '—'} fps <span className="sep">·</span> 7 layers
-        </p>
-      )}
     </section>
   );
 }

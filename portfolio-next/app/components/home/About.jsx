@@ -24,7 +24,7 @@ export default function About() {
             <i />
             <i />
           </span>
-          <b>L2</b> Model card <span className="rule" aria-hidden="true" /> about me
+          <b>L2</b> Model card <span className="rule" aria-hidden="true" /> <span className="layer-gloss">about me</span>
         </p>
         <Split
           as="h2"

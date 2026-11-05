@@ -96,14 +96,17 @@ export default function Media({ project, active = true }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [p.slug, frame]);
 
-  // multi-screenshot projects resample through their frames while on stage
+  // multi-screenshot projects resample through their frames while on stage:
+  // one lap, then they rest on the first screen (the arrows take it from there)
   useEffect(() => {
     if (!active || fr.length < 2 || reducedMotionNow()) return;
+    let shown = 0;
     const id = setInterval(() => {
       if (!visible.current || hover.current || document.hidden) return;
       const n = (frameRef.current + 1) % fr.length;
       setFrame(n);
       paint(p, n, 'cycle');
+      if (++shown >= fr.length) clearInterval(id);
     }, CYCLE_MS);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -22,14 +22,14 @@ export const KNOWLEDGE = [
     id: 'research#safe-rag',
     title: 'SAFE-RAG',
     section: 'Research · first author',
-    href: '/#research',
+    href: '/research',
     text: 'SAFE-RAG (regulatory RAG evaluation, 2025–2026, first author, manuscript complete, not yet submitted) investigates incorrect regulatory scope in cited AI answers. Answers were evaluated for valid output schemas and supporting citations — and still grounded to the wrong scope at a measurable rate: an 8.6% wrong-scope grounding rate across 200 annotated items.',
   },
   {
     id: 'research#text-to-sql',
     title: 'Text-to-SQL answerability under schema evolution',
     section: 'Research · first author',
-    href: '/#research',
+    href: '/research',
     text: 'Text-to-SQL answerability under schema evolution (benchmark and drift detection, 2026, first author, manuscript complete, not yet submitted). When a database schema changes, a question that used to be answerable can silently stop being so. The benchmark evaluates answerability as schemas evolve and catches structurally invisible drift: 79.5% of structurally invisible drift detected, a 13.0% false-alarm rate on 5,627 benign schema updates, across 1,382 benchmark instances, 20 databases and 27,384 model generations.',
   },
   {

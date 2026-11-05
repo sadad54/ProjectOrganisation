@@ -3,6 +3,7 @@
    ========================================================================= */
 .rs-head{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px 64px;align-items:end;margin-bottom:clamp(40px,6vh,64px)}
 .rs-head .display{max-width:15ch}
+.rs-aside{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
 @media (max-width:1000px){.rs-head{grid-template-columns:1fr}}
 .papers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 @media (max-width:1000px){.papers{grid-template-columns:1fr}}
@@ -16,7 +17,7 @@
 .paper:hover{border-color:var(--hair-3)}
 .paper::before{
   content:"";position:absolute;left:0;top:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(var(--ember-rgb),.7),transparent);opacity:0;transition:opacity .5s;
+  background:linear-gradient(90deg,transparent,rgba(var(--signal-rgb),.7),transparent);opacity:0;transition:opacity .5s;
 }
 .paper:hover::before{opacity:1}
 .pp-tags{
@@ -25,23 +26,58 @@
 }
 .pp-status{display:inline-flex;align-items:center;gap:8px;padding:5px 10px;border-radius:var(--r-pill);border:1px solid}
 .pp-status i{width:6px;height:6px;border-radius:50%}
-.pp-status.review{color:var(--ember);border-color:rgba(var(--ember-rgb),.45)}
-.pp-status.review i{background:var(--ember);animation:livePingE 2.2s var(--ease-out) infinite}
-@keyframes livePingE{0%{box-shadow:0 0 0 0 rgba(var(--ember-rgb),.6)}70%,100%{box-shadow:0 0 0 8px rgba(var(--ember-rgb),0)}}
+.pp-status.review{color:var(--signal);border-color:rgba(var(--signal-rgb),.45)}
+.pp-status.review i{background:var(--signal);animation:livePingE 2.2s var(--ease-out) 2}
+@keyframes livePingE{0%{box-shadow:0 0 0 0 rgba(var(--signal-rgb),.6)}70%,100%{box-shadow:0 0 0 8px rgba(var(--signal-rgb),0)}}
 .pp-status.done{color:var(--pass);border-color:rgba(var(--pass-rgb),.4)}
 .pp-status.done i{background:var(--pass)}
 .pp-title{
   font-family:var(--f-display);font-stretch:108%;font-weight:620;font-size:clamp(1.6rem,2.5vw,2.4rem);
   line-height:1.02;letter-spacing:-.035em;margin:0 0 8px;max-width:20ch;
 }
-.pp-kind{font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-2);margin-bottom:18px}
-.pp-body{color:var(--text-2);line-height:1.6;max-width:52ch}
-.pp-viz{margin-top:auto;padding-top:30px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;align-items:end}
-.pp-viz.col{grid-template-columns:1fr;gap:18px}
-.pp-foot{
-  margin-top:24px;padding-top:14px;border-top:1px dashed var(--hair-2);
-  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+/* byline the way a paper prints it: the author, then the kind of work */
+.pp-byline{font-size:.92rem;color:var(--text-3);margin-bottom:18px}
+.pp-byline b{font-weight:500;color:var(--text-2)}
+.pp-body{color:var(--text-2);line-height:1.6;max-width:56ch;text-wrap:pretty}
+.pp-findings{margin-top:20px;display:grid;gap:10px;max-width:56ch}
+.pp-findings li{position:relative;padding-left:22px;color:var(--text);line-height:1.5;font-variant-numeric:tabular-nums}
+.pp-findings li::before{content:"";position:absolute;left:0;top:.72em;width:10px;height:1px;background:var(--lc,var(--signal))}
+
+/* the figure, numbered and captioned: the number is the evidence */
+.pp-fig{margin:auto 0 0;padding-top:30px}
+.pp-fig figcaption{
+  margin-top:16px;padding-top:12px;border-top:1px solid var(--hair);
+  font-size:.84rem;line-height:1.5;color:var(--text-3);max-width:60ch;text-wrap:pretty;
 }
+.pp-fig figcaption b{font-family:var(--f-mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--text-2);margin-right:8px}
+.pp-viz{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;align-items:end}
+.pp-viz.col{grid-template-columns:1fr;gap:18px}
+.pp-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;margin-top:24px}
+.pp-note{margin-left:auto;font-size:.82rem;color:var(--text-3)}
+@media (max-width:520px){.pp-note{margin-left:0;width:100%}}
+
+/* /research: each paper takes the full measure, text left, figure right */
+.paper.full{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px clamp(32px,5vw,72px);padding:clamp(26px,3.4vw,48px)}
+.paper.full .pp-fig{margin:0;padding-top:0;align-self:start}
+.paper.full .pp-actions{grid-column:1/-1;padding-top:18px;border-top:1px solid var(--hair);margin-top:4px}
+@media (max-width:1000px){.paper.full{grid-template-columns:1fr}}
+
+.rp{position:relative;z-index:1;padding:calc(var(--nav-h) + clamp(28px,5vh,56px)) 0 clamp(80px,12vh,140px)}
+.rp-back{margin-bottom:clamp(32px,6vh,64px)}
+.rp-head{max-width:880px}
+.rp-h{max-width:16ch;margin-bottom:24px;text-wrap:balance}
+.rp-profile{
+  margin:clamp(40px,7vh,72px) 0 clamp(40px,6vh,64px);display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  border-top:1px solid var(--hair-2);
+}
+.rp-profile div{padding:16px 20px 18px 0;border-bottom:1px solid var(--hair);display:grid;gap:6px;align-content:start}
+.rp-profile dt{font-family:var(--f-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.rp-profile dd{margin:0;color:var(--text);line-height:1.45;font-size:.95rem;text-wrap:pretty}
+.rp-papers{display:grid;gap:20px}
+.rp-cta{margin-top:clamp(64px,10vh,110px);padding-top:clamp(32px,5vh,48px);border-top:1px solid var(--hair-2)}
+.rp-cta .h2{max-width:24ch;margin-bottom:28px;text-wrap:balance}
+.rp-cta-row{display:flex;flex-wrap:wrap;gap:12px}
+@media (max-width:520px){.rp-cta-row .btn{width:100%;justify-content:center}}
 
 /* waffle: 500 cells, 43 lit — 8.6% drawn to scale */
 .waffle{display:grid;grid-template-columns:repeat(25,9px);gap:3px}

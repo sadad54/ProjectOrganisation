@@ -117,7 +117,7 @@ void main(){
 const FRAG = /* glsl */ `
 precision highp float;
 uniform vec3 uCool;
-uniform vec3 uEmber;
+uniform vec3 uHot;
 uniform vec3 uWhite;
 varying float vHeat;
 varying float vAlpha;
@@ -128,7 +128,7 @@ void main(){
   float halo = pow(smoothstep(0.5, 0.0, r), 2.2);
   float dotc = smoothstep(0.2, 0.0, r);
   float core = halo * 0.72 + dotc * 0.6;
-  vec3 col = mix(uCool, uEmber, smoothstep(0.3, 0.85, vHeat));
+  vec3 col = mix(uCool, uHot, smoothstep(0.3, 0.85, vHeat));
   col = mix(col, uWhite, smoothstep(0.9, 1.0, vHeat) * dotc * 0.55);
   float a = core * vAlpha;
   // premultiplied, summed with ONE/ONE blending: true additive light over
@@ -152,11 +152,11 @@ uniform float uHotLo;
 uniform float uBase;
 uniform float uGain;
 uniform vec3 uCool;
-uniform vec3 uEmber;
+uniform vec3 uHot;
 varying float vW;
 void main(){
   // weight → colour and strength: most lines faint, the heavy ones run hot
-  vec3 c = mix(uCool, uEmber, smoothstep(uHotLo, 1.0, vW));
+  vec3 c = mix(uCool, uHot, smoothstep(uHotLo, 1.0, vW));
   float a = uA * (uBase + uGain * vW * vW);
   gl_FragColor = vec4(c * a, a);
 }
@@ -185,13 +185,13 @@ uniform float uGlass;
 uniform float uTime;
 uniform float uAspect;
 uniform vec3 uCool;
-uniform vec3 uEmber;
+uniform vec3 uHot;
 uniform vec3 uWhite;
 varying vec2 vUv;
 
 vec4 aurora(vec2 uv){
   // a blue column falling from the top, hottest just right of centre (the
-  // type pocket is on the left), with a cantaloupe core pooling at the base
+  // type pocket is on the left), with a hot core (signal → mint by depth) pooling at the base
   float cx = 0.6 + 0.02 * sin(uTime * 0.11);
   // never narrower than square, or a portrait phone becomes one blue slab
   float dx = (uv.x - cx) * max(uAspect, 1.0);
@@ -202,7 +202,9 @@ vec4 aurora(vec2 uv){
   float core = exp(-dx * dx / 0.07) * exp(-cy * cy / 0.035);
   float b = (column * 0.6 + wash * 0.22) * breathe;
   float w = core * 0.5 * breathe;
-  vec3 col = uCool * b + uEmber * w;
+  // indigo is far more saturated than the old cool blue: held back so the
+  // column reads as atmosphere, not a purple wash over every section
+  vec3 col = uCool * b * 0.62 + uHot * w;
   return vec4(col, max(b, w));
 }
 
@@ -234,6 +236,18 @@ void main(){
 `;
 
 const lerp = (a, b, t) => a + (b - a) * t;
+
+/* The forward pass in colour: the field's hot colour is light blue at the
+   input and reaches mint at the output, the same walk the CSS depth ramp
+   (--d0…--d7) makes for the layer tags and the rail. m is the formation
+   index (0 = network … 6 = output). */
+const HOT_IN = new THREE.Color(...unit(PALETTE.signal));
+const HOT_OUT = new THREE.Color(...unit(PALETTE.mint));
+function depthHot(target, m) {
+  let t = Math.max(0, Math.min(1, (m - 1.5) / 4.5));
+  t = t * t * (3 - 2 * t);
+  return target.copy(HOT_IN).lerp(HOT_OUT, t);
+}
 
 function lookAt(m) {
   // interpolate the staging table at fractional formation index m
@@ -301,8 +315,9 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uShockO: { value: new THREE.Vector3(0, 0, 0) },
     uShockT: { value: 1 },
     uVel: { value: 0 },
-    uCool: { value: new THREE.Color(...unit(PALETTE.cool)) },
-    uEmber: { value: new THREE.Color(...unit(PALETTE.ember)) },
+    // cold = indigo atmosphere; hot walks signal → mint with depth (see depthHot)
+    uCool: { value: new THREE.Color(...unit(PALETTE.indigo)) },
+    uHot: { value: new THREE.Color(...unit(PALETTE.signal)) },
     uWhite: { value: new THREE.Color(0.94, 0.97, 1) },
   };
   const mat = new THREE.ShaderMaterial({
@@ -335,7 +350,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
       uBase: { value: base },
       uGain: { value: gain },
       uCool: uniforms.uCool,
-      uEmber: uniforms.uEmber,
+      uHot: uniforms.uHot,
     };
     const m = new THREE.ShaderMaterial({
       vertexShader: LINE_VERT,
@@ -370,7 +385,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uTime: { value: 0 },
     uAspect: { value: 1 },
     uCool: uniforms.uCool,
-    uEmber: uniforms.uEmber,
+    uHot: uniforms.uHot,
     uWhite: uniforms.uWhite,
   };
   const glassMat = new THREE.ShaderMaterial({
@@ -482,6 +497,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     glassU.uTime.value = S.t;
     glassU.uGlass.value = S.dimMul;
     uniforms.uMorph.value = S.morph;
+    depthHot(uniforms.uHot.value, S.morph);
     uniforms.uDim.value = look.dim * S.dimMul;
     synapseU.uA.value = synapseAlpha(S.morph) * look.dim * S.dimMul;
     landU.uA.value = landAlpha(S.morph) * look.dim * S.dimMul;
@@ -521,6 +537,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     group.rotation.set(-0.08, 0.3, 0);
     group.position.set(look.off[0], look.off[1], look.off[2]);
     uniforms.uMorph.value = S.target;
+    depthHot(uniforms.uHot.value, S.target);
     uniforms.uDim.value = look.dim * 0.7 * S.dimTarget;
     synapseU.uA.value = synapseAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
     landU.uA.value = landAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
