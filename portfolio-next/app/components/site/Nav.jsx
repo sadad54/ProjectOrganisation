@@ -102,6 +102,10 @@ export default function Nav() {
           <span className="nav-name">Adnan M. Sadad</span>
           <span className="nav-role">AI · Data · Full stack</span>
         </a>
+        <p className="nav-open">
+          <i aria-hidden="true" />
+          Open to AI/ML &amp; full-stack roles · relocation
+        </p>
         <nav className="nav-links" aria-label="Primary">
           {LINKS.map(([id, label]) => (
             <a

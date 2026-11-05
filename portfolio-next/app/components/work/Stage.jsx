@@ -96,7 +96,7 @@ export default function Stage({ project: p, index, total, neighbours, onSelect, 
 
             <motion.div className="st-links" variants={rise}>
               {p.page && (
-                <a className="btn btn-solid st-cta" href={`/work/${p.slug}`} data-pt={p.name} data-cursor="Open">
+                <a className="btn btn-solid st-cta" href={`/work/${p.slug}`} data-pt={p.name} data-vt=".st-name" data-vt-scope=".st" data-cursor="Open">
                   Case study <span className="arw">→</span>
                 </a>
               )}

@@ -157,7 +157,7 @@ html.rm .hero-ask{opacity:1!important;transform:none!important}
   content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;
   background:conic-gradient(from var(--ha-a,0deg),transparent 0 70%,rgba(var(--cool-rgb),.9) 82%,rgba(var(--signal-rgb),.8) 88%,transparent 96%);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
-  animation:ha-scan 6s linear infinite;opacity:.85;
+  animation:ha-scan 5s var(--ease-in-out) 1 both;opacity:.85;
 }
 @property --ha-a{syntax:"<angle>";inherits:false;initial-value:0deg}
 @keyframes ha-scan{to{--ha-a:360deg}}
@@ -181,7 +181,8 @@ html.rm .hero-ask{opacity:1!important;transform:none!important}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .hero-ask.on .ha-ph{color:var(--text-3)}
-.ha-caret{display:inline-block;width:7px;height:15px;margin-left:2px;vertical-align:-2px;background:var(--cool);animation:blink 1.05s steps(1) infinite}
+.ha-caret{display:inline-block;width:7px;height:15px;margin-left:2px;vertical-align:-2px;background:var(--cool);animation:blink 1.05s steps(1) 4}
+.ha-ph.is-done .ha-caret{display:none}
 .ha-ph{transition:opacity .26s var(--ease-soft)}
 .ha-ph.is-out{opacity:0}
 .ha-ph.is-stream .ha-caret{animation:none}
@@ -192,19 +193,14 @@ html.rm .hero-ask{opacity:1!important;transform:none!important}
   transition:background-color var(--d-quick),color var(--d-quick),box-shadow var(--d-base);
 }
 .ha-go:hover,.hero-ask.on .ha-go{background:var(--cool);color:var(--void);box-shadow:0 0 24px rgba(var(--cool-rgb),.45)}
-.ha-note{
-  margin-top:12px;display:flex;align-items:center;gap:9px;
-  font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.13em;text-transform:uppercase;color:var(--text-3);
-}
 .ha-dot,.nav-ask-dot,.ask-lnk-dot{flex:none;width:6px;height:6px;border-radius:50%;background:var(--cool);box-shadow:0 0 8px rgba(var(--cool-rgb),.8)}
-.ha-dot{animation:ha-breathe 2.4s var(--ease-soft) infinite}
 @keyframes ha-breathe{50%{box-shadow:0 0 0 5px rgba(var(--cool-rgb),0),0 0 14px rgba(var(--cool-rgb),.9);transform:scale(1.25)}}
 
 /* nav: the pill names itself once the hero is gone */
 .nav-ask-more{display:inline-block;max-width:0;overflow:hidden;white-space:pre;vertical-align:bottom;transition:max-width .5s var(--ease-out)}
 .nav.past .nav-ask-more{max-width:9em}
 .nav.past .nav-ask{border-color:rgba(var(--cool-rgb),.45);color:var(--text)}
-.nav.past .nav-ask-dot{animation:ha-breathe 2.4s var(--ease-soft) infinite}
+.nav.past .nav-ask-dot{animation:ha-breathe 2.4s var(--ease-soft) 2}
 @media (max-width:760px){.nav-ask-more{display:none}}
 
 /* the first-visit hint, now an invitation */
@@ -239,7 +235,6 @@ html.rm .hero-ask{opacity:1!important;transform:none!important}
   .ha-ph,.ha-field input{font-size:13px}
   .ha-go{height:38px;padding:0 14px}
   .ha-go-k{display:none}
-  .ha-note{letter-spacing:.1em}
 }
 @media (prefers-reduced-motion:reduce){.ha-bar::before,.ha-dot,.nav.past .nav-ask-dot,.ha-caret{animation:none}}
 html.rm .ha-bar::before,html.rm .ha-dot,html.rm .nav.past .nav-ask-dot,html.rm .ha-caret{animation:none}

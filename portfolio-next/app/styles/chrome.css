@@ -28,6 +28,15 @@
 .nav-mark:hover .nav-glyph circle:nth-of-type(3){animation-delay:.24s}
 @keyframes fire{0%{fill:var(--void)}30%{fill:var(--signal);stroke:var(--signal)}100%{fill:var(--void);stroke:var(--text-2)}}
 @media (max-width:640px){.nav-role{display:none}}
+/* availability, beside the name: the one status a recruiter needs, out of
+   the hero so the hero can hold one idea */
+.nav-open{
+  display:flex;align-items:center;gap:9px;margin:0 auto 0 4px;padding:6px 12px 6px 10px;border-radius:var(--r-pill);
+  border:1px solid var(--hair);font-family:var(--f-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-2);
+  white-space:nowrap;
+}
+@media (max-width:1100px){.nav-open{display:none}}
+@media (max-width:1280px){.nav-role{display:none}}
 
 .nav-links{display:flex;align-items:center;gap:clamp(14px,2.2vw,30px)}
 .nav-link{

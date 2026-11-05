@@ -45,6 +45,7 @@ export default function HeroAsk() {
     let words = [];
     let n = 0;
     let step = 'hold';
+    let laps = 0;
     const tick = () => {
       if (!on) return;
       if (!vis || document.activeElement === input.current) {
@@ -59,6 +60,13 @@ export default function HeroAsk() {
       }
       if (step === 'out') {
         i = (i + 1) % QS.length;
+        // one pass through the questions, then it settles on the first
+        if (i === 0 && ++laps >= 1) {
+          setQi(0);
+          setShown(QS[0]);
+          setPhase('done');
+          return;
+        }
         setQi(i);
         words = QS[i].match(/\S+\s*/g);
         n = 0;
@@ -126,10 +134,6 @@ export default function HeroAsk() {
           <span aria-hidden="true">↵</span>
         </button>
       </div>
-      <p className="ha-note">
-        <span className="ha-dot" aria-hidden="true" />
-        Ask the model · answers come only from this site, every claim cited
-      </p>
     </form>
   );
 }

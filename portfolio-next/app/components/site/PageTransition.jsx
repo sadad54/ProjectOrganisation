@@ -37,6 +37,7 @@ export default function PageTransition() {
   const [label, setLabel] = useState('');
   const pending = useRef(null);
   const lastPath = useRef(pathname);
+  const vtDone = useRef(null);
 
   useEffect(() => {
     function go(href, text = '') {
@@ -60,6 +61,36 @@ export default function PageTransition() {
     // programmatic entry point (command palette, etc.)
     window.__ptGo = go;
 
+    /* Shared-element route change: the project name on the work stage
+       becomes the case study's title (the browser morphs one into the other
+       through the View Transitions API). The new page is captured once the
+       route has rendered and scrolled to the top. Browsers without the API,
+       and reduced motion, get the cell wipe instead. */
+    function goShared(href, src) {
+      if (!document.startViewTransition || reducedMotionNow()) return false;
+      const url = new URL(href, location.href);
+      if (src) src.style.viewTransitionName = 'project-title';
+      window.__ptBusy = true;
+      window.__vtArrive = true;
+      pending.current = url;
+      const vt = document.startViewTransition(
+        () =>
+          new Promise((resolve) => {
+            vtDone.current = resolve;
+            router.push(href, { scroll: false });
+            // never hold the old frame if the route is slow to render
+            setTimeout(resolve, 1800);
+          })
+      );
+      vt.finished.finally(() => {
+        if (src) src.style.viewTransitionName = '';
+        window.__ptBusy = false;
+        window.__vtArrive = false;
+        window.dispatchEvent(new Event('pt:revealed'));
+      });
+      return true;
+    }
+
     function onClick(e) {
       if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const a = e.target.closest?.('a[data-pt]');
@@ -68,6 +99,10 @@ export default function PageTransition() {
       if (!href || href.startsWith('http') || a.target === '_blank') return;
       if (new URL(href, location.href).pathname === location.pathname) return; // same page: let anchors work
       e.preventDefault();
+      if (a.hasAttribute('data-vt')) {
+        const src = a.closest(a.getAttribute('data-vt-scope') || 'body')?.querySelector(a.getAttribute('data-vt'));
+        if (goShared(href, src)) return;
+      }
       go(href, a.getAttribute('data-pt') || '');
     }
     function onEnter(e) {
@@ -92,6 +127,16 @@ export default function PageTransition() {
     pending.current = null;
     // Back/forward (no wipe in flight): leave scroll to the browser/router.
     if (!url || !window.__ptBusy) return;
+    // a shared-element change: land at the top, then let the browser take
+    // the new snapshot (two frames, so the new route has painted)
+    if (vtDone.current) {
+      const resolve = vtDone.current;
+      vtDone.current = null;
+      if (window.__lenis) window.__lenis.scrollTo(0, { immediate: true, force: true });
+      else window.scrollTo(0, 0);
+      requestAnimationFrame(() => requestAnimationFrame(resolve));
+      return;
+    }
     // land: hash target or top, instantly, while the cells still cover
     const land = () => {
       const el = url.hash ? document.getElementById(url.hash.slice(1)) : null;

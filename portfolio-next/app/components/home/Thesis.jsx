@@ -79,7 +79,7 @@ export default function Thesis() {
               <i />
               <i />
             </span>
-            <b>L1</b> Thesis <span className="rule" aria-hidden="true" /> what every project below has in common
+            <b>L1</b> Thesis <span className="rule" aria-hidden="true" /> <span className="layer-gloss">what every project below has in common</span>
           </p>
           <p className="thesis-text">
             <span className="sr-only">{full}</span>

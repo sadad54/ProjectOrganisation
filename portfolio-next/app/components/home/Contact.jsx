@@ -111,7 +111,7 @@ export default function Contact() {
             <i />
             <i />
           </span>
-          <b>Out</b> Output <span className="rule" aria-hidden="true" /> contact
+          <b>Out</b> Output <span className="rule" aria-hidden="true" /> <span className="layer-gloss">contact</span>
         </p>
         <Split
           as="h2"

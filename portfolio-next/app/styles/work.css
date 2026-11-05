@@ -36,7 +36,7 @@
   font-family:var(--f-mono);font-size:14px;color:var(--text-3);white-space:nowrap;
 }
 .q-ph b{font-weight:400;color:var(--text-2)}
-.q-caret{display:inline-block;width:7px;height:15px;background:var(--signal);margin-left:2px;vertical-align:-2px;animation:caret 1s steps(1) infinite}
+.q-caret{display:inline-block;width:7px;height:15px;background:var(--signal);margin-left:2px;vertical-align:-2px;animation:caret 1s steps(1) 4}
 .q.focus .q-ph{opacity:.6}
 .q-meta{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);white-space:nowrap}
 .q-x{font-size:18px;color:var(--text-3);width:28px;height:28px;border-radius:50%;transition:color .2s,background-color .2s}

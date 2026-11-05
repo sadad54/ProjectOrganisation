@@ -22,6 +22,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 input,textarea{font:inherit;color:inherit}
 p{margin:0}
 h1,h2,h3,h4{margin:0;font-weight:inherit}
+h1,h2,h3{text-wrap:balance}
+p,li,dd,figcaption{text-wrap:pretty}
+/* every figure that can sit beside another figure lines up digit for digit */
+.odo,.pp-counts b,.g-v,.cs-side-v,.opener-num b,time{font-variant-numeric:tabular-nums}
 ul,ol{margin:0;padding:0;list-style:none}
 ::selection{background:var(--signal);color:var(--void)}
 :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:3px}
@@ -45,7 +49,11 @@ ul,ol{margin:0;padding:0;list-style:none}
    portrait's `lighten` blend can no longer see the field canvas behind it */
 main{position:relative}
 section{position:relative}
-.band{padding-block:clamp(96px,15vh,180px)}
+.band{padding-block:var(--sp-xl)}
+/* density follows content: the data-heavy layers sit tighter so their
+   instruments read as one surface; the statements get room to land */
+.work.band,.research.band{padding-block:var(--sp-l)}
+.contact.band{padding-top:clamp(140px,22vh,260px)}
 
 /* ---- type primitives ---- */
 .display{
@@ -86,11 +94,15 @@ section{position:relative}
   display:block;width:2px;height:100%;background:var(--lc,var(--signal));border-radius:1px;
   transform-origin:bottom;transform:scaleY(.25);
 }
-[data-in] .layer .bars i,.layer[data-in] .bars i{animation:layerBars 1.8s var(--ease-soft) infinite}
+/* the bars fire once as the layer arrives, then rest (only the field loops) */
+[data-in] .layer .bars i,.layer[data-in] .bars i{animation:layerBars 1.8s var(--ease-soft) 1 both}
 .layer .bars i:nth-child(2){animation-delay:.18s!important}
 .layer .bars i:nth-child(3){animation-delay:.36s!important}
 @keyframes layerBars{0%,100%{transform:scaleY(.25)}35%{transform:scaleY(1)}70%{transform:scaleY(.5)}}
 .layer .rule{width:34px;height:1px;background:var(--hair-3)}
+/* the plain-language gloss on the metaphor: set as text, not as a label, so
+   the tag carries one line of mono instead of two */
+.layer-gloss{font-family:var(--f-body);font-size:.88rem;letter-spacing:0;text-transform:none;color:var(--text-3)}
 
 /* Depth ramp per layer (idea 1): each section carries its colour as --lc,
    which its layer tag, its heading emphasis and its rail node all read.
@@ -103,6 +115,18 @@ section{position:relative}
 #research{--lc:var(--d5)}
 #toolkit{--lc:var(--d6)}
 #contact{--lc:var(--d7)}
+
+/* A section can open on a real number instead of an accent clause: the
+   figure large, its unit in mono beside it. Counts come from the data. */
+.opener-num{display:flex;align-items:flex-end;gap:14px;margin:0 0 clamp(10px,1.6vh,18px)}
+.opener-num b{
+  font-family:var(--f-display);font-stretch:118%;font-weight:560;font-size:clamp(3.6rem,8vw,7.2rem);
+  line-height:.8;letter-spacing:-.05em;color:var(--text);font-variant-numeric:tabular-nums;
+}
+.opener-num span{
+  font-family:var(--f-mono);font-size:var(--fs-label);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--lc,var(--text-2));line-height:1.5;padding-bottom:.4em;
+}
 
 /* ---- buttons ---- */
 .btn{
@@ -180,7 +204,6 @@ html.js:not(.hydrated) .hero-portrait,html.js:not(.hydrated) .hero-portrait-in{a
 .grain{
   position:fixed;inset:-100%;z-index:90;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation:grain 7s steps(8) infinite;
 }
 @keyframes grain{
   0%,100%{transform:translate(0,0)}12%{transform:translate(-4%,3%)}25%{transform:translate(3%,-5%)}

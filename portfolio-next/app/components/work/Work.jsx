@@ -87,6 +87,7 @@ export default function Work() {
   const [sheet, setSheet] = useState(false);
   const touched = useRef(false);
   const inView = useRef(false);
+  const toured = useRef(0);
   const hovering = useRef(false);
   const sec = useRef(null);
   const mobile = useMedia('(max-width: 900px)');
@@ -135,7 +136,8 @@ export default function Work() {
     if (rows.length && !rows.some((r) => r.p.slug === selected)) setSelected(rows[0].p.slug);
   }, [rows, selected]);
 
-  // autoplay: the console demos itself until someone touches it
+  // autoplay: the console demos itself until someone touches it — one tour
+  // of the case studies, then it rests (only the field moves forever)
   useEffect(() => {
     if (reducedMotionNow() || !window.matchMedia('(pointer: fine)').matches) return;
     const io = new IntersectionObserver(
@@ -155,6 +157,11 @@ export default function Work() {
       if (!inView.current || hovering.current || touched.current) return;
       const i = rows.findIndex((r) => r.p.slug === selected);
       const next = rows[(i + 1) % rows.length];
+      if (++toured.current >= 6 || next?.p.tier !== 'case') {
+        touched.current = true;
+        setAuto(false);
+        return;
+      }
       if (next) setSelected(next.p.slug);
     }, AUTO_MS);
     return () => clearTimeout(t);
@@ -216,12 +223,20 @@ export default function Work() {
                 <i />
                 <i />
               </span>
-              <b>L4</b> Retrieval <span className="rule" aria-hidden="true" /> selected work
+              <b>L4</b> Retrieval <span className="rule" aria-hidden="true" /> <span className="layer-gloss">selected work</span>
             </p>
-            <Split as="h2" id="work-h" className="display" text={['Every project, ', { t: 'one query away.', em: true }]} />
+            <p className="opener-num rv" aria-hidden="true">
+              <b>{items.length}</b>
+              <span>
+                builds
+                <br />
+                indexed
+              </span>
+            </p>
+            <Split as="h2" id="work-h" className="display" text="Every project, one query away." />
             <p className="lede rv" style={{ '--d': 120 }}>
-              {items.length} builds — case studies with walkthroughs, shipped projects, smaller experiments. Type what
-              you’re looking for: the ranking is a real TF-IDF search, running in your browser.
+              Case studies with walkthroughs, shipped projects, smaller experiments. Type what you’re looking for: the
+              ranking is a real TF-IDF search, running in your browser.
             </p>
           </div>
 

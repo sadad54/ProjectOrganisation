@@ -92,6 +92,12 @@ export default function CommandPalette() {
         go: () => (window.__ptGo ? window.__ptGo(`/work/${p.slug}`, p.name) : router.push(`/work/${p.slug}`)),
       })
     );
+    A.push({
+      g: 'Case studies',
+      n: 'Research — both papers in full',
+      h: 'Page',
+      go: () => (window.__ptGo ? window.__ptGo('/research', 'research') : router.push('/research')),
+    });
     A.push(
       { g: 'Contact', n: 'Copy email address', h: 'Copy', go: () => copyText(EMAIL, 'Email copied') },
       { g: 'Contact', n: 'Open GitHub', h: 'External', go: () => window.open('https://github.com/sadad54', '_blank', 'noopener') },
@@ -191,16 +197,26 @@ export default function CommandPalette() {
       /* ignore */
     }
     if (seen) return;
-    const s = setTimeout(() => setHint(true), 6500);
-    const r = setTimeout(() => {
-      setHint(false);
-      try {
-        localStorage.setItem('askHintSeen', '1');
-      } catch {
-        /* ignore */
-      }
-    }, 17000);
+    // the hero already holds an ask bar; offer the shortcut only once the
+    // visitor has scrolled past it, then retire it for good
+    let s = 0,
+      r = 0;
+    const onScroll = () => {
+      if (window.scrollY < window.innerHeight * 0.9) return;
+      window.removeEventListener('scroll', onScroll);
+      s = setTimeout(() => setHint(true), 1200);
+      r = setTimeout(() => {
+        setHint(false);
+        try {
+          localStorage.setItem('askHintSeen', '1');
+        } catch {
+          /* ignore */
+        }
+      }, 11000);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
+      window.removeEventListener('scroll', onScroll);
       clearTimeout(s);
       clearTimeout(r);
     };

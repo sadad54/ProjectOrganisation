@@ -96,6 +96,12 @@
   --fs-label:10.5px;
   --fs-micro:9.5px;
 
+  /* spacing scale: four steps, used for rhythm between and inside sections */
+  --sp-s:clamp(16px,2.2vh,24px);
+  --sp-m:clamp(28px,4.4vh,48px);
+  --sp-l:clamp(56px,9vh,96px);
+  --sp-xl:clamp(96px,15vh,180px);
+
   /* layout */
   --gut:clamp(18px,4.6vw,68px);
   --maxw:1380px;

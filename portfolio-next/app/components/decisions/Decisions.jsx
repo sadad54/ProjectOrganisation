@@ -65,9 +65,9 @@ function Pinned() {
                 <i />
                 <i />
               </span>
-              <b>L3</b> Attention <span className="rule" aria-hidden="true" /> the decisions I’d defend
+              <b>L3</b> Attention <span className="rule" aria-hidden="true" /> <span className="layer-gloss">the decisions I’d defend</span>
             </p>
-            <Split as="h2" className="h2 dec-title" text={[`${COUNT} trade-offs, `, { t: 'drawn as you scroll.', em: true }]} />
+            <Split as="h2" className="h2 dec-title" text={`${COUNT} trade-offs, drawn as you scroll.`} />
           </div>
           <nav className="dec-tabs" aria-label="Decisions" style={{ '--n': n }}>
             {CHAPTERS.map((c, k) => (
@@ -154,9 +154,9 @@ export default function Decisions() {
               <i />
               <i />
             </span>
-            <b>L3</b> Attention <span className="rule" aria-hidden="true" /> the decisions I’d defend
+            <b>L3</b> Attention <span className="rule" aria-hidden="true" /> <span className="layer-gloss">the decisions I’d defend</span>
           </p>
-          <Split as="h2" className="h2 dec-title" text={[`${COUNT} trade-offs, `, { t: 'drawn as they play.', em: true }]} />
+          <Split as="h2" className="h2 dec-title" text={`${COUNT} trade-offs, drawn as they play.`} />
           {CHAPTERS.map((c) => (
             <PlayOnView key={c.k} C={c.C} still={rm} />
           ))}

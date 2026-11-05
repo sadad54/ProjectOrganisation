@@ -95,10 +95,10 @@ export default function Weights() {
             <i />
             <i />
           </span>
-          <b>L6</b> Weights <span className="rule" aria-hidden="true" /> toolkit
+          <b>L6</b> Weights <span className="rule" aria-hidden="true" /> <span className="layer-gloss">toolkit</span>
         </p>
         <div className="wt-head">
-          <Split as="h2" id="weights-h" className="display" text={['What I reach for, ', { t: 'wired to where I used it.', em: true }]} />
+          <Split as="h2" id="weights-h" className="display" text="What I reach for, wired to where I used it." />
           <p className="lede rv" style={{ '--d': 120 }}>
             {skills.length} skills × {projects.length} projects, {edges.length} connections — each one a project whose
             stack actually uses the skill. Point at either side.
