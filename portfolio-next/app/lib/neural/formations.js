@@ -50,6 +50,8 @@ export function buildFormations(N) {
   let LINEW = null;
   let LAND = null; // landscape wireframe for the line pass
   let LANDW = null;
+  let BRAIN = null; // the brain's outline and folds for the line pass
+  let BRAINW = null;
 
   const set3 = (arr, i, x, y, z) => {
     arr[i * 3] = x;
@@ -438,9 +440,10 @@ export function buildFormations(N) {
     ];
     const glow = (x, y, z) => active.reduce((g, a) => Math.max(g, Math.exp(-((x - a[0]) ** 2 + (y - a[1]) ** 2 + (z - a[2]) ** 2) / (a[3] * a[3]))), 0);
     const K = 0.9;
+    const place = (x, y, z) => [-x * K + 0.25, y * K + 0.35, z * K]; // frontal lobe faces the copy
     const put = (n, x, y, z, heat) => {
       const i = perm[n];
-      set3(I, i, -x * K + 0.25, y * K + 0.35, z * K); // frontal lobe faces the copy
+      set3(I, i, ...place(x, y, z));
       H1[i * 4] = heat;
     };
     const rimN = Math.round(N * 0.1);
@@ -501,6 +504,81 @@ export function buildFormations(N) {
       set3(I, perm[i], (rnd() - 0.5) * 16, (rnd() - 0.5) * 9, -5 + rnd() * 5);
       H1[perm[i] * 4] = 0;
     }
+
+    // The same shape as 1px strokes for the line pass: dots alone read as
+    // dust, lines read as a drawing. Folds are the zero-contour of `fold`,
+    // found by marching squares over each hemisphere's (angle, lift) grid.
+    const segs = [];
+    const line = (a, b, w) => segs.push([place(...a), place(...b), w]);
+    const SINK = 0.965;
+    const surf = (al, be, side) => {
+      const cb = Math.cos(be);
+      const x = Math.cos(al) * cb * 2.55,
+        dy = Math.sin(al) * cb;
+      const y = dy > 0 ? dy * topOf(x) : dy * underOf(x);
+      return [x * SINK, y * SINK, (0.07 + Math.sin(be) * 0.95) * side * SINK];
+    };
+    const GA = 132,
+      GB = 44;
+    for (const side of [-1, 1]) {
+      const P = [],
+        V = [];
+      for (let b = 0; b <= GB; b++) {
+        for (let a = 0; a <= GA; a++) {
+          const p = surf((a / GA) * TAU, (b / GB) * (Math.PI / 2) * 0.985, side);
+          P.push(p);
+          V.push(fold(p[0] / SINK, p[1] / SINK, p[2] / SINK + side * 3.1));
+        }
+      }
+      const at = (a, b) => b * (GA + 1) + a;
+      const cross = (i0, i1) => {
+        const t = V[i0] / (V[i0] - V[i1]);
+        return [P[i0][0] + (P[i1][0] - P[i0][0]) * t, P[i0][1] + (P[i1][1] - P[i0][1]) * t, P[i0][2] + (P[i1][2] - P[i0][2]) * t];
+      };
+      for (let b = 0; b < GB; b++) {
+        for (let a = 0; a < GA; a++) {
+          const c = [at(a, b), at(a + 1, b), at(a + 1, b + 1), at(a, b + 1)];
+          const pts = [];
+          for (let e = 0; e < 4; e++) {
+            const i0 = c[e],
+              i1 = c[(e + 1) % 4];
+            if (V[i0] > 0 !== V[i1] > 0) pts.push(cross(i0, i1));
+          }
+          if (pts.length === 2 || pts.length === 4) {
+            for (let e = 0; e < pts.length; e += 2) {
+              const m = pts[e];
+              line(pts[e], pts[e + 1], 0.42 + 0.58 * glow(m[0], m[1], m[2]));
+            }
+          }
+        }
+      }
+      // the profile, drawn once per hemisphere either side of the fissure
+      const RIM = 150;
+      for (let k = 0; k < RIM; k++) line(surf((k / RIM) * TAU, 0, side), surf(((k + 1) / RIM) * TAU, 0, side), 0.62);
+    }
+    // cerebellum: stacked rings; brain stem: four edges
+    for (let r = 0; r < 7; r++) {
+      const u = -0.86 + (r / 6) * 1.72,
+        s = Math.sqrt(1 - u * u),
+        y = -1.22 + u * 0.58;
+      for (let k = 0; k < 40; k++) {
+        const t0 = (k / 40) * TAU,
+          t1 = ((k + 1) / 40) * TAU;
+        line([-1.75 + s * Math.cos(t0) * 0.85, y, s * Math.sin(t0) * 0.9], [-1.75 + s * Math.cos(t1) * 0.85, y, s * Math.sin(t1) * 0.9], 0.34);
+      }
+    }
+    for (let e = 0; e < 4; e++) {
+      const a = (e / 4) * TAU + 0.6;
+      line([-0.8 + Math.cos(a) * 0.32, -1.05, Math.sin(a) * 0.32], [-1.1 + Math.cos(a) * 0.2, -2.75, Math.sin(a) * 0.2], 0.3);
+    }
+    BRAIN = new Float32Array(segs.length * 6);
+    BRAINW = new Float32Array(segs.length * 2);
+    segs.forEach(([a, b, w], k) => {
+      BRAIN.set(a, k * 6);
+      BRAIN.set(b, k * 6 + 3);
+      BRAINW[k * 2] = w;
+      BRAINW[k * 2 + 1] = w;
+    });
   }
 
   // ----------------------------------------------------------------- 8 STARRY
@@ -564,11 +642,15 @@ export function buildFormations(N) {
     for (; i < N; i++) orbit(i, (rnd() - 0.5) * 16, (rnd() - 0.5) * 9, -5 + rnd() * 5, 0.02, rnd() * TAU, 0);
   }
 
-  return { A, A2, B, C, D, E, G, I, J, FH, H0, H1, R, LINES, LINEW, LAND, LANDW };
+  return { A, A2, B, C, D, E, G, I, J, FH, H0, H1, R, LINES, LINEW, LAND, LANDW, BRAIN, BRAINW };
 }
 
 /* Per-formation staging, interpolated on the CPU: where the formation sits,
-   how much it rotates and follows the pointer, how bright it burns. */
+   how much it rotates and follows the pointer, how bright it burns.
+   `fx` (optional) places the formation by screen position instead of world
+   units: a fraction of the half-width, so it stays inside its frame on any
+   aspect ratio. It is a default: a section can give the exact spot with
+   data-field-x (see NeuralField.jsx). */
 export const LOOKS = [
   { off: [0.35, 0.45, 0], spin: 1, follow: 1, dim: 1.0 }, // 0 network
   { off: [0, 0.35, 0], spin: 0.18, follow: 0.5, dim: 0.72 }, // 1 attention
@@ -576,8 +658,8 @@ export const LOOKS = [
   { off: [0, 0, 0], spin: 0.12, follow: 0.35, dim: 0.85 }, // 3 landscape
   { off: [0, 0, -1.2], spin: 0.35, follow: 0.6, dim: 0.5 }, // 4 clusters
   { off: [0.9, 0.2, 0.2], spin: 0.22, follow: 0.5, dim: 0.8 }, // 5 matrix
-  { off: [2.9, 0.05, 0], spin: 0.42, follow: 0.5, dim: 1.05, glass: 0.45 }, // 6 brain
-  { off: [2.5, 0.3, -2.2], spin: 1, follow: 0.8, dim: 0.8 }, // 7 network
+  { off: [2.9, -0.35, 0], fx: 0.34, spin: 0.42, follow: 0.5, dim: 1.05, glass: 0.4 }, // 6 brain
+  { off: [2.9, -0.35, -6.5], fx: 0.34, spin: 0.8, follow: 0.6, dim: 0.95, glass: 0.4 }, // 7 network
   { off: [0, 0.2, 0], spin: 0.04, follow: 0.18, dim: 0.9, glass: 0.3 }, // 8 starry
   { off: [0.2, 0.4, 0], spin: 1, follow: 1, dim: 0.95 }, // 9 network
 ];

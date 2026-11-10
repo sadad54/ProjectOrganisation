@@ -23,6 +23,12 @@ const py = (v) => Y0 - ((Y0 - Y1) * v) / TOP;
 const path = (f) =>
   Array.from({ length: DAYS + 1 }, (_, d) => `${d ? 'L' : 'M'}${px(d).toFixed(1)} ${py(f(d)).toFixed(2)}`).join('');
 const YT = [1, 10, 20, 30];
+// milestones come from the arithmetic, never typed in: the first day each
+// multiple is passed
+const firstDay = (x) => Math.ceil(Math.log(x) / Math.log(1.01));
+const MARKS = [2, 10].map((x) => ({ x, d: firstDay(x) }));
+const FLAT = MARKS[0].d; // the stretch that still looks like nothing
+const area = `${path(up)}L${px(DAYS).toFixed(1)} ${Y0}L${X0} ${Y0}Z`;
 const XT = [0, 90, 180, 270, 365];
 
 export default function Compound() {
@@ -70,7 +76,7 @@ export default function Compound() {
             </span>
             <b>lr</b> Learning rate <span className="rule" aria-hidden="true" /> small steps, every day
           </p>
-          <Split as="h2" className="h2 bw-kin" text={['One percent, ', { t: 'compounded.', em: true }]} />
+          <Split as="h2" className="display" text={['One percent, ', { t: 'compounded.', em: true }]} />
           <p className="lede rv" style={{ '--d': 80 }}>
             <b>Atomic Habits</b> puts arithmetic on it. Get one percent better every day and a year later you are close
             to thirty-eight times where you started. Slip one percent a day and almost nothing is left. Drag the day:
@@ -92,7 +98,16 @@ export default function Compound() {
           </dl>
         </div>
 
-        <figure className="bw-chart rv" data-reveal ref={root} style={{ '--d': 120 }}>
+        <figure className="bw-chart scene-stage rv" data-reveal ref={root} style={{ '--d': 120 }}>
+          <p className="bw-chart-top" aria-hidden="true">
+            <span>
+              <i className="hot" /> 1.01ⁿ
+            </span>
+            <span>
+              <i className="cold" /> 0.99ⁿ
+            </span>
+            <span className="r">drag the day</span>
+          </p>
           <svg
             ref={svg}
             viewBox={`0 0 ${W} ${H}`}
@@ -119,7 +134,32 @@ export default function Compound() {
                 {d === 0 ? 'day 0' : d}
               </text>
             ))}
+            <defs>
+              <linearGradient id="bw-area" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="var(--ember)" stopOpacity=".26" />
+                <stop offset="1" stopColor="var(--ember)" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path className="bw-area" d={area} fill="url(#bw-area)" />
             <line className="bw-axis" x1={X0} x2={X1} y1={Y0} y2={Y0} />
+            {/* the first seventy days: twice as good, and it looks like nothing */}
+            <g className="bw-flatline">
+              <path d={`M${px(0)} ${Y0 - 30}v-7H${px(FLAT)}v7`} />
+              <text x={px(0)} y={Y0 - 46}>
+                ×2 by day {FLAT} · still looks flat
+              </text>
+            </g>
+            {MARKS.map((m) => (
+              <g key={m.x} className={`bw-ms${day >= m.d ? ' on' : ''}`}>
+                <line x1={px(m.d)} x2={px(m.d)} y1={py(up(m.d))} y2={Y0} />
+                <circle cx={px(m.d)} cy={py(up(m.d))} r="3" />
+                {m.x > 2 && (
+                  <text x={px(m.d) - 8} y={py(up(m.d)) - 10} textAnchor="end">
+                    ×{m.x} · day {m.d}
+                  </text>
+                )}
+              </g>
+            ))}
             <path className="bw-curve cold" d={worse} pathLength="1" />
             <path className="bw-curve hot" d={better} pathLength="1" />
             <g className="bw-mark">

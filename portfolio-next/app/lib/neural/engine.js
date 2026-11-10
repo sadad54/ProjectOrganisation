@@ -271,7 +271,12 @@ void main(){
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
-function lookAt(m) {
+// world x for a staging entry: its own, or (with `fx`) a fraction of the
+// half-width of the view at that depth
+let anchorX = null; // set by the page (data-field-x): overrides a staging entry's own fx
+const offX = (l, cam) => (l.fx == null ? l.off[0] : (anchorX ?? l.fx) * (cam.position.z - l.off[2]) * 0.36397 * cam.aspect);
+
+function lookAt(m, cam) {
   // interpolate the staging table at fractional formation index m
   const k0 = Math.max(0, Math.min(LAST, Math.floor(m)));
   const k1 = Math.min(LAST, k0 + 1);
@@ -280,7 +285,7 @@ function lookAt(m) {
   const a = LOOKS[k0],
     b = LOOKS[k1];
   return {
-    off: [lerp(a.off[0], b.off[0], t), lerp(a.off[1], b.off[1], t), lerp(a.off[2], b.off[2], t)],
+    off: [lerp(offX(a, cam), offX(b, cam), t), lerp(a.off[1], b.off[1], t), lerp(a.off[2], b.off[2], t)],
     spin: lerp(a.spin, b.spin, t),
     follow: lerp(a.follow, b.follow, t),
     dim: lerp(a.dim, b.dim, t),
@@ -399,6 +404,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
   }
   const synapseU = makeLines(F.LINES, F.LINEW, { hotLo: 0.88, base: 0.05, gain: 0.3 });
   const landU = makeLines(F.LAND, F.LANDW, { hotLo: 0.7, base: 0.07, gain: 0.26 });
+  const brainU = makeLines(F.BRAIN, F.BRAINW, { hotLo: 0.6, base: 0.1, gain: 0.5 });
   group.add(points);
   scene.add(group);
 
@@ -433,6 +439,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
   const near = (m, k) => Math.max(0, 1 - Math.abs(m - k) * 1.8);
   const synapseAlpha = (m) => near(m, 0) + near(m, 7) + near(m, LAST);
   const landAlpha = (m) => near(m, 3);
+  const brainAlpha = (m) => near(m, 6);
 
   // ---- state ----
   const S = {
@@ -502,7 +509,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     if (Math.abs(S.target - S.morph) < 0.0005) S.morph = S.target;
     S.dimMul += (S.dimTarget - S.dimMul) * (1 - Math.exp(-dt * 3));
 
-    const look = lookAt(S.morph);
+    const look = lookAt(S.morph, camera);
     S.ex += (S.mx - S.ex) * (1 - Math.exp(-dt * 5));
     S.ey += (S.my - S.ey) * (1 - Math.exp(-dt * 5));
     if (now - S.lastMove > 2400) S.hoverTarget = 0;
@@ -526,6 +533,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uniforms.uDim.value = look.dim * S.dimMul;
     synapseU.uA.value = synapseAlpha(S.morph) * look.dim * S.dimMul;
     landU.uA.value = landAlpha(S.morph) * look.dim * S.dimMul;
+    brainU.uA.value = brainAlpha(S.morph) * look.dim * S.dimMul;
     uniforms.uHover.value = S.hover;
     uniforms.uShockT.value = S.shockT;
     updateRay();
@@ -558,13 +566,14 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
 
   function staticFrame() {
     // reduced motion: one still frame, network formation, calm
-    const look = lookAt(S.target);
+    const look = lookAt(S.target, camera);
     group.rotation.set(-0.08, 0.3, 0);
     group.position.set(look.off[0], look.off[1], look.off[2]);
     uniforms.uMorph.value = S.target;
     uniforms.uDim.value = look.dim * 0.7 * S.dimTarget;
     synapseU.uA.value = synapseAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
     landU.uA.value = landAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
+    brainU.uA.value = brainAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
     uniforms.uTime.value = 2;
     glassU.uTime.value = 2;
     glassU.uGlass.value = 0.7 * S.dimTarget * look.glass;
@@ -639,6 +648,10 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     setVelocity(v) {
       if (reduced) return;
       S.velTarget = Math.max(-1, Math.min(1, v / 60));
+    },
+    /** where an `fx` formation sits: -1 (left edge) .. 1 (right edge), or null for its default */
+    setAnchor(v) {
+      anchorX = v == null || Number.isNaN(v) ? null : v;
     },
     /** 0..1 page-level dimming multiplier */
     setDim(v) {

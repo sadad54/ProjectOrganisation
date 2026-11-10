@@ -32,6 +32,7 @@ function readPage() {
   return {
     m: Number(el.dataset.field) || 0,
     dim: el.dataset.fieldDim ? Number(el.dataset.fieldDim) : 1,
+    x: el.dataset.fieldX ? Number(el.dataset.fieldX) : null,
   };
 }
 
@@ -52,6 +53,7 @@ export default function NeuralField() {
       const s = readPage();
       if (!s) return;
       e.setTarget(s.m);
+      e.setAnchor(s.x);
       e.setDim(s.dim);
     };
     let lastY = window.scrollY;
@@ -74,7 +76,10 @@ export default function NeuralField() {
       engine.current = e;
       window.__field = e;
       const s = readPage();
-      if (s) e.jump(s.m);
+      if (s) {
+        e.setAnchor(s.x);
+        e.jump(s.m);
+      }
       sync();
       window.__fieldReady = true;
       window.dispatchEvent(new Event('field:ready'));

@@ -15,30 +15,35 @@
 export const PAIRS = [
   {
     human: 'Neuroplasticity',
+    verb: 'is',
     machine: 'fine-tuning',
     line: 'A brain is never finished. What you practise gets wired in and what you stop using fades, which is the kindest fact I know about being a person. A model learns the same way: its weights move toward whatever it is shown most.',
     src: 'the premise of everything below',
   },
   {
     human: 'Habits',
+    verb: 'are',
     machine: 'gradient descent',
     line: 'Nobody rewrites themselves in one step. You take a small step in the direction that reduces the error, then you take it again tomorrow. Training is just that, done a few million times.',
     src: 'Atomic Habits · James Clear, 2018',
   },
   {
     human: 'Self-image',
+    verb: 'is',
     machine: 'the objective function',
     line: 'You steer toward the person you believe you are. Maltz borrowed the idea from cybernetics, the study of goal-seeking machines, and those machines are the ancestors of the models I work on. Choose the target badly and all the effort lands in the wrong place.',
     src: 'Psycho-Cybernetics · Maxwell Maltz, 1960',
   },
   {
     human: 'The subconscious',
+    verb: 'is',
     machine: 'latent space',
     line: 'Most of what drives a decision was never written down as a rule. It sits underneath, learned from repetition, and you only see it in what comes out. A model keeps its knowledge the same way, in a hidden layer nobody typed in.',
     src: 'The Power of Your Subconscious Mind · Joseph Murphy, 1963',
   },
   {
     human: 'Self-accounting',
+    verb: 'is',
     machine: 'the eval harness',
     line: 'Al-Ghazali wrote about muhasaba: at the end of the day, call yourself to account for it. Marcus Aurelius kept a private notebook for the same reason. It is the oldest version of the thing this whole site argues for: a number that says whether you got better.',
     src: 'Ihya’ ʿUlum al-Din, Book 38 · Meditations',
