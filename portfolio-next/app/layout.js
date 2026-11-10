@@ -8,6 +8,7 @@ import './styles/decisions.css';
 import './styles/work.css';
 import './styles/research.css';
 import './styles/weights.css';
+import './styles/backward.css';
 import './styles/contact.css';
 import './styles/project.css';
 import Providers from './components/site/Providers';

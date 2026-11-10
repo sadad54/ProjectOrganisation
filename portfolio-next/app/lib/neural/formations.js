@@ -9,7 +9,10 @@
      3  LANDSCAPE  decisions   a loss surface with a real gradient-descent path
      4  CLUSTERS   work        four semantic clusters and the bridges between
      5  MATRIX     research    a weight matrix rendered as a heatmap
-     6  NETWORK    contact     back where it started (shares slot 0)
+     6  BRAIN      backward    the wetware: two hemispheres, gyri drawn as lines
+     7  NETWORK    backward    …rewired into the software (shares slot 0)
+     8  STARRY     corpus      a turning night sky of vortices, after Van Gogh
+     9  NETWORK    contact     back where it started (shares slot 0)
 
    Heat (0..1) is art direction per formation: 0 renders cool and dim, 1
    renders ember and larger. Everything is seeded — the same field every load.
@@ -37,6 +40,9 @@ export function buildFormations(N) {
   const D = new Float32Array(N * 3); // landscape
   const E = new Float32Array(N * 3); // clusters
   const G = new Float32Array(N * 3); // matrix
+  const I = new Float32Array(N * 3); // brain
+  const J = new Float32Array(N * 3); // starry: orbit centre x, y and depth z
+  const H1 = new Float32Array(N * 4); // heat6 (brain), heat8 (starry), starry orbit radius (signed = direction), starry angle
   const FH = new Float32Array(N * 4); // flow phase, flow speed, heat4, heat5
   const H0 = new Float32Array(N * 4); // heat 0..3
   const R = new Float32Array(N * 4); // rand phase, size, morph delay, swirl
@@ -50,6 +56,17 @@ export function buildFormations(N) {
     arr[i * 3 + 1] = y;
     arr[i * 3 + 2] = z;
   };
+
+  // The engine drops the tail of the buffer on slow devices. Formations built
+  // part by part write through this shuffle, so every part thins out evenly
+  // instead of the last one vanishing.
+  const perm = Array.from({ length: N }, (_, i) => i);
+  for (let i = N - 1; i > 0; i--) {
+    const j = (rnd() * (i + 1)) | 0;
+    const t = perm[i];
+    perm[i] = perm[j];
+    perm[j] = t;
+  }
 
   for (let i = 0; i < N; i++) {
     R[i * 4] = rnd();
@@ -405,7 +422,149 @@ export function buildFormations(N) {
     }
   }
 
-  return { A, A2, B, C, D, E, G, FH, H0, R, LINES, LINEW, LAND, LANDW };
+  // ------------------------------------------------------------------ 6 BRAIN
+  // Two hemispheres seen from the side. Particles are rejection-sampled onto
+  // the zero-crossings of a warped sine field, which meander across a surface
+  // the way gyri do; a thin fill keeps the silhouette. A few regions run hot.
+  {
+    const fold = (x, y, z) =>
+      Math.sin(2.1 * x + 1.7 * Math.sin(1.7 * y + 1.1 * z)) +
+      Math.sin(2.5 * y + 1.5 * Math.sin(1.9 * z - 0.9 * x)) +
+      Math.sin(2.3 * z + 1.6 * Math.sin(1.8 * x + y));
+    const active = [
+      [1.55, 0.55, 0.9, 0.75],
+      [-0.2, -0.45, -0.95, 0.6],
+      [-1.3, 0.85, 0.75, 0.55],
+    ];
+    const glow = (x, y, z) => active.reduce((g, a) => Math.max(g, Math.exp(-((x - a[0]) ** 2 + (y - a[1]) ** 2 + (z - a[2]) ** 2) / (a[3] * a[3]))), 0);
+    const K = 0.9;
+    const put = (n, x, y, z, heat) => {
+      const i = perm[n];
+      set3(I, i, -x * K + 0.25, y * K + 0.35, z * K); // frontal lobe faces the copy
+      H1[i * 4] = heat;
+    };
+    const rimN = Math.round(N * 0.1);
+    const cortexN = rimN + Math.round(N * 0.68);
+    const cerebN = Math.round(N * 0.1);
+    const stemN = Math.round(N * 0.035);
+    // the underside: flat, with the temporal lobe bulging below the middle
+    const underOf = (x) => 1.05 + 0.5 * Math.exp(-((x - 0.45) ** 2) / 0.9) - 0.25 * Math.exp(-((x - 2.1) ** 2) / 0.5);
+    const topOf = (x) => 1.72 - 0.1 * Math.max(0, x - 1.2);
+    let i = 0;
+    // the profile first: the outline you would draw if asked to draw a brain
+    for (; i < rimN; i++) {
+      const a = rnd() * TAU;
+      const x = Math.cos(a) * 2.55,
+        dy = Math.sin(a);
+      const y = dy > 0 ? dy * topOf(x) : dy * underOf(x);
+      put(i, x + gauss(rnd) * 0.012, y + gauss(rnd) * 0.012, (rnd() < 0.5 ? -1 : 1) * (0.07 + rnd() * 0.1), 0.34);
+    }
+    let guard = 0;
+    while (i < cortexN && guard++ < N * 40) {
+      const u = rnd() * 2 - 1,
+        th = rnd() * TAU,
+        s = Math.sqrt(1 - u * u);
+      const dx = s * Math.cos(th),
+        dy = u,
+        dz = Math.abs(s * Math.sin(th));
+      const side = rnd() < 0.5 ? -1 : 1;
+      const x = dx * 2.55;
+      const y = dy > 0 ? dy * topOf(x) : dy * underOf(x);
+      const z = (0.07 + dz * 0.95) * side;
+      const n = Math.abs(fold(x, y, z + side * 3.1));
+      const line = n < 0.11;
+      if (!line && rnd() > 0.02) continue;
+      const sink = line ? 0.965 : 1; // sulci sit a touch below the surface
+      const g = glow(x, y, z);
+      put(i, x * sink + gauss(rnd) * 0.008, y * sink + gauss(rnd) * 0.008, z * sink + gauss(rnd) * 0.008, line ? 0.3 + 0.7 * g : 0.03 + 0.3 * g);
+      i++;
+    }
+    // cerebellum: a striated lobe tucked under the back
+    for (let k = 0; k < cerebN && i < N; ) {
+      const u = rnd() * 2 - 1,
+        th = rnd() * TAU,
+        s = Math.sqrt(1 - u * u);
+      const y = -1.22 + u * 0.58;
+      if (((y * 11) % 1 + 1) % 1 > 0.4) continue;
+      put(i, -1.75 + s * Math.cos(th) * 0.85, y, s * Math.sin(th) * 0.9, 0.2);
+      i++;
+      k++;
+    }
+    // brain stem
+    for (let k = 0; k < stemN && i < N; k++, i++) {
+      const t = rnd(),
+        a = rnd() * TAU,
+        r = 0.32 - 0.12 * t;
+      put(i, -0.8 - 0.3 * t + Math.cos(a) * r, -1.05 - 1.7 * t, Math.sin(a) * r, 0.14 + (rnd() < 0.06 ? 0.7 : 0));
+    }
+    for (; i < N; i++) {
+      set3(I, perm[i], (rnd() - 0.5) * 16, (rnd() - 0.5) * 9, -5 + rnd() * 5);
+      H1[perm[i] * 4] = 0;
+    }
+  }
+
+  // ----------------------------------------------------------------- 8 STARRY
+  // Every particle orbits a centre, so the sky turns: J holds the centre and
+  // depth, H1.z the radius (sign = direction) and H1.w the starting angle. A
+  // radius above 8 marks a wind band: a slice of a very large circle, whose
+  // angle wraps (H1.w is then a 0..1 phase). The shader draws each particle as
+  // a dash along its orbit — a brush stroke.
+  {
+    const orbit = (n, cx, cy, z, r, th, heat) => {
+      const i = perm[n];
+      set3(J, i, cx, cy, z);
+      H1[i * 4 + 1] = heat;
+      H1[i * 4 + 2] = r;
+      H1[i * 4 + 3] = th;
+    };
+    let i = 0;
+    const take = (frac) => Math.round(N * frac);
+    // the great swirl: two interlocked spiral arms
+    for (let k = 0, n = take(0.27); k < n && i < N; k++, i++) {
+      const t = Math.sqrt(rnd()) * 1.75 * Math.PI;
+      const arm = k % 2 ? Math.PI : 0;
+      // each arm is three brush-widths side by side
+      const lane = ((k >> 1) % 3) - 1;
+      const r = 0.16 + 0.44 * t + lane * 0.11 + gauss(rnd) * 0.022;
+      orbit(i, -0.5, 1.05, gauss(rnd) * 0.1, -Math.max(0.05, r), -t + arm, lane === 0 || rnd() < 0.15 ? 0.78 + rnd() * 0.22 : 0.2 + rnd() * 0.3);
+    }
+    // its smaller partner, turning the other way
+    for (let k = 0, n = take(0.08); k < n && i < N; k++, i++) {
+      const t = Math.sqrt(rnd()) * 1.7 * Math.PI;
+      const r = 0.15 + 0.2 * t + gauss(rnd) * 0.04;
+      orbit(i, 2.45, 0.35, gauss(rnd) * 0.12, Math.max(0.05, r), t, rnd() < 0.08 ? 0.9 : 0.18 + rnd() * 0.25);
+    }
+    // eleven stars, each a set of haloed rings
+    const stars = [
+      [-5.6, 2.5, 0.8], [-4.2, 0.9, 0.6], [-3.3, 2.8, 0.7], [-2.2, 1.9, 0.5], [-0.4, 2.9, 0.75], [1.2, 2.2, 0.55],
+      [2.6, 2.9, 0.65], [3.6, 1.3, 0.6], [-5.2, -0.4, 0.5], [4.9, -0.6, 0.55], [0.6, -1.6, 0.45],
+    ];
+    const starN = take(0.24);
+    const starW = stars.reduce((a, s) => a + s[2] * s[2], 0);
+    stars.forEach(([cx, cy, size], si) => {
+      const n = Math.round((starN * size * size) / starW);
+      for (let k = 0; k < n && i < N; k++, i++) {
+        const ring = Math.floor(Math.sqrt(rnd()) * 5);
+        const r = size * (0.1 + ring * 0.19) + gauss(rnd) * 0.012;
+        orbit(i, cx, cy, gauss(rnd) * 0.06, (si % 2 ? 1 : -1) * Math.max(0.03, r), rnd() * TAU, ring === 0 ? 1 : ring === 1 ? 0.92 : ring === 2 ? 0.6 : 0.3);
+      }
+    });
+    // the moon: a hot core and wide halos, top right
+    for (let k = 0, n = take(0.09); k < n && i < N; k++, i++) {
+      const ring = Math.floor(Math.sqrt(rnd()) * 6);
+      const r = 0.12 + ring * 0.2 + gauss(rnd) * 0.015;
+      orbit(i, 5.35, 2.35, gauss(rnd) * 0.06, Math.max(0.03, r), rnd() * TAU, ring < 2 ? 1 : ring < 4 ? 0.75 : 0.4);
+    }
+    // wind bands sweeping across the lower sky
+    for (let k = 0, n = take(0.2); k < n && i < N; k++, i++) {
+      const band = (rnd() * 6) | 0;
+      const r = 12.5 + band * 0.34 + gauss(rnd) * 0.03;
+      orbit(i, 0.5, -15.2, gauss(rnd) * 0.15, band % 2 ? r : -r, rnd(), band === 2 ? 0.55 + rnd() * 0.3 : 0.12 + rnd() * 0.22);
+    }
+    for (; i < N; i++) orbit(i, (rnd() - 0.5) * 16, (rnd() - 0.5) * 9, -5 + rnd() * 5, 0.02, rnd() * TAU, 0);
+  }
+
+  return { A, A2, B, C, D, E, G, I, J, FH, H0, H1, R, LINES, LINEW, LAND, LANDW };
 }
 
 /* Per-formation staging, interpolated on the CPU: where the formation sits,
@@ -417,5 +576,11 @@ export const LOOKS = [
   { off: [0, 0, 0], spin: 0.12, follow: 0.35, dim: 0.85 }, // 3 landscape
   { off: [0, 0, -1.2], spin: 0.35, follow: 0.6, dim: 0.5 }, // 4 clusters
   { off: [0.9, 0.2, 0.2], spin: 0.22, follow: 0.5, dim: 0.8 }, // 5 matrix
-  { off: [0.2, 0.4, 0], spin: 1, follow: 1, dim: 0.95 }, // 6 network
+  { off: [2.9, 0.05, 0], spin: 0.42, follow: 0.5, dim: 1.05, glass: 0.45 }, // 6 brain
+  { off: [2.5, 0.3, -2.2], spin: 1, follow: 0.8, dim: 0.8 }, // 7 network
+  { off: [0, 0.2, 0], spin: 0.04, follow: 0.18, dim: 0.9, glass: 0.3 }, // 8 starry
+  { off: [0.2, 0.4, 0], spin: 1, follow: 1, dim: 0.95 }, // 9 network
 ];
+
+/** Highest formation index. */
+export const LAST = LOOKS.length - 1;

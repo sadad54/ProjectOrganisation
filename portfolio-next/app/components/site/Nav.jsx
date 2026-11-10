@@ -14,6 +14,7 @@ export const LAYERS = [
   { id: 'work', n: 'L4', name: 'Retrieval' },
   { id: 'research', n: 'L5', name: 'Evaluation' },
   { id: 'toolkit', n: 'L6', name: 'Weights' },
+  { id: 'backward', n: '∇', name: 'Backward pass' },
   { id: 'contact', n: 'Out', name: 'Output' },
 ];
 

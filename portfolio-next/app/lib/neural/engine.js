@@ -7,7 +7,7 @@
    per frame and never touches a vertex after init.
    ========================================================================= */
 import * as THREE from 'three';
-import { buildFormations, LOOKS } from './formations';
+import { buildFormations, LOOKS, LAST } from './formations';
 import { PALETTE, unit } from '../palette';
 
 const VERT = /* glsl */ `
@@ -28,11 +28,18 @@ attribute vec3 aC;
 attribute vec3 aD;
 attribute vec3 aE;
 attribute vec3 aG;
+attribute vec3 aI;
+attribute vec3 aJ;
 attribute vec4 aFH;
 attribute vec4 aH0;
+attribute vec4 aH1;
 attribute vec4 aR;
 varying float vHeat;
 varying float vAlpha;
+varying vec2 vDir;
+varying float vDash;
+
+vec3 pSky;
 
 vec3 formation(float k, vec3 pNet){
   if (k < 0.5) return pNet;
@@ -41,6 +48,9 @@ vec3 formation(float k, vec3 pNet){
   if (k < 3.5) return aD;
   if (k < 4.5) return aE;
   if (k < 5.5) return aG;
+  if (k < 6.5) return aI;
+  if (k < 7.5) return pNet;
+  if (k < 8.5) return pSky;
   return pNet;
 }
 float heatOf(float k){
@@ -50,6 +60,9 @@ float heatOf(float k){
   if (k < 3.5) return aH0.w;
   if (k < 4.5) return aFH.z;
   if (k < 5.5) return aFH.w;
+  if (k < 6.5) return aH1.x;
+  if (k < 7.5) return aH0.x;
+  if (k < 8.5) return aH1.y;
   return aH0.x;
 }
 
@@ -57,9 +70,19 @@ void main(){
   float ph = fract(aFH.x + uTime * aFH.y);
   vec3 pNet = mix(position, aA2, ph);
 
-  float m = clamp(uMorph + (aR.z - 0.5) * uStagger, 0.0, 6.0);
+  // the night sky: every particle rides an orbit; a radius above 8 is a wind
+  // band (a slice of a huge circle) whose angle wraps instead of turning
+  float orad = abs(aH1.z);
+  float odir = aH1.z < 0.0 ? -1.0 : 1.0;
+  float oth = orad > 8.0
+    ? 1.5708 + (fract(aH1.w + odir * uTime * 0.007 * (0.6 + aR.w)) - 0.5) * 1.5
+    : aH1.w + odir * uTime * 0.3 / (0.3 + orad);
+  pSky = vec3(aJ.x + orad * cos(oth), aJ.y + orad * sin(oth), aJ.z);
+  vDir = vec2(-sin(oth), cos(oth));
+
+  float m = clamp(uMorph + (aR.z - 0.5) * uStagger, 0.0, 9.0);
   float k0 = floor(m);
-  float k1 = min(k0 + 1.0, 6.0);
+  float k1 = min(k0 + 1.0, 9.0);
   float f = fract(m);
   float e = f * f * (3.0 - 2.0 * f);
   e = e * e * (3.0 - 2.0 * e);
@@ -107,9 +130,14 @@ void main(){
   vAlpha = (0.42 + 0.58 * hot) * tw * uDim;
   // per-particle size only means something in the network (somas, pulses);
   // every other formation uses an even, slightly randomised dot
-  float netW = clamp(max(0.0, 1.0 - m * 1.6) + max(0.0, 1.0 - (6.0 - m) * 1.6), 0.0, 1.0);
+  float netW = clamp(max(0.0, 1.0 - m * 1.6) + max(0.0, 1.0 - abs(m - 7.0) * 1.6) + max(0.0, 1.0 - (9.0 - m) * 1.6), 0.0, 1.0);
   float size = mix(0.95 + aR.x * 0.55, aR.y, netW);
   size *= 1.0 + clamp(1.0 - abs(m - 5.0), 0.0, 1.0) * 1.1;
+  // the brain's folds are fine lines: a slightly heavier point holds them
+  size *= 1.0 + clamp(1.0 - abs(m - 6.0), 0.0, 1.0) * 0.3;
+  // in the sky each point stretches into a stroke laid along its orbit
+  vDash = clamp(1.0 - abs(m - 8.0) * 1.5, 0.0, 1.0);
+  size *= 1.0 + vDash * (1.9 + aR.x * 1.6);
   gl_PointSize = uPx * size * (1.0 + hot * 0.8) * (10.0 / -mv.z);
 }
 `;
@@ -119,16 +147,24 @@ precision highp float;
 uniform vec3 uCool;
 uniform vec3 uEmber;
 uniform vec3 uWhite;
+uniform vec3 uSun;
 varying float vHeat;
 varying float vAlpha;
+varying vec2 vDir;
+varying float vDash;
 void main(){
   vec2 q = gl_PointCoord - 0.5;
-  float r = length(q);
+  q.y = -q.y;
+  // a round point, or (in the sky) a dash: squeeze the axis across the stroke
+  float along = dot(q, vDir);
+  float across = dot(q, vec2(-vDir.y, vDir.x));
+  float r = length(vec2(along, across * mix(1.0, 4.6, vDash)));
   if (r > 0.5) discard;
-  float halo = pow(smoothstep(0.5, 0.0, r), 2.2);
+  float halo = pow(smoothstep(0.5, 0.0, r), mix(2.2, 1.2, vDash));
   float dotc = smoothstep(0.2, 0.0, r);
   float core = halo * 0.72 + dotc * 0.6;
-  vec3 col = mix(uCool, uEmber, smoothstep(0.3, 0.85, vHeat));
+  // the sky's lit strokes are painted yellow, not ember
+  vec3 col = mix(uCool, mix(uEmber, uSun, vDash), smoothstep(0.3, 0.85, vHeat));
   col = mix(col, uWhite, smoothstep(0.9, 1.0, vHeat) * dotc * 0.55);
   float a = core * vAlpha;
   // premultiplied, summed with ONE/ONE blending: true additive light over
@@ -237,8 +273,8 @@ const lerp = (a, b, t) => a + (b - a) * t;
 
 function lookAt(m) {
   // interpolate the staging table at fractional formation index m
-  const k0 = Math.max(0, Math.min(6, Math.floor(m)));
-  const k1 = Math.min(6, k0 + 1);
+  const k0 = Math.max(0, Math.min(LAST, Math.floor(m)));
+  const k1 = Math.min(LAST, k0 + 1);
   let t = m - k0;
   t = t * t * (3 - 2 * t);
   const a = LOOKS[k0],
@@ -248,6 +284,7 @@ function lookAt(m) {
     spin: lerp(a.spin, b.spin, t),
     follow: lerp(a.follow, b.follow, t),
     dim: lerp(a.dim, b.dim, t),
+    glass: lerp(a.glass ?? 1, b.glass ?? 1, t),
   };
 }
 
@@ -284,6 +321,9 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
   geo.setAttribute('aD', new THREE.BufferAttribute(F.D, 3));
   geo.setAttribute('aE', new THREE.BufferAttribute(F.E, 3));
   geo.setAttribute('aG', new THREE.BufferAttribute(F.G, 3));
+  geo.setAttribute('aI', new THREE.BufferAttribute(F.I, 3));
+  geo.setAttribute('aJ', new THREE.BufferAttribute(F.J, 3));
+  geo.setAttribute('aH1', new THREE.BufferAttribute(F.H1, 4));
   geo.setAttribute('aFH', new THREE.BufferAttribute(F.FH, 4));
   geo.setAttribute('aH0', new THREE.BufferAttribute(F.H0, 4));
   geo.setAttribute('aR', new THREE.BufferAttribute(F.R, 4));
@@ -304,6 +344,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uCool: { value: new THREE.Color(...unit(PALETTE.cool)) },
     uEmber: { value: new THREE.Color(...unit(PALETTE.ember)) },
     uWhite: { value: new THREE.Color(0.94, 0.97, 1) },
+    uSun: { value: new THREE.Color(...unit(PALETTE.sun)) },
   };
   const mat = new THREE.ShaderMaterial({
     vertexShader: VERT,
@@ -390,7 +431,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
 
   // each line set belongs to its formation(s) and fades with distance to it
   const near = (m, k) => Math.max(0, 1 - Math.abs(m - k) * 1.8);
-  const synapseAlpha = (m) => near(m, 0) + near(m, 6);
+  const synapseAlpha = (m) => near(m, 0) + near(m, 7) + near(m, LAST);
   const landAlpha = (m) => near(m, 3);
 
   // ---- state ----
@@ -480,7 +521,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
 
     uniforms.uTime.value = S.t;
     glassU.uTime.value = S.t;
-    glassU.uGlass.value = S.dimMul;
+    glassU.uGlass.value = S.dimMul * look.glass;
     uniforms.uMorph.value = S.morph;
     uniforms.uDim.value = look.dim * S.dimMul;
     synapseU.uA.value = synapseAlpha(S.morph) * look.dim * S.dimMul;
@@ -526,7 +567,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     landU.uA.value = landAlpha(S.target) * look.dim * 0.7 * S.dimTarget;
     uniforms.uTime.value = 2;
     glassU.uTime.value = 2;
-    glassU.uGlass.value = 0.7 * S.dimTarget;
+    glassU.uGlass.value = 0.7 * S.dimTarget * look.glass;
     uniforms.uHover.value = 0;
     render();
   }
@@ -589,7 +630,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     },
     /** formation index the page wants (fractional values blend neighbours) */
     setTarget(m) {
-      S.target = Math.max(0, Math.min(6, m));
+      S.target = Math.max(0, Math.min(LAST, m));
       if (reduced) {
         S.morph = S.target;
       }
@@ -605,18 +646,30 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
       if (reduced) staticFrame();
     },
     jump(m) {
-      S.target = S.morph = Math.max(0, Math.min(6, m));
+      S.target = S.morph = Math.max(0, Math.min(LAST, m));
       if (reduced) staticFrame();
     },
     pulse() {
       S.shockT = 0;
       uniforms.uShockO.value.set(group.position.x, group.position.y, group.position.z);
     },
+    /** briefly repaint the field's lit particles in another colour ([r,g,b] 0-255) */
+    flash(rgb, ms = 2600) {
+      const home = new THREE.Color(...unit(PALETTE.ember));
+      uniforms.uEmber.value.setRGB(...unit(rgb));
+      clearTimeout(S.flashT);
+      S.flashT = setTimeout(() => {
+        uniforms.uEmber.value.copy(home);
+        if (reduced) staticFrame();
+      }, ms);
+      if (reduced) staticFrame();
+    },
     get stats() {
       return { particles: S.degraded ? Math.round(N * 0.6) : N, dpr };
     },
     destroy() {
       stop();
+      clearTimeout(S.flashT);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerdown', onDown);
       window.removeEventListener('resize', onResize);

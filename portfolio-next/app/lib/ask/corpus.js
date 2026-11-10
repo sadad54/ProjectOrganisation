@@ -7,6 +7,7 @@ import projects from '../../data/projects';
 import { SKILL_GROUPS, ALSO } from '../../data/skills';
 import { CARD } from '../../data/profile';
 import { KNOWLEDGE } from '../../data/knowledge';
+import { PAIRS, CORPUS } from '../../data/priors';
 
 const strip = (s) =>
   String(s)
@@ -100,6 +101,24 @@ function build() {
     href: '/#about',
     text: CARD.map(([k, v]) => `${k}: ${v}.`).join(' '),
   });
+
+  // the backward pass: what shaped him, outside the résumé
+  add({
+    id: 'backward#parallels',
+    title: 'Backward pass',
+    section: 'How a brain and a model learn',
+    href: '/#backward',
+    text: `Adnan's interests outside work: self-development, neuroplasticity, psychology, and how closely training a model resembles how a brain learns. ${PAIRS.map((p) => `${p.human} is ${p.machine}: ${p.line} (${p.src}.)`).join(' ')}`,
+  });
+  for (const g of CORPUS) {
+    add({
+      id: `backward#${g.group.toLowerCase().replace(/[^a-z]+/g, '-')}`,
+      title: 'What shaped him',
+      section: `Training corpus · ${g.group}`,
+      href: '/#backward',
+      text: `${g.group} Adnan keeps going back to (books he reads, people he follows, interests): ${g.items.map((it) => `${it.name} (${it.by}) — ${it.says}`).join(' ')}`,
+    });
+  }
 
   KNOWLEDGE.forEach(add);
   return chunks;

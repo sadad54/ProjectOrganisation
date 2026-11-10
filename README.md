@@ -41,10 +41,11 @@ and edges are derived from each project's `stack`.
 | L0 Input | Hero: token-streamed headline, rim-lit portrait | `components/home/Hero.jsx` |
 | L1 Thesis | Scroll-lit statement | `components/home/Thesis.jsx` |
 | L2 Model card | About, written as an ML model card, with a detector pass on the photo | `components/home/About.jsx` |
-| L3 Attention | Four engineering decisions in one pinned, scroll-drawn stage | `components/decisions/` |
+| L3 Attention | Five engineering decisions in one pinned, scroll-drawn stage | `components/decisions/` |
 | L4 Retrieval | The work console: index, stage, map | `components/work/` |
 | L5 Evaluation | Research | `components/home/Research.jsx` |
 | L6 Weights | Skills × projects graph | `components/home/Weights.jsx` |
+| ∇ Backward pass | The personal section: brain ↔ model parallels (pinned), the 1%-a-day curve, and the training corpus under a Starry-Night sky. Copy lives in `data/priors.js` | `components/home/Backward.jsx`, `components/backward/` |
 | Out | Contact composer | `components/home/Contact.jsx` |
 
 Persistent across routes (in the root layout, `components/site/Providers.jsx`): Lenis smooth scroll,
@@ -53,9 +54,10 @@ the neural field, the cursor, the route-transition wipe, the boot sequence and t
 ### The neural field (`app/lib/neural/`)
 
 One Three.js context. About 16k particles (8k on small or low-core devices) carry a position for each of
-six formations: a 7-layer network with flowing synapses, attention arcs, a clustered hypersphere, a
-wireframe loss landscape with a real gradient-descent run, semantic clusters, and a stacked weight
-tensor. The vertex shader blends between formations, so a morph costs one uniform write per frame.
+eight formations: a 7-layer network with flowing synapses, attention arcs, a clustered hypersphere, a
+wireframe loss landscape with a real gradient-descent run, semantic clusters, a stacked weight
+tensor, a brain (two hemispheres, folds drawn as lines), and a night sky of turning vortices after
+Van Gogh, where each particle is drawn as a brush stroke along its orbit. The vertex shader blends between formations, so a morph costs one uniform write per frame.
 Sections pick a formation with `data-field="<n>"` (and optionally `data-field-dim`). The pointer is a
 query ray, and clicks send a shockwave. Frame times are monitored and quality drops once if a device
 struggles. The field pauses when the tab is hidden.

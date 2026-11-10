@@ -24,9 +24,11 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 
 `portfolio-next/` — a Next.js app — is the **sole** implementation. A parallel static, zero-build, single-file mirror (`index.html`) previously existed and was deliberately dropped (2026-08-06). Do not recreate or mirror future edits into an `index.html` file unless explicitly asked again.
 
-**Redesign, 2026-09-27** ("the page is a forward pass"). Site sections, in order, each labelled as a layer: hero (L0 Input — token-streamed headline, rim-lit portrait), thesis (L1 — scroll-lit statement), About as an ML model card (L2), four engineering decisions in one pinned, scroll-drawn stage (L3 Attention), the work console (L4 Retrieval), Research (L5 Evaluation), a skills × projects graph (L6 Weights), and a prompt-style contact composer (Out). A persistent WebGL neural field re-forms per section. Command palette (⌘K) for navigation and actions.
+**Redesign, 2026-09-27** ("the page is a forward pass"). Site sections, in order, each labelled as a layer: hero (L0 Input — token-streamed headline, rim-lit portrait), thesis (L1 — scroll-lit statement), About as an ML model card (L2), five engineering decisions in one pinned, scroll-drawn stage (L3 Attention), the work console (L4 Retrieval), Research (L5 Evaluation), a skills × projects graph (L6 Weights), and a prompt-style contact composer (Out). A persistent WebGL neural field re-forms per section. Command palette (⌘K) for navigation and actions.
 
-**The work console is the answer to "add more projects without a carousel or a long scroll."** Every project lives in `app/data/work.js` (14 today: 5 case studies, 5 projects, 4 archive). The console is a fixed-height instrument: an index (grouped by tier, or live-ranked by a real client-side TF-IDF search), a stage that samples each project in with a diffusion-style denoise transition, and a similarity-map view. Adding a project is one entry in that file; the page does not get longer.
+**Backward pass, 2026-11-10.** A personal section (`∇`, `#backward`) sits between Weights and Contact: the forward pass is the work, the backward pass is what trained it. Three acts — five brain ↔ model parallels in a pinned stage (the field holds a brain, then rewires into the network), the 1%-a-day compounding curve (computed, to scale, draggable), and the "training corpus" of books, thinkers and off-hours interests on tilt cards under a Starry-Night field formation. All of it, including the influences (al-Ghazali, Rumi, Marcus Aurelius), stays in the site's own idiom: mono tags, model vocabulary, midnight and ember. No quote posters, no calligraphy. Copy lives in `app/data/priors.js`; the first-person lines there were drafted for Adnan and are his to confirm or rewrite. Lighter touches elsewhere: a "Known biases" row on the model card, a rotating footer credit, a fourth contact starter, and two unlisted ⌘K commands (`hala madrid`, `leap of faith`).
+
+**The work console is the answer to "add more projects without a carousel or a long scroll."** Every project lives in `app/data/work.js` (18 today: 6 case studies, 8 projects, 4 archive). The console is a fixed-height instrument: an index (grouped by tier, or live-ranked by a real client-side TF-IDF search), a stage that samples each project in with a diffusion-style denoise transition, and a similarity-map view. Adding a project is one entry in that file; the page does not get longer.
 
 ## Capabilities and Constraints
 
@@ -39,7 +41,7 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 ## Brand Commitments
 
 - Name/byline: "ADNAN M. SADAD" / "AI / Data / Full Stack".
-- Visual system: see `DESIGN.md` ("Activation", 2026-09-27) — near-black `#050608` ground, one ember signal `#FF6B3D`, cool/pass/fail reserved for data, Archivo + Instrument Serif italic + Instrument Sans + Geist Mono.
+- Visual system: see `DESIGN.md` ("Activation", 2026-09-27) — midnight `#02070A` ground, one ember signal `#FF6A2B`, cool/pass/fail reserved for data, Archivo + Instrument Serif italic + Instrument Sans + Geist Mono.
 - Contact: adnanmashrursadad@gmail.com, LinkedIn (`adnan-mashrur-sadad-87a45b237`), GitHub (`sadad54`). Phone number removed from the site (2026-08-06).
 
 ## Evidence on Hand

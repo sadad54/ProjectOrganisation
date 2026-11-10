@@ -31,6 +31,30 @@ function applyRM(on) {
   }
 }
 
+// Unlisted commands. Both leave the page as they found it.
+const EGGS = [
+  {
+    key: 'hala madrid',
+    n: '¡Hala Madrid!',
+    h: '90+3′',
+    go: () => {
+      toast('90+3′ — it isn’t over');
+      // the field's lit particles run white and gold for a few seconds
+      window.__field?.flash?.([255, 226, 150], 4200);
+      if (!reducedMotionNow()) window.__field?.pulse?.();
+    },
+  },
+  {
+    key: 'leap of faith',
+    n: 'Leap of faith',
+    h: 'Back to the input',
+    go: () => {
+      if (window.__lenis && !reducedMotionNow()) window.__lenis.scrollTo(0, { duration: 1.5, easing: (t) => t * t * t });
+      else window.scrollTo({ top: 0 });
+    },
+  },
+];
+
 /* ⌘K / Ctrl-K. Every section, every project, the contact actions and the
    motion switch — grouped, filterable, fully keyboard driven, focus trapped
    and returned to the trigger on close. */
@@ -68,6 +92,7 @@ export default function CommandPalette() {
       ['about', 'About — the model card'],
       ['decisions', 'The decisions I’d defend'],
       ['toolkit', 'Toolkit — skills graph'],
+      ['backward', 'Backward pass — what trained the weights'],
       ['contact', 'Contact'],
     ].forEach(([id, n]) => A.push({ g: 'Sections', n, h: 'Jump', go: () => goSection(id) }));
     WORK.forEach((p) =>
@@ -132,6 +157,9 @@ export default function CommandPalette() {
     const raw = query.trim();
     const q = raw.toLowerCase();
     if (!q) return actions;
+    // two unlisted commands: they only appear once you type them
+    const egg = EGGS.find((e) => q.length > 3 && e.key.startsWith(q.replace(/\s+/g, ' ')));
+    if (egg) return [{ g: 'Unlisted', n: egg.n, h: egg.h, go: egg.go }];
     const hits = actions.filter((a) => `${a.n} ${a.h} ${a.g}`.toLowerCase().includes(q));
     // a question goes to the model: first when it reads like one, last otherwise
     const ask = raw.length > 3 && { g: 'Ask the model', n: `Ask: “${raw}”`, h: 'Answers from this site', ask: raw };

@@ -13,6 +13,7 @@ export const CARD = [
   ['Benchmarks', 'Gold Award — NALI 2026, UTM (Learn2Unlock) · Gold Medal & Best Video — myHCI-UX Student Design Challenge, Oct 2025'],
   ['Community', 'Secretary Treasurer, SOFEA Society — AI workshops for 200+ students'],
   ['Languages', 'English · Bengali · Bahasa Malaysia · Hindi / Urdu'],
+  ['Known biases', 'Real Madrid. Declared, not mitigated.'],
   ['Intended use', 'AI systems that validate, repair and measure their own output'],
   ['License', 'Open — good conversations about interesting work are reason enough'],
 ];

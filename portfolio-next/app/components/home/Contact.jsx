@@ -11,6 +11,7 @@ const EMAIL = 'adnanmashrursadad@gmail.com';
 const STARTERS = [
   { k: 'Collaborate', s: 'A project', t: 'Hi Adnan — I’m working on something I think you’d enjoy digging into: ' },
   { k: 'Research', s: 'Research chat', t: 'Hi Adnan — I read about your evaluation research and wanted to ask about ' },
+  { k: 'Brains & models', s: 'Brains and neural nets', t: 'Hi Adnan — I read the backward-pass section and wanted to talk about how brains and models learn: ' },
   { k: 'Say hello', s: 'Hello from your portfolio', t: 'Hi Adnan — just saying hello. The part of the site I liked most was ' },
 ];
 
@@ -103,7 +104,7 @@ export default function Contact() {
   const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(msg)}`;
 
   return (
-    <section className="contact band" id="contact" data-field="6" data-field-dim="0.7" aria-labelledby="contact-h">
+    <section className="contact band" id="contact" data-field="9" data-field-dim="0.7" aria-labelledby="contact-h">
       <div className="wrap">
         <p className="layer rv">
           <span className="bars" aria-hidden="true">

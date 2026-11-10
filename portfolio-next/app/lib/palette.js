@@ -11,6 +11,7 @@ export const PALETTE = {
   emberHi: [255, 138, 76],
   cool: [2, 151, 222],
   pass: [82, 227, 168],
+  sun: [242, 193, 78],
   fail: [255, 84, 112],
 };
 

@@ -2,21 +2,22 @@
 name: Adnan Mashrur Sadad — Portfolio
 description: A dark, cinematic portfolio built as a neural network's forward pass. One warm signal on a cold, dim ground.
 colors:
-  void: "#050608"
-  surface-1: "#0B0D11"
-  surface-2: "#11141A"
-  surface-3: "#181C24"
-  surface-4: "#20252F"
-  text: "#EEEBE4"
-  text-secondary: "#A6A39C"
-  text-tertiary: "#85837D"
-  hairline: "rgba(238,235,228,0.08)"
-  hairline-2: "rgba(238,235,228,0.14)"
-  hairline-3: "rgba(238,235,228,0.22)"
-  ember: "#FF6B3D"
-  ember-hover: "#FF8A63"
-  ember-press: "#E4521F"
-  cool: "#A9BBFF"
+  void: "#02070A"
+  surface-1: "#08111A"
+  surface-2: "#0D1722"
+  surface-3: "#131F2B"
+  surface-4: "#1A2734"
+  text: "#EAF1F6"
+  text-secondary: "#9DA9B4"
+  text-tertiary: "#7C8894"
+  hairline: "rgba(234,241,246,0.08)"
+  hairline-2: "rgba(234,241,246,0.14)"
+  hairline-3: "rgba(234,241,246,0.22)"
+  ember: "#FF6A2B"
+  ember-hover: "#FF8A4C"
+  ember-press: "#E5521A"
+  cool: "#0297DE"
+  sun: "#F2C14E"
   pass: "#52E3A8"
   fail: "#FF5470"
 typography:
@@ -56,7 +57,7 @@ read as heavy black blocks. The rim-lit hero portrait was always lit for a dark 
 ## North star
 
 The site is a model you can look inside. Scrolling is a forward pass: every section is a layer
-(L0 Input → L1 Thesis → L2 Model card → L3 Attention → L4 Retrieval → L5 Evaluation → L6 Weights → Out),
+(L0 Input → L1 Thesis → L2 Model card → L3 Attention → L4 Retrieval → L5 Evaluation → L6 Weights → ∇ Backward pass → Out),
 and a single WebGL neural field behind the page re-forms per layer. Motion is the argument, never
 decoration: the headline is *generated*, the work index is a *working search engine*, the decisions
 *draw themselves*, and the case-study limitations are written the way a model card writes them.
@@ -66,13 +67,16 @@ decoration: the headline is *generated*, the work index is a *working search eng
 The palette works like an activation map. Almost everything sits cold and dim, and the few things that
 are live run hot.
 
-- **Ember** (`#FF6B3D`) is the only UI accent. It marks the active, hovered, selected or firing
+- **Ember** (`#FF6A2B`) is the only UI accent. It marks the active, hovered, selected or firing
   thing and the number that matters, and it colours the serif-italic headline clause. It never fills
   large areas.
-- **Cool** (`#A9BBFF`) is data only: the neural field's resting particles, diagram structure, and the
+- **Cool** (`#0297DE`) is data only: the neural field's resting particles, diagram structure, and the
   "ML & data" domain in the work console. It is never used for chrome.
 - **Pass / fail** (`#52E3A8` / `#FF5470`) are diagram semantics: valid vs rejected, detection vs
   false alarm, recovery vs collapse. They are never used for buttons or links.
+- **Sun** (`#F2C14E`) has two jobs and no others: the "client web" domain in the work console, and the
+  ∇ Backward pass corpus, where it is the yellow of the night sky's strokes and of the card tags and
+  pointer light in front of it. It never appears in chrome elsewhere.
 - Hairlines are neutral (warm-white at 8–22% alpha), never tinted.
 - Text steps (`text` / `text-2` / `text-3`) all pass WCAG AA on `void`. `text-3` (~5.3:1) is the floor
   for small mono labels.

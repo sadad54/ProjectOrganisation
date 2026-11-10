@@ -87,6 +87,7 @@
 .rail:hover .rail-node:nth-child(7) .rail-lbl{transition-delay:125ms}
 .rail:hover .rail-node:nth-child(8) .rail-lbl{transition-delay:150ms}
 .rail:hover .rail-node:nth-child(9) .rail-lbl{transition-delay:175ms}
+.rail:hover .rail-node:nth-child(10) .rail-lbl{transition-delay:200ms}
 .rail-node:hover .rail-dot{border-color:var(--ember)}
 @media (max-width:1100px),(pointer:coarse){.rail{display:none}}
 
