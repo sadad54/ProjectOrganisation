@@ -57,10 +57,10 @@
   --fail-rgb:255,84,112;
 
   /* type */
-  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --f-serif:"Instrument Serif",Georgia,"Times New Roman",serif;
-  --f-body:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
-  --f-mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-display:var(--font-archivo),"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-serif:var(--font-instrument-serif),"Instrument Serif",Georgia,"Times New Roman",serif;
+  --f-body:var(--font-instrument-sans),"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:var(--font-geist-mono),"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 
   --fs-hero:clamp(2.55rem,5.7vw,6.5rem);
   --fs-display:clamp(2.1rem,4.6vw,4.4rem);

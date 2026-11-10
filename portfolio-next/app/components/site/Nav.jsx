@@ -98,7 +98,7 @@ export default function Nav() {
   return (
     <>
       <header className={`nav${stuck ? ' stuck' : ''}${hidden ? ' hide' : ''}${past || !onHome ? ' past' : ''}`}>
-        <a className="nav-mark" href={onHome ? '#top' : '/'} data-pt={onHome ? undefined : ''} aria-label="Adnan Mashrur Sadad — home">
+        <a className="nav-mark" href={onHome ? '#top' : '/'} data-pt={onHome ? undefined : ''} aria-label="Adnan M. Sadad, AI · Data · Full stack — home">
           <Glyph />
           <span className="nav-name">Adnan M. Sadad</span>
           <span className="nav-role">AI · Data · Full stack</span>

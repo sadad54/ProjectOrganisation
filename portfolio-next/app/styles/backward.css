@@ -4,50 +4,83 @@
    decisions.css); only what differs is here.
    ========================================================================= */
 
-/* ---- Act A: parallels ---- */
+/* ---- Act A: parallels (pinned) ---- */
+.bw-track{position:relative}
+.bw-pin{position:sticky;top:0;height:100vh;display:flex;overflow:hidden;padding-top:var(--nav-h)}
 /* a readable pocket for the copy; the field stays bright on the right */
 .bw-pin::before{
   content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(90deg,rgba(var(--void-rgb),.78) 0%,rgba(var(--void-rgb),.5) 36%,transparent 58%);
+  background:linear-gradient(90deg,rgba(var(--void-rgb),.74) 0%,rgba(var(--void-rgb),.42) 38%,transparent 60%);
 }
 .bw-pin>*{position:relative;z-index:1}
-.bw-stage{
-  display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(28px,4.5vw,72px);
-  align-items:center;padding-block:clamp(10px,2vh,24px) clamp(22px,4vh,44px);
+.bw-pin-in{
+  width:100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr auto;
+  column-gap:clamp(28px,4.5vw,72px);row-gap:clamp(18px,3.4vh,40px);align-content:center;
+  padding-block:clamp(16px,3vh,36px);
 }
-/* every pair shares one grid cell, so the tallest sets the height and no
-   pair can run out of the stage */
-.bw-scenes{display:grid;align-items:center;min-width:0}
-.bw-scene{
-  grid-area:1/1;opacity:0;pointer-events:none;transform:translate3d(0,34px,0);
-  transition:opacity .6s var(--ease-soft),transform .9s var(--ease-out);
-}
-.bw-scene.past{transform:translate3d(0,-34px,0)}
-.bw-scene.on{opacity:1;transform:none;pointer-events:auto;transition-delay:.12s}
-.bw-h3{font-size:clamp(1.7rem,3vw,3rem);max-width:15ch;margin-bottom:clamp(14px,2.2vh,22px)}
-.bw-h3 em{font-family:var(--f-serif);font-style:italic;font-weight:400;letter-spacing:-.01em;font-stretch:100%;color:var(--ember)}
-.bw-body{font-size:var(--fs-lede);line-height:1.58;margin-bottom:0}
-.bw-scene .scene-eyebrow span,.dec-flat-scene .scene-eyebrow span{color:var(--text-3)}
-.bw-scene .scene-note::before,.dec-flat-scene .scene-note::before{content:"↳ ";color:var(--ember)}
+.bw-copy{align-self:center;min-width:0}
+.bw-copy .layer{margin-bottom:18px}
+.bw-title{max-width:15ch;margin-bottom:clamp(20px,4vh,44px)}
+.bw-title em{color:var(--ember)}
+/* the open half of the stage: the field's brain is centred on it */
+.bw-room{min-height:1px}
+.bw-steps{grid-column:1/-1}
 
-/* the window onto the field */
-.bw-frame{position:relative;align-self:stretch;min-height:min(52vh,520px)}
-.bw-frame i{position:absolute;width:22px;height:22px;border:0 solid var(--ember);opacity:.9}
-.bw-frame .tl{left:0;top:0;border-left-width:1px;border-top-width:1px}
-.bw-frame .tr{right:0;top:0;border-right-width:1px;border-top-width:1px}
-.bw-frame .bl{left:0;bottom:0;border-left-width:1px;border-bottom-width:1px}
-.bw-frame .br{right:0;bottom:0;border-right-width:1px;border-bottom-width:1px}
-.bw-frame-top,.bw-frame-cap{
-  position:absolute;left:16px;right:16px;display:flex;justify-content:space-between;gap:12px;
-  font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);
+/* every pair shares one grid cell, so the tallest sets the height and no
+   pair can run into the steps below */
+.bw-stage{display:grid}
+.bw-scene{
+  grid-area:1/1;opacity:0;pointer-events:none;
+  transform:translate3d(0,30px,0);
+  transition:opacity .5s var(--ease-soft),transform .8s var(--ease-out);
 }
-.bw-frame-top{top:12px}
-.bw-frame-top span:first-child{color:var(--text-2)}
-.bw-frame-cap{bottom:12px;justify-content:flex-start;align-items:center}
-.bw-frame-cap span{transition:color .5s var(--ease-soft)}
-.bw-frame-cap .on{color:var(--ember)}
-.bw-frame-cap .arw{display:inline-block;transition:transform .7s var(--ease-out)}
-.bw-frame.wired .arw{transform:translateX(4px)}
+.bw-scene.past{transform:translate3d(0,-30px,0)}
+.bw-scene.on{opacity:1;transform:none;pointer-events:auto;transition-delay:.12s}
+
+.bw-count{font-family:var(--f-mono);font-size:var(--fs-label);letter-spacing:.18em;color:var(--ember);margin-bottom:14px}
+.bw-count span{color:var(--text-3)}
+.bw-pair{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;font-weight:400}
+.bw-human{
+  font-family:var(--f-serif);font-style:italic;font-size:clamp(2.6rem,min(5.2vw,9.4vh),4.9rem);line-height:.95;letter-spacing:-.02em;
+  background:linear-gradient(100deg,var(--ember-lit-a),var(--ember-lit-b));-webkit-background-clip:text;background-clip:text;color:transparent;
+  padding-bottom:.08em;
+}
+.bw-is{display:flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:clamp(.92rem,1.25vw,1.12rem);letter-spacing:.02em}
+.bw-rule{flex:0 0 clamp(36px,6vw,84px);height:1px;background:var(--hair-3);transform-origin:left;transform:scaleX(0);transition:transform .9s var(--ease-in-out) .25s}
+.bw-scene.on .bw-rule,.bw-flat-item .bw-rule{transform:none}
+.bw-eq{color:var(--text-3);text-transform:uppercase;font-size:var(--fs-label);letter-spacing:.18em}
+.bw-machine{color:var(--text);border:1px solid var(--hair-2);border-radius:var(--r-xs);padding:5px 10px;background:rgba(var(--panel-rgb),.6)}
+.bw-line{font-size:var(--fs-lede);line-height:1.58;color:var(--text-2);max-width:50ch}
+.bw-src{margin-top:16px;font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.bw-src::before{content:"↳ ";color:var(--ember)}
+
+.bw-steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.bw-step{
+  display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:var(--r-pill);
+  border:1px solid var(--hair);background:rgba(var(--panel-rgb),.55);
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);
+  transition:color .3s,border-color .3s,background-color .3s;
+}
+.bw-step span{color:var(--text-3);transition:color .3s}
+.bw-step:hover{border-color:var(--hair-3);color:var(--text-2)}
+.bw-step.done{color:var(--text-2)}
+.bw-step.done span{color:var(--pass)}
+.bw-step.on{color:var(--text);border-color:rgba(var(--ember-rgb),.55);background:rgba(var(--ember-rgb),.08)}
+.bw-step.on span{color:var(--ember)}
+.bw-state{margin-left:auto;font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+.bw-state b{font-weight:500;color:var(--text-2)}
+.bw-pin .dec-progress{position:absolute;left:0;right:0;bottom:0;top:auto;height:1px;background:var(--hair);z-index:1}
+/* a short screen: tighten the stack so all five pairs still fit */
+@media (max-height:800px){
+  .bw-title{margin-bottom:18px}
+  .bw-pair{margin-bottom:14px}
+  .bw-src{margin-top:10px}
+}
+
+/* small screens / reduced motion: the pairs stack */
+.bw-flat .bw-title{max-width:none}
+.bw-flat-list{display:grid;gap:clamp(40px,8vh,72px);max-width:640px}
+.bw-flat-item .bw-human{font-size:clamp(2.2rem,10vw,3.4rem)}
 
 /* ---- Act B: compounding ---- */
 .bw-cmp{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:32px clamp(28px,4.5vw,72px);align-items:center}
@@ -152,8 +185,6 @@
 @media (max-width:900px){
   .bw-row{grid-template-columns:32px minmax(0,1fr) auto;padding-inline:4px}
   .bw-says{grid-column:2/-1}
-  .bw-stage{grid-template-columns:1fr}
-  .bw-frame{display:none}
 }
 @media (max-width:640px){
   .bw-sky{min-height:78vh}

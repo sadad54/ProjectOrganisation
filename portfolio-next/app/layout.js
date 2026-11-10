@@ -11,7 +11,18 @@ import './styles/weights.css';
 import './styles/backward.css';
 import './styles/contact.css';
 import './styles/project.css';
+import './styles/polish.css';
+import { Archivo, Instrument_Sans, Instrument_Serif, Geist_Mono } from 'next/font/google';
 import Providers from './components/site/Providers';
+
+// Self-hosted at build time: no request to Google at runtime, no render-
+// blocking stylesheet, and size-adjusted fallbacks so text doesn't jump when
+// the real faces arrive. tokens.css reads these variables.
+const archivo = Archivo({ subsets: ['latin'], axes: ['wdth'], display: 'swap', variable: '--font-archivo' });
+const instrumentSans = Instrument_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap', variable: '--font-instrument-sans' });
+const instrumentSerif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], display: 'swap', variable: '--font-instrument-serif' });
+const geistMono = Geist_Mono({ subsets: ['latin'], weight: ['400', '500'], display: 'swap', variable: '--font-geist-mono' });
+const FONTS = [archivo, instrumentSans, instrumentSerif, geistMono].map((f) => f.variable).join(' ');
 
 export const viewport = {
   themeColor: '#02070A',
@@ -49,15 +60,9 @@ const PREPAINT =
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={FONTS} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREPAINT }} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500&display=swap"
-          rel="stylesheet"
-        />
       </head>
       <body>
         <Providers>{children}</Providers>

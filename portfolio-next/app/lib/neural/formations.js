@@ -659,7 +659,7 @@ export const LOOKS = [
   { off: [0, 0, -1.2], spin: 0.35, follow: 0.6, dim: 0.5 }, // 4 clusters
   { off: [0.9, 0.2, 0.2], spin: 0.22, follow: 0.5, dim: 0.8 }, // 5 matrix
   { off: [2.9, -0.35, 0], fx: 0.34, spin: 0.42, follow: 0.5, dim: 1.05, glass: 0.4 }, // 6 brain
-  { off: [2.9, -0.35, -6.5], fx: 0.34, spin: 0.8, follow: 0.6, dim: 0.95, glass: 0.4 }, // 7 network
+  { off: [2.9, -0.2, -3.6], fx: 0.34, spin: 0.8, follow: 0.6, dim: 1.05, glass: 0.4 }, // 7 network
   { off: [0, 0.2, 0], spin: 0.04, follow: 0.18, dim: 0.9, glass: 0.3 }, // 8 starry
   { off: [0.2, 0.4, 0], spin: 1, follow: 1, dim: 0.95 }, // 9 network
 ];

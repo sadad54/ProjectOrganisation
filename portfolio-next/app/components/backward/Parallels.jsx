@@ -6,8 +6,8 @@ import Split from '../site/Split';
 import { PAIRS } from '../../data/priors';
 import { reducedMotionNow, useMedia } from '../../lib/motion';
 
-const PER = 95; // vh of scroll per pair
-const REWIRE = 3; // from this pair on, the brain beside the copy has become a network
+const PER = 82; // vh of scroll per pair
+const REWIRE = 3; // from this pair on, the brain behind the copy has become a network
 const pad = (n) => String(n).padStart(2, '0');
 
 function Label() {
@@ -23,37 +23,40 @@ function Label() {
   );
 }
 
-const TITLE = ['A brain and a model ', { t: 'learn the same way.', em: true }];
-
-function Copy({ pair, k }) {
+function Pair({ pair, k }) {
   return (
-    <div className="scene-copy">
-      <p className="scene-eyebrow">
-        Parallel {pad(k + 1)} <span>/ {pad(PAIRS.length)}</span>
+    <>
+      <p className="bw-count">
+        {pad(k + 1)} <span>/ {pad(PAIRS.length)}</span>
       </p>
-      <h3 className="scene-h bw-h3">
-        <em>{pair.human}</em> {pair.verb} {pair.machine}.
+      <h3 className="bw-pair">
+        <em className="bw-human">{pair.human}</em>
+        <span className="bw-is">
+          <span className="bw-rule" aria-hidden="true" />
+          <span className="bw-eq">is</span>
+          <span className="bw-machine">{pair.machine}</span>
+        </span>
       </h3>
-      <p className="scene-body bw-body">{pair.line}</p>
-      <p className="scene-note">{pair.src}</p>
-    </div>
+      <p className="bw-line">{pair.line}</p>
+      <p className="bw-src">{pair.src}</p>
+    </>
   );
 }
 
-/* Act A, on the same pinned frame as the L3 decisions: a head row with the
-   title and one tab per parallel, and a stage below it. The stage's right
-   half is a window onto the field, which holds a brain for the first pairs
-   and then rewires into the hero's network. The engine plays that morph on
-   its own clock; this component only says which formation it wants. */
+/* Act A, pinned: five ideas, each said once about a brain and once about a
+   model. Behind the copy the field holds a brain for the first pairs, then
+   rewires into the network from the hero. The engine plays that morph on its
+   own clock; this component only says which formation it wants. */
 function Pinned() {
   const ref = useRef(null);
-  const fills = useRef([]);
-  const frame = useRef(null);
+  const fill = useRef(null);
+  const room = useRef(null);
   const [fx, setFx] = useState(null);
-  // tell the field where its window is, so the specimen sits inside the frame
+  // tell the field where the open half of the stage is, so the brain sits in
+  // it and never under the copy, whatever the screen's shape
   useEffect(() => {
     const read = () => {
-      const r = frame.current?.getBoundingClientRect();
+      const r = room.current?.getBoundingClientRect();
       if (!r || !r.width) return;
       const half = window.innerWidth / 2;
       setFx(((r.left + r.width / 2 - half) / half).toFixed(3));
@@ -62,90 +65,66 @@ function Pinned() {
     window.addEventListener('resize', read);
     return () => window.removeEventListener('resize', read);
   }, []);
-  const bar = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] });
   const [k, setK] = useState(0);
   const n = PAIRS.length;
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     setK(Math.min(n - 1, Math.floor(v * n * 0.9999)));
-    if (bar.current) bar.current.style.transform = `scaleX(${v})`;
-    fills.current.forEach((el, i) => {
-      if (el) el.style.transform = `scaleX(${Math.min(1, Math.max(0, (v * n - i) * 1.12))})`;
-    });
+    if (fill.current) fill.current.style.transform = `scaleX(${v})`;
   });
-  const wired = k >= REWIRE;
-  const first = useRef(true);
-  const wasWired = useRef(false);
+  const formation = k >= REWIRE ? 7 : 6;
+  const prev = useRef(formation);
   useEffect(() => {
     window.dispatchEvent(new Event('field:sync'));
     // the rewire is an event, not a fade
-    if (!first.current && wasWired.current !== wired) window.__field?.pulse?.();
-    first.current = false;
-    wasWired.current = wired;
-  }, [wired, fx]);
+    if (prev.current !== formation) window.__field?.pulse?.();
+    prev.current = formation;
+  }, [formation, fx]);
 
   function jump(i) {
     const el = ref.current;
     const top = el.getBoundingClientRect().top + window.scrollY;
-    const y = top + ((el.offsetHeight - window.innerHeight) * (i + 0.06)) / n;
-    if (window.__lenis) window.__lenis.scrollTo(y, { duration: 1.2 });
+    const y = top + ((el.offsetHeight - window.innerHeight) * (i + 0.08)) / n;
+    if (window.__lenis) window.__lenis.scrollTo(y, { duration: 1.1 });
     else window.scrollTo({ top: y, behavior: 'smooth' });
   }
 
   return (
-    <div className="dec-track" ref={ref} style={{ height: `${100 + PER * n}vh` }} data-field={wired ? 7 : 6} data-field-dim="1" data-field-x={fx ?? undefined}>
-      <div className="dec-pin bw-pin">
-        <div className="wrap dec-head">
-          <div>
+    <div className="bw-track" ref={ref} style={{ height: `${100 + PER * n}vh` }} data-field={formation} data-field-dim="1" data-field-x={fx ?? undefined}>
+      <div className="bw-pin">
+        <div className="wrap bw-pin-in">
+          <div className="bw-copy">
             <Label />
-            <Split as="h2" id="bw-h" className="h2 dec-title" text={TITLE} />
+            <Split as="h2" id="bw-h" className="h2 bw-title" text={['A brain and a model ', { t: 'learn the same way.', em: true }]} />
+            <div className="bw-stage">
+              {PAIRS.map((pair, i) => (
+                <div key={pair.human} className={`bw-scene${i === k ? ' on' : ''}${i < k ? ' past' : ''}`} aria-hidden={i !== k}>
+                  <Pair pair={pair} k={i} />
+                </div>
+              ))}
+            </div>
           </div>
-          <nav className="dec-tabs" aria-label="Parallels" style={{ '--n': n }}>
+          <div className="bw-room" ref={room} aria-hidden="true" />
+          <nav className="bw-steps" aria-label="Parallels">
             {PAIRS.map((pair, i) => (
               <button
                 type="button"
                 key={pair.human}
-                className={`dec-tab${i === k ? ' on' : ''}${i < k ? ' done' : ''}`}
+                className={`bw-step${i === k ? ' on' : ''}${i < k ? ' done' : ''}`}
                 aria-current={i === k ? 'step' : undefined}
                 onClick={() => jump(i)}
               >
-                <span className="dt-n">{pad(i + 1)}</span>
-                <span className="dt-t">{pair.human}</span>
-                <span className="dt-k">{pair.machine}</span>
-                <span className="dt-bar" aria-hidden="true">
-                  <span className="fill" ref={(el) => (fills.current[i] = el)} />
-                </span>
+                <span>{pad(i + 1)}</span>
+                {pair.human}
               </button>
             ))}
+            <span className="bw-state" aria-hidden="true">
+              field · <b>{k >= REWIRE ? 'network' : 'brain'}</b>
+            </span>
           </nav>
         </div>
-        <div className="wrap dec-stage bw-stage">
-          <div className="bw-scenes">
-            {PAIRS.map((pair, i) => (
-              <div key={pair.human} className={`bw-scene${i === k ? ' on' : ''}${i < k ? ' past' : ''}`} aria-hidden={i !== k}>
-                <Copy pair={pair} k={i} />
-              </div>
-            ))}
-          </div>
-          {/* a window onto the field: the specimen is the particles themselves */}
-          <div className={`bw-frame${wired ? ' wired' : ''}`} ref={frame} aria-hidden="true">
-            <i className="tl" />
-            <i className="tr" />
-            <i className="bl" />
-            <i className="br" />
-            <p className="bw-frame-top">
-              <span>fig. ∇</span>
-              <span>same particles, rewired</span>
-            </p>
-            <p className="bw-frame-cap">
-              <span className={wired ? '' : 'on'}>wetware</span>
-              <span className="arw">→</span>
-              <span className={wired ? 'on' : ''}>software</span>
-            </p>
-          </div>
-        </div>
         <div className="dec-progress" aria-hidden="true">
-          <span ref={bar} className="fill" />
+          <span ref={fill} className="fill" />
         </div>
       </div>
     </div>
@@ -153,20 +132,24 @@ function Pinned() {
 }
 
 export default function Parallels() {
-  const small = useMedia('(max-width: 900px), (max-height: 640px)');
+  const small = useMedia('(max-width: 900px), (max-height: 660px)');
   const [rm, setRm] = useState(false);
   useEffect(() => setRm(reducedMotionNow()), []);
 
   if (!(small || rm)) return <Pinned />;
   return (
-    <div className="wrap dec-flat" data-field="6" data-field-dim="0.4">
-      <Label />
-      <Split as="h2" id="bw-h" className="h2 dec-title" text={TITLE} />
-      {PAIRS.map((pair, i) => (
-        <div className="dec-flat-scene rv" key={pair.human}>
-          <Copy pair={pair} k={i} />
+    <div className="bw-flat band" data-field="6" data-field-dim="0.35">
+      <div className="wrap">
+        <Label />
+        <Split as="h2" id="bw-h" className="h2 bw-title" text={['A brain and a model ', { t: 'learn the same way.', em: true }]} />
+        <div className="bw-flat-list">
+          {PAIRS.map((pair, i) => (
+            <article key={pair.human} className="bw-flat-item rv">
+              <Pair pair={pair} k={i} />
+            </article>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }
