@@ -46,7 +46,7 @@ export const metadata = {
     type: 'website',
   },
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23060A1D'/><path d='M14 44 L32 18 L50 44 M14 44 H50' stroke='%23F5B83D' stroke-width='3' fill='none'/><circle cx='14' cy='44' r='5' fill='%23F5B83D'/><circle cx='32' cy='18' r='5' fill='%23F3EEE1'/><circle cx='50' cy='44' r='5' fill='%23F5B83D'/></svg>",
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23060A1D'/><path d='M14 44 L32 18 L50 44 M14 44 H50' stroke='%23F26B21' stroke-width='3' fill='none'/><circle cx='14' cy='44' r='5' fill='%23F26B21'/><circle cx='32' cy='18' r='5' fill='%23F3EEE1'/><circle cx='50' cy='44' r='5' fill='%23F26B21'/></svg>",
   },
 };
 

@@ -1,6 +1,6 @@
 ---
 name: Adnan Mashrur Sadad — Portfolio
-description: A night-blue portfolio built as a neural network's forward pass. One lamp-yellow signal on a deep ultramarine ground.
+description: A night-blue portfolio built as a neural network's forward pass. One cadmium-orange signal on a deep ultramarine ground.
 colors:
   void: "#060A1D"
   surface-1: "#0A102A"
@@ -13,9 +13,9 @@ colors:
   hairline: "rgba(243,238,225,0.08)"
   hairline-2: "rgba(243,238,225,0.14)"
   hairline-3: "rgba(243,238,225,0.22)"
-  signal: "#F5B83D"
-  signal-hover: "#FBD068"
-  signal-press: "#D9982A"
+  signal: "#F26B21"
+  signal-hover: "#FF8A47"
+  signal-press: "#D4551A"
   cool: "#4F9BE6"
   sun: "#F6DF9A"
   rose: "#E08A9B"
@@ -68,17 +68,18 @@ decoration: the headline is *generated*, the work index is a *working search eng
 *(2026-11-11. "Nocturne" replaces the "Activation" palette of near-black, neon orange and electric blue,
 which read as a default dark-tech scheme. The rule is the same; the colours now come from somewhere.)*
 
-The palette is taken from The Starry Night, the painting the ∇ Backward pass section already draws in
-particles: a deep ultramarine night, lamp yellow, warm paper white, cerulean. It also sits well beside
-the warm rim light in the hero portrait. Almost everything stays in the cold night, and the few things
+The ground, text and data colours are taken from The Starry Night, the painting the ∇ Backward pass
+section already draws in particles: a deep ultramarine night, warm paper white, cerulean, starlight
+yellow. The one signal is the night blue's complement, cadmium orange, which is also the colour of the
+rim light in the hero portrait. Almost everything stays in the cold night, and the few things
 that are live are lit.
 
-- **Signal** (`#F5B83D`, lamp yellow) is the only UI accent. It marks the active, hovered, selected or
+- **Signal** (`#F26B21`, cadmium orange: a pigment orange, not a neon one) is the only UI accent. It marks the active, hovered, selected or
   firing thing and the number that matters, and it colours the italic clause of a headline. It never
   fills large areas, and it is always flat: no gradient text.
 - **Cool** (`#4F9BE6`, cerulean) is data only: the neural field's resting particles, diagram structure,
   and the "ML & data" domain in the work console. It is never used for chrome.
-- **Sun** (`#F6DF9A`, starlight) belongs to the corpus ledger and its sky. **Rose** (`#E08A9B`) is the
+- **Sun** (`#F6DF9A`, starlight) belongs to the corpus ledger and its sky, and is the only yellow. **Rose** (`#E08A9B`) is the
   "client web" domain in the work console. Neither appears in chrome.
 - **Pass / fail** (`#63DBA6` / `#FF6B7A`) are diagram semantics: valid vs rejected, detection vs
   false alarm, recovery vs collapse. They are never used for buttons or links.

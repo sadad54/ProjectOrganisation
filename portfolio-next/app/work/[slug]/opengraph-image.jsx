@@ -28,19 +28,19 @@ export default async function Image({ params }) {
           padding: '64px 72px',
           color: '#F3EEE1',
           backgroundColor: '#060A1D',
-          backgroundImage: 'radial-gradient(900px 520px at 78% 0%, rgba(79,155,230,0.4), rgba(6,10,29,0)), radial-gradient(520px 320px at 70% 108%, rgba(245,184,61,0.34), rgba(6,10,29,0))',
+          backgroundImage: 'radial-gradient(900px 520px at 78% 0%, rgba(79,155,230,0.4), rgba(6,10,29,0)), radial-gradient(520px 320px at 70% 108%, rgba(242,107,33,0.4), rgba(6,10,29,0))',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 22, letterSpacing: 5, textTransform: 'uppercase', color: '#B0B3C6' }}>
           <div style={{ display: 'flex' }}>
-            <span style={{ color: '#F5B83D', marginRight: 16 }}>Case study</span>
+            <span style={{ color: '#F26B21', marginRight: 16 }}>Case study</span>
             <span>{p?.kind || ''}</span>
           </div>
           <span>{p?.year ? String(p.year) : ''}</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', fontSize: name.length > 14 ? 104 : 136, fontWeight: 700, letterSpacing: -5, lineHeight: 1 }}>{name}</div>
-          <div style={{ display: 'flex', marginTop: 26, fontSize: 36, lineHeight: 1.25, color: '#FBD068', maxWidth: 900 }}>{p?.hook || ''}</div>
+          <div style={{ display: 'flex', marginTop: 26, fontSize: 36, lineHeight: 1.25, color: '#FF8A47', maxWidth: 900 }}>{p?.hook || ''}</div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end' }}>

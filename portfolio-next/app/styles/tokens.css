@@ -1,8 +1,9 @@
 /* =========================================================================
    TOKENS — "Nocturne"
    The palette is taken from one painting, The Starry Night: a deep
-   ultramarine night for the ground, lamp yellow for the one signal, warm
-   paper white for text, cerulean for data. The logic is unchanged from the
+   ultramarine night for the ground, warm paper white for text, cerulean for
+   data and starlight yellow for the sky. The one signal is its complement,
+   cadmium orange, taken from the rim light in the hero portrait. The logic is unchanged from the
    system it replaces: almost everything sits in the cold night, and the few
    things that are live (hovered, selected, firing, the number that matters)
    are lit. The signal stays rare.
@@ -36,14 +37,16 @@
   --hair-2:rgba(243,238,225,.14);
   --hair-3:rgba(243,238,225,.22);
 
-  /* the signal (lamp yellow): the lit windows and stars against the night.
-     The lit pair is for the one place that glows, the active rail node. */
-  --signal:#F5B83D;
-  --signal-rgb:245,184,61;
-  --signal-hi:#FBD068;
-  --signal-lo:#D9982A;
-  --signal-lit-a:#EE9F36;
-  --signal-lit-b:#FBE08A;
+  /* the signal (cadmium orange): the complement of the night blue, and the
+     colour of the rim light in the hero portrait. A pigment orange, not a
+     neon one. The lit pair is for the one place that glows, the active rail
+     node. Yellow (--sun) is kept for the corpus sky only. */
+  --signal:#F26B21;
+  --signal-rgb:242,107,33;
+  --signal-hi:#FF8A47;
+  --signal-lo:#D4551A;
+  --signal-lit-a:#E85A1B;
+  --signal-lit-b:#FFB066;
 
   /* data-only hues */
   --cool:#4F9BE6;
