@@ -15,6 +15,9 @@ import { reducedMotionNow } from '../../lib/motion';
 export default function ProjectPage({ project: p, entry, shots, prev, next, num, total }) {
   const hero = useRef(null);
   const [active, setActive] = useState('overview');
+  const [pinned, setPinned] = useState(false);
+  const light = useRef(null);
+  const [shot, setShot] = useState(0);
 
   const sections = [
     ['overview', 'Overview'],
@@ -48,6 +51,21 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // once the hero has gone, a slim bar keeps the name and the number in view
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => setPinned(!e.isIntersecting), { rootMargin: '-80px 0px 0px 0px' });
+    io.observe(hero.current);
+    return () => io.disconnect();
+  }, []);
+
+  const openShot = (i) => {
+    setShot(i);
+    light.current?.showModal();
+  };
+  const step = (d) => setShot((i) => (i + d + shots.length) % shots.length);
+  const activeIdx = sections.findIndex((s) => s[0] === active);
+  const repo = p.links.find((l) => !l.internal);
+
   const domain = entry ? DOMAINS[entry.domain].label : null;
   // a case study without a walkthrough yet samples its own screens in instead
   const video = { slug: p.slug, name: p.name, media: p.media || { type: 'video', slug: p.slug } };
@@ -56,7 +74,21 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
     : null;
 
   return (
-    <main id="main" className="cs" data-field="2" data-field-dim="0.42">
+    <main id="main" className="cs" data-field={p.field ?? 2} data-field-dim="0.42">
+      <span className="cs-progress" aria-hidden="true" />
+      <div className={`cs-pin${pinned ? ' on' : ''}`} aria-hidden={!pinned}>
+        <div className="wrap cs-pin-in">
+          <span className="cs-pin-n">{p.name}</span>
+          <span className="cs-pin-m">
+            <b>{p.headline.metric}</b> {p.headline.label}
+          </span>
+          {repo && (
+            <a className="lnk" href={repo.href} target="_blank" rel="noopener noreferrer" tabIndex={pinned ? 0 : -1}>
+              {repo.label} ↗
+            </a>
+          )}
+        </div>
+      </div>
       <header className="cs-hero wrap" ref={hero}>
         <nav className="cs-crumbs" aria-label="Breadcrumb">
           <a href="/#work" data-pt="the index" className="lnk">
@@ -130,7 +162,7 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
           <ol>
             {sections.map(([id, label], k) => (
               <li key={id}>
-                <a href={`#${id}`} className={active === id ? 'on' : ''} aria-current={active === id ? 'true' : undefined}>
+                <a href={`#${id}`} className={active === id ? 'on' : k < activeIdx ? 'read' : ''} aria-current={active === id ? 'true' : undefined}>
                   <span>{String(k + 1).padStart(2, '0')}</span>
                   {label}
                 </a>
@@ -226,6 +258,15 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
               <div className="cs-gallery">
                 <Media project={gallery} />
               </div>
+              <ul className="cs-thumbs" aria-label="All screens, full size">
+                {shots.map((src, i) => (
+                  <li key={src}>
+                    <button type="button" onClick={() => openShot(i)} aria-label={`Open screen ${i + 1} of ${shots.length} full size`} data-cursor="Open">
+                      <img src={src} alt="" loading="lazy" decoding="async" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </section>
           )}
 
@@ -257,30 +298,71 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
         </div>
       </div>
 
-      <nav className="cs-next wrap" aria-label="More case studies">
-        {prev ? (
-          <a href={`/work/${prev.slug}`} data-pt={prev.name} className="cs-nx prev" data-cursor="Prev">
-            <span className="k">← Previous case study</span>
-            <span className="n">{prev.name}</span>
-            <span className="h">{prev.hook}</span>
+      {/* the page hands over to the next case study instead of stopping */}
+      <nav className="cs-end wrap" aria-label="Continue">
+        <a
+          href={next ? `/work/${next.slug}` : '/#work'}
+          data-pt={next ? next.name : 'the index'}
+          className="cs-handoff"
+          data-cursor={next ? 'Next' : 'Index'}
+        >
+          <span className="k">{next ? `Next case study · ${String(num + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}` : 'That was the last one'}</span>
+          <span className="n">{next ? next.name : 'All work'}</span>
+          <span className="h">{next ? next.hook : 'Every project, one query away.'}</span>
+          {next && (
+            <span className="m">
+              <b>{next.headline.metric}</b> {next.headline.label}
+            </span>
+          )}
+          <span className="go" aria-hidden="true">
+            →
+          </span>
+        </a>
+        <div className="cs-end-row">
+          {prev ? (
+            <a href={`/work/${prev.slug}`} data-pt={prev.name} className="lnk">
+              ← {prev.name}
+            </a>
+          ) : (
+            <span />
+          )}
+          <a href="/#work" data-pt="the index" className="lnk">
+            All work
           </a>
-        ) : (
-          <span />
-        )}
-        {next ? (
-          <a href={`/work/${next.slug}`} data-pt={next.name} className="cs-nx next" data-cursor="Next">
-            <span className="k">Next case study →</span>
-            <span className="n">{next.name}</span>
-            <span className="h">{next.hook}</span>
-          </a>
-        ) : (
-          <a href="/#work" data-pt="the index" className="cs-nx next" data-cursor="Index">
-            <span className="k">Back to the index →</span>
-            <span className="n">All work</span>
-            <span className="h">Every project, one query away.</span>
-          </a>
-        )}
+        </div>
       </nav>
+
+      {shots.length > 0 && (
+        <dialog
+          ref={light}
+          className="cs-light"
+          aria-label={`${p.name} screens`}
+          data-lenis-prevent
+          onClick={(e) => e.target === e.currentTarget && light.current.close()}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowRight') step(1);
+            if (e.key === 'ArrowLeft') step(-1);
+          }}
+        >
+          <figure>
+            <img src={shots[shot]} alt={`${p.name}, screen ${shot + 1} of ${shots.length}`} />
+            <figcaption>
+              <button type="button" className="lnk" onClick={() => step(-1)} aria-label="Previous screen">
+                ← Prev
+              </button>
+              <span>
+                {String(shot + 1).padStart(2, '0')} / {String(shots.length).padStart(2, '0')}
+              </span>
+              <button type="button" className="lnk" onClick={() => step(1)} aria-label="Next screen">
+                Next →
+              </button>
+              <button type="button" className="lnk" onClick={() => light.current.close()} autoFocus>
+                Close
+              </button>
+            </figcaption>
+          </figure>
+        </dialog>
+      )}
     </main>
   );
 }

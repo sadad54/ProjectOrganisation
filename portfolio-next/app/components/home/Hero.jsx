@@ -5,6 +5,18 @@ import Magnetic from '../site/Magnetic';
 import HeroAsk from '../ask/HeroAsk';
 import { whenStageReady } from '../../lib/stage';
 import { reducedMotionNow } from '../../lib/motion';
+import { play } from '../../lib/sound';
+import { Odometer } from '../work/Stage';
+import { WORK } from '../../data/work';
+import { PAPERS, AWARDS } from '../../data/profile';
+
+// the proof strip: four counts, all read from the data files
+const PROOF = [
+  [WORK.length, 'projects built'],
+  [WORK.filter((p) => p.tier === 'case').length, 'case studies'],
+  [PAPERS.length, 'first-author papers'],
+  [AWARDS.length, 'gold awards'],
+];
 
 /* The headline is generated, not typeset: tokens stream in the way a model
    emits them — a highlight marks each fresh token, a caret rides the end —
@@ -41,6 +53,20 @@ function useFps(on) {
 export default function Hero() {
   const root = useRef(null);
   const [hud, setHud] = useState(false);
+  const [proof, setProof] = useState(false);
+  // the counts roll in once the hero has finished arriving
+  useEffect(() => {
+    const el = root.current;
+    if (el.classList.contains('done')) return setProof(true);
+    const mo = new MutationObserver(() => {
+      if (el.classList.contains('done')) {
+        setProof(true);
+        mo.disconnect();
+      }
+    });
+    mo.observe(el, { attributes: true, attributeFilter: ['class'] });
+    return () => mo.disconnect();
+  }, []);
   const [particles, setParticles] = useState(null);
   const fps = useFps(hud);
 
@@ -98,7 +124,10 @@ export default function Hero() {
         field.setFace(pts, box.getBoundingClientRect());
         field.faceTo(1);
         stop = whenStageReady(() => {
-          t = setTimeout(() => field.faceTo(0, 3000), 1100);
+          t = setTimeout(() => {
+            field.faceTo(0, 3000);
+            play('swell');
+          }, 1100);
         });
       } catch {
         /* no portrait opening: the hero is complete without it */
@@ -199,6 +228,9 @@ export default function Hero() {
             <Magnetic className="btn" href="#research">
               Research <span className="arw down">↓</span>
             </Magnetic>
+            <button type="button" className="lnk hero-brief" data-brief data-cursor="1 min">
+              The short version
+            </button>
           </div>
         </div>
         <HeroAsk />
@@ -222,6 +254,15 @@ export default function Hero() {
           <span>subject</span> Adnan M. Sadad <span className="sep">·</span> KL 2026
         </figcaption>
       </figure>
+
+      <dl className="hero-proof">
+        {PROOF.map(([n, label]) => (
+          <div key={label}>
+            <dt>{label}</dt>
+            <dd>{proof ? <Odometer value={String(n).padStart(2, '0')} /> : '00'}</dd>
+          </div>
+        ))}
+      </dl>
 
       <a className="hero-scroll" href="#thesis">
         <span className="hs-line" aria-hidden="true" />

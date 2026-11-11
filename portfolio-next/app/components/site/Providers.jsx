@@ -11,6 +11,8 @@ import Preloader from './Preloader';
 import RevealObserver from './RevealObserver';
 import Nav from './Nav';
 import CommandPalette from './CommandPalette';
+import Brief from './Brief';
+import Shortcuts from './Shortcuts';
 
 /* Everything that persists across routes lives here, in the root layout:
    one Lenis instance, one WebGL context, one cursor, one transition overlay.
@@ -33,6 +35,8 @@ export default function Providers({ children }) {
         <Nav />
         {children}
         <CommandPalette />
+        <Brief />
+        <Shortcuts />
         <Cursor />
         <PageTransition />
         <Preloader />

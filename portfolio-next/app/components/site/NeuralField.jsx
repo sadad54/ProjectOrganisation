@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { reducedMotionNow } from '../../lib/motion';
+import { daylight } from '../../lib/daylight';
 
 /* Reads the page: every section that wants the field declares
    data-field="<formation>" (and optionally data-field-dim="0..1"). The
@@ -44,6 +45,7 @@ export default function NeuralField() {
   useEffect(() => {
     let cancelled = false;
     let raf = 0;
+    let mood = 0;
     const reduced = reducedMotionNow();
 
     const sync = () => {
@@ -75,6 +77,9 @@ export default function NeuralField() {
       }
       engine.current = e;
       window.__field = e;
+      // the field takes its mood from the time in Kuala Lumpur, checked every few minutes
+      e.setMood(daylight());
+      mood = setInterval(() => engine.current?.setMood(daylight()), 5 * 60 * 1000);
       const s = readPage();
       if (s) {
         e.setAnchor(s.x);
@@ -90,6 +95,7 @@ export default function NeuralField() {
     window.addEventListener('field:sync', onScroll);
     return () => {
       cancelled = true;
+      clearInterval(mood);
       cancelAnimationFrame(raf);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);

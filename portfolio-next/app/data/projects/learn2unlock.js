@@ -5,6 +5,8 @@ export default {
   kind: 'Human-in-the-loop LLM · mobile',
   badge: 'Gold Award · NALI 2026',
   hook: 'The AI drafts. A parent decides. Server code keeps score.',
+  // which field formation sits behind this page (lib/neural/formations.js)
+  field: 5,
   headline: {
     metric: '0',
     label: 'minutes of screen time the model can award',

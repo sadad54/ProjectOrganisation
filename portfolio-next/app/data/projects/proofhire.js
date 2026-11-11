@@ -4,6 +4,8 @@ export default {
   year: '2026',
   kind: 'AI engineering / Full stack',
   hook: 'Your code is the evidence. Every application claim has to earn its place.',
+  // which field formation sits behind this page (lib/neural/formations.js)
+  field: 1,
   headline: {
     metric: '5 ms',
     label: 'retrieval p50 · 20k rows · local benchmark',

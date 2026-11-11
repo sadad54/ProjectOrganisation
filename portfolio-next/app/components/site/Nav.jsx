@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { onSoundChange, play, setSound, soundOn } from '../../lib/sound';
 
 /* The page is read as a forward pass: every section is a layer. The top bar
    carries the few links people actually use; the right-edge rail shows the
@@ -47,6 +48,17 @@ export default function Nav() {
   const [kbd, setKbd] = useState('⌘');
   const [touch, setTouch] = useState(false);
   const lastY = useRef(0);
+  const [snd, setSnd] = useState(false);
+  useEffect(() => {
+    setSnd(soundOn());
+    return onSoundChange(setSnd);
+  }, []);
+  // a section arriving is a soft tick (only if the visitor turned sound on)
+  const firstActive = useRef(true);
+  useEffect(() => {
+    if (firstActive.current) firstActive.current = false;
+    else play('tick');
+  }, [active]);
 
   useEffect(() => {
     if (/Win|Linux/i.test(navigator.platform || '')) setKbd('Ctrl');
@@ -119,6 +131,21 @@ export default function Nav() {
             <span className="nav-ask-dot" aria-hidden="true" />
             <span>Ask</span>
             <span className="nav-ask-more"> the model</span>
+          </button>
+          <button
+            className={`nav-kbd nav-snd${snd ? ' on' : ''}`}
+            type="button"
+            aria-pressed={snd}
+            aria-label="Interface sound"
+            title="Sound (M)"
+            onClick={() => setSound(!soundOn())}
+          >
+            <svg viewBox="0 0 16 12" aria-hidden="true">
+              <path d="M1 4.5h2.5L7 1.5v9L3.5 7.5H1z" />
+              <path className="w1" d="M9.5 3.8a3.2 3.2 0 0 1 0 4.4" />
+              <path className="w2" d="M11.6 1.9a6 6 0 0 1 0 8.2" />
+              <path className="x" d="M10 4l4 4M14 4l-4 4" />
+            </svg>
           </button>
           <button className="nav-kbd" id="cmdk-open" type="button" aria-label="Open command menu" data-cursor="Menu">
             {touch ? (

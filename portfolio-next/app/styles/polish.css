@@ -73,3 +73,96 @@
 .foot-mark em{font-family:var(--f-serif);font-style:italic;font-weight:400;font-stretch:100%;letter-spacing:-.03em}
 .foot-base{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--hair)}
 @media (forced-colors:active){.foot-mark span{background:none;color:CanvasText}}
+
+/* =========================================================================
+   THE 60-SECOND PATH — proof strip, the short version, the shortcut sheet
+   ========================================================================= */
+/* four counts, bottom right of the hero, above the field readout */
+.hero-proof{
+  position:absolute;right:var(--gut);bottom:62px;z-index:2;margin:0;display:flex;gap:clamp(18px,2.4vw,38px);
+  opacity:0;transition:opacity 1s var(--ease-soft) .3s;
+}
+.hero.done .hero-proof,html:not(.js) .hero-proof{opacity:1}
+.hero-proof div{display:flex;flex-direction:column-reverse;gap:6px}
+.hero-proof dt{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);white-space:nowrap}
+.hero-proof dd{margin:0;font-family:var(--f-display);font-stretch:112%;font-weight:600;font-size:clamp(1.3rem,1.9vw,1.9rem);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.hero-proof div:last-child dd{color:var(--ember)}
+.hero-brief{margin-left:6px;cursor:pointer}
+@media (max-width:1100px){
+  /* no room beside the portrait: the counts join the flow under the ask bar */
+  .hero-proof{position:static;margin:22px var(--gut) 0;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .hero-proof dt{white-space:normal;max-width:9ch;line-height:1.4}
+}
+@media (max-width:760px){.hero-brief{margin-left:0;width:100%;justify-content:flex-start}}
+
+dialog.brief,dialog.keys{
+  border:1px solid var(--hair-2);border-radius:var(--r-lg);padding:0;color:var(--text);
+  background:linear-gradient(180deg,rgba(var(--text-rgb),.03),transparent 30%),rgba(var(--s1-rgb),.96);
+  box-shadow:0 40px 120px rgba(0,0,0,.6);max-height:min(92vh,980px);overflow:auto;overscroll-behavior:contain;
+}
+dialog.brief{width:min(980px,calc(100vw - 28px))}
+dialog.keys{width:min(380px,calc(100vw - 28px))}
+dialog.brief::backdrop,dialog.keys::backdrop,dialog.cs-light::backdrop{background:rgba(var(--void-rgb),.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+dialog.brief[open],dialog.keys[open]{animation:dlgIn .32s var(--ease-out)}
+@keyframes dlgIn{from{opacity:0;transform:translate3d(0,-10px,0) scale(.98)}}
+.brief-in{padding:clamp(22px,3.4vw,44px)}
+.brief-top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:clamp(18px,3vh,30px)}
+.brief-k{font-family:var(--f-mono);font-size:var(--fs-label);letter-spacing:.18em;text-transform:uppercase;color:var(--text-3)}
+.brief-k b{font-weight:500;color:var(--ember);margin-right:8px}
+.brief-acts{display:flex;gap:22px}
+.brief-acts button span{color:var(--text-3);margin-left:6px}
+.brief-h{font-family:var(--f-display);font-stretch:110%;font-weight:640;font-size:clamp(2rem,4.4vw,3.6rem);line-height:.98;letter-spacing:-.04em}
+.brief-role{margin-top:12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-2)}
+.brief-role .sep{color:var(--text-3);margin:0 6px}
+.brief-use{margin-top:14px;font-family:var(--f-serif);font-style:italic;font-size:clamp(1.15rem,1.7vw,1.45rem);color:var(--ember);max-width:44ch;line-height:1.25}
+.brief-sec{margin:clamp(22px,3.6vh,34px) 0 12px;padding-bottom:10px;border-bottom:1px solid var(--hair-2);font-family:var(--f-mono);font-weight:400;font-size:var(--fs-label);letter-spacing:.18em;text-transform:uppercase;color:var(--text-3)}
+.brief-work{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.brief-work a{
+  display:grid;gap:4px;height:100%;padding:16px 16px 18px;border:1px solid var(--hair-2);border-radius:var(--r-md);
+  background:rgba(var(--panel-rgb),.6);transition:border-color .3s,background-color .3s;
+}
+.brief-work a:hover{border-color:rgba(var(--ember-rgb),.55);background:rgba(var(--ember-rgb),.06)}
+.brief-work .bw-m{font-family:var(--f-display);font-stretch:116%;font-weight:600;font-size:clamp(1.7rem,3vw,2.5rem);line-height:1;letter-spacing:-.04em;color:var(--ember);font-variant-numeric:tabular-nums}
+.brief-work .bw-l{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);line-height:1.5;min-height:3em}
+.brief-work .bw-t{margin-top:8px;font-weight:600;font-size:1.02rem}
+.brief-work .bw-kd{font-size:.86rem;color:var(--text-2)}
+.brief-cols{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(22px,3vw,44px)}
+.brief-list{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.brief-list li{display:grid;gap:3px;font-size:.9rem;line-height:1.45;color:var(--text-2)}
+.brief-list b{font-weight:600;color:var(--text)}
+.brief-foot{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;margin-top:clamp(24px,4vh,38px);padding-top:22px;border-top:1px solid var(--hair-2)}
+@media (max-width:760px){.brief-work,.brief-cols{grid-template-columns:1fr}.brief-work .bw-l{min-height:0}}
+
+.keys-in{padding:24px 26px 22px}
+.keys dl{margin:18px 0 20px;display:grid;gap:2px}
+.keys dl div{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:9px 0;border-bottom:1px solid var(--hair)}
+.keys dt,.keys dd{margin:0}
+.keys dd{font-size:.92rem;color:var(--text-2)}
+.keys kbd{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--text);border:1px solid var(--hair-3);border-radius:var(--r-xs);padding:3px 8px;background:rgba(var(--text-rgb),.04)}
+
+/* sound toggle in the nav: waves when on, a cross when off */
+.nav-snd svg{display:block;width:16px;height:12px;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.nav-snd .w1,.nav-snd .w2{opacity:0;transition:opacity .25s}
+.nav-snd.on .w1,.nav-snd.on .w2{opacity:1}
+.nav-snd.on .x{opacity:0}
+.nav-snd.on{color:var(--ember);border-color:rgba(var(--ember-rgb),.5)}
+@media (prefers-reduced-motion:reduce){.nav-snd{display:none}}
+html.rm .nav-snd{display:none}
+@media (max-width:760px){.nav-snd{display:none}}
+
+/* the short version prints as a one-page handout */
+@media print{
+  html.brief-open body *{visibility:hidden!important}
+  html.brief-open dialog.brief,html.brief-open dialog.brief *{visibility:visible!important}
+  html.brief-open,html.brief-open body{background:#fff!important}
+  html.brief-open dialog.brief{
+    position:absolute;inset:0 auto auto 0;margin:0;width:100%;max-width:none;max-height:none;overflow:visible;border:0;box-shadow:none;
+    background:#fff;color:#111;--text:#111;--text-2:#333;--text-3:#666;--hair:#ddd;--hair-2:#ccc;--hair-3:#bbb;--ember:#c2410c;--panel-rgb:255,255,255;--ember-rgb:194,65,12;
+  }
+  html.brief-open dialog.brief::backdrop{display:none}
+  html.brief-open .brief-acts,html.brief-open .brief-foot .btn{display:none}
+  html.brief-open .brief-in{padding:8mm 4mm}
+  html.brief-open .brief-work a{background:none!important;border-color:#bbb}
+  html.brief-open .brief-work .bw-l{color:#555}
+  html.brief-open .brief-list li{color:#333}
+}

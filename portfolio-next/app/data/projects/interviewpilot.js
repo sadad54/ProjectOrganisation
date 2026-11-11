@@ -4,6 +4,8 @@ export default {
   year: '2026',
   kind: 'Full stack + LLM',
   hook: 'A mock interview that pushes back.',
+  // which field formation sits behind this page (lib/neural/formations.js)
+  field: 0,
   headline: {
     metric: '0',
     label: 'dropped requests under schema repair',

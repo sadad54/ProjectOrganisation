@@ -128,6 +128,8 @@ export default function CommandPalette() {
       },
       { g: 'Contact', n: 'Résumé — AI / ML', h: 'PDF', go: () => window.open('/Adnan_Sadad_AI_ML_Resume_LaTeX.pdf', '_blank', 'noopener') },
       { g: 'Contact', n: 'Résumé — Full-stack', h: 'PDF', go: () => window.open('/Adnan_Sadad_SWE_Resume_LaTeX.pdf', '_blank', 'noopener') },
+      { g: 'Site', n: 'The short version — one screen', h: 'B', go: () => window.dispatchEvent(new Event('brief:open')) },
+      { g: 'Site', n: 'Keyboard shortcuts', h: '?', go: () => window.dispatchEvent(new Event('shortcuts:open')) },
       {
         g: 'Site',
         n: 'Fire the network',

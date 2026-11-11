@@ -51,6 +51,24 @@ and edges are derived from each project's `stack`.
 Persistent across routes (in the root layout, `components/site/Providers.jsx`): Lenis smooth scroll,
 the neural field, the cursor, the route-transition wipe, the boot sequence and the ⌘K palette.
 
+### The fast path, shortcuts and sound
+
+- **The short version** (`components/site/Brief.jsx`): a one-screen summary opened from the hero, ⌘K or `B`, built
+  from the same data files as the long page, and printable as a one-page handout. The hero's proof strip uses
+  the same counts (`WORK`, and `PAPERS` / `AWARDS` in `data/profile.js`).
+- **Shortcuts** (`components/site/Shortcuts.jsx`): `?` lists them; `1`–`9` jump to sections, `/` asks the model,
+  `B` opens the short version, `M` toggles sound. Ignored while typing.
+- **Sound** (`lib/sound.js`): optional, off by default, synthesised with Web Audio (no files), remembered in
+  `localStorage`, and disabled under reduced motion.
+- **Daylight** (`lib/daylight.js`): the field's glow is a little warmer at dawn and dusk in Kuala Lumpur and
+  deeper at night.
+
+### Sharing and search
+
+Each case study generates its own preview card at build time (`app/work/[slug]/opengraph-image.jsx`).
+`app/sitemap.js` and `app/robots.js` list the pages, and the home page and case studies carry JSON-LD.
+Set `SITE_URL` to the final domain so these print the right absolute URLs (`lib/site.js`).
+
 ### Fonts and site-wide polish
 
 Fonts are self-hosted through `next/font` in `app/layout.js` (no runtime request to Google); `tokens.css`

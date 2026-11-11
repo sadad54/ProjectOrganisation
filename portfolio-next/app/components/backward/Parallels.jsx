@@ -5,6 +5,7 @@ import { useMotionValueEvent, useScroll } from 'framer-motion';
 import Split from '../site/Split';
 import { PAIRS } from '../../data/priors';
 import { reducedMotionNow, useMedia } from '../../lib/motion';
+import { play } from '../../lib/sound';
 
 const PER = 82; // vh of scroll per pair
 const REWIRE = 3; // from this pair on, the brain behind the copy has become a network
@@ -77,7 +78,10 @@ function Pinned() {
   useEffect(() => {
     window.dispatchEvent(new Event('field:sync'));
     // the rewire is an event, not a fade
-    if (prev.current !== formation) window.__field?.pulse?.();
+    if (prev.current !== formation) {
+      window.__field?.pulse?.();
+      play('rise');
+    }
     prev.current = formation;
   }, [formation, fx]);
 

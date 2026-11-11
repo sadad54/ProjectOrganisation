@@ -4,6 +4,8 @@ export default {
   year: '2026',
   kind: 'Streaming ML / MLOps',
   hook: 'A model decays in silence. The retrain has to beat it on the same holdout to ship.',
+  // which field formation sits behind this page (lib/neural/formations.js)
+  field: 3,
   headline: {
     metric: '0.4802',
     label: 'candidate PR-AUC vs 0.2811 incumbent, same holdout',

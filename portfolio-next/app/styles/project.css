@@ -146,3 +146,57 @@ html:not(.js) .diagram-frame svg>g{opacity:1;transform:none}
 .cs-nx.prev:hover .n{transform:translateX(8px)}
 .cs-nx.next:hover .n{transform:translateX(-8px)}
 .cs-nx .h{font-family:var(--f-serif);font-style:italic;font-size:1.1rem;color:var(--text-2);max-width:36ch}
+
+/* ---- reading progress, pinned metric, read marks ---- */
+.cs-progress{position:fixed;left:0;right:0;top:0;height:2px;z-index:121;background:var(--ember);transform-origin:left;transform:scaleX(0);pointer-events:none}
+@supports (animation-timeline:scroll()){
+  .cs-progress{animation:csProgress linear both;animation-timeline:scroll(root block)}
+}
+@keyframes csProgress{to{transform:none}}
+.cs-pin{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;border-top:1px solid var(--hair-2);
+  background:rgba(var(--s1-rgb),.9);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  transform:translate3d(0,102%,0);transition:transform .6s var(--ease-out);
+}
+.cs-pin.on{transform:none}
+.cs-pin-in{display:flex;align-items:center;gap:14px clamp(16px,3vw,40px);min-height:54px;padding-block:10px}
+.cs-pin-n{font-family:var(--f-display);font-stretch:108%;font-weight:620;letter-spacing:-.02em;white-space:nowrap}
+.cs-pin-m{flex:1;min-width:0;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cs-pin-m b{font-family:var(--f-display);font-stretch:112%;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:var(--ember);margin-right:8px;text-transform:none}
+@media (max-width:640px){.cs-pin-n{display:none}}
+.cs-toc a.read{color:var(--text-2)}
+.cs-toc a.read span{color:var(--pass)}
+
+/* ---- screens: thumbnails and the full-size view ---- */
+.cs-thumbs{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.cs-thumbs button{display:block;width:100%;aspect-ratio:16/10;border:1px solid var(--hair-2);border-radius:var(--r-sm);overflow:hidden;background:var(--s2);transition:border-color .25s,transform .4s var(--ease-out)}
+.cs-thumbs button:hover{border-color:var(--ember);transform:translateY(-2px)}
+.cs-thumbs img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:.82;transition:opacity .25s}
+.cs-thumbs button:hover img{opacity:1}
+dialog.cs-light{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100vw;height:100vh;display:none;place-items:center}
+dialog.cs-light[open]{display:grid}
+.cs-light figure{margin:0;display:grid;gap:14px;justify-items:center;max-width:min(1500px,94vw)}
+.cs-light img{max-width:100%;max-height:82vh;border-radius:var(--r-md);border:1px solid var(--hair-2);box-shadow:0 40px 120px rgba(0,0,0,.7);animation:dlgIn .3s var(--ease-out)}
+.cs-light figcaption{display:flex;align-items:center;gap:22px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-2)}
+
+/* ---- the hand-off ---- */
+.cs-end{padding-bottom:clamp(110px,16vh,180px)}
+.cs-handoff{
+  position:relative;display:grid;gap:10px;padding:clamp(28px,5vw,64px);border:1px solid var(--hair-2);border-radius:var(--r-lg);overflow:hidden;isolation:isolate;
+  background:rgba(var(--panel-rgb),.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:border-color .4s;
+}
+.cs-handoff::before{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .6s var(--ease-soft);
+  background:radial-gradient(90% 140% at 100% 100%,rgba(var(--ember-rgb),.2),transparent 62%);
+}
+.cs-handoff:hover{border-color:rgba(var(--ember-rgb),.55)}
+.cs-handoff:hover::before{opacity:1}
+.cs-handoff .k{font-family:var(--f-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+.cs-handoff .n{font-family:var(--f-display);font-stretch:112%;font-weight:640;font-size:clamp(2.4rem,7vw,6rem);letter-spacing:-.045em;line-height:.95;transition:transform .7s var(--ease-out)}
+.cs-handoff:hover .n{transform:translateX(12px)}
+.cs-handoff .h{font-family:var(--f-serif);font-style:italic;font-size:clamp(1.1rem,1.8vw,1.5rem);color:var(--ember);max-width:40ch;line-height:1.25}
+.cs-handoff .m{margin-top:10px;font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
+.cs-handoff .m b{font-family:var(--f-display);font-stretch:112%;font-weight:600;font-size:1.3rem;letter-spacing:-.02em;color:var(--text);margin-right:10px;text-transform:none}
+.cs-handoff .go{position:absolute;right:clamp(22px,4vw,56px);bottom:clamp(22px,4vw,52px);font-size:clamp(1.6rem,3vw,2.6rem);color:var(--ember);transition:transform .6s var(--ease-out)}
+.cs-handoff:hover .go{transform:translateX(10px)}
+.cs-end-row{display:flex;justify-content:space-between;margin-top:18px}

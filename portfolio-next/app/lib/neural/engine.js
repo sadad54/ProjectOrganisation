@@ -232,6 +232,8 @@ uniform float uFlutes;
 uniform float uGlass;
 uniform float uTime;
 uniform float uAspect;
+uniform float uWarmK;
+uniform float uCoolK;
 uniform vec3 uCool;
 uniform vec3 uEmber;
 uniform vec3 uWhite;
@@ -248,8 +250,9 @@ vec4 aurora(vec2 uv){
   float wash = exp(-dx * dx / 1.4) * 0.35;
   float cy = uv.y - 0.1;
   float core = exp(-dx * dx / 0.07) * exp(-cy * cy / 0.035);
-  float b = (column * 0.6 + wash * 0.22) * breathe;
-  float w = core * 0.5 * breathe;
+  // uCoolK / uWarmK: the time of day in Kuala Lumpur (see lib/daylight.js)
+  float b = (column * 0.6 + wash * 0.22) * breathe * uCoolK;
+  float w = core * 0.5 * breathe * uWarmK;
   vec3 col = uCool * b + uEmber * w;
   return vec4(col, max(b, w));
 }
@@ -432,6 +435,8 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uGlass: { value: 1 },
     uTime: { value: 0 },
     uAspect: { value: 1 },
+    uWarmK: { value: 1 },
+    uCoolK: { value: 1 },
     uCool: uniforms.uCool,
     uEmber: uniforms.uEmber,
     uWhite: uniforms.uWhite,
@@ -714,6 +719,12 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
         a[i * 4 + 3] = Math.max(0.06 + samples[k + 2] * 0.23, samples[k + 3]);
       }
       faceAttr.needsUpdate = true;
+    },
+    /** Time-of-day mood: `warm` (dawn/dusk) lifts the ember pool, `deep` (night) lowers the blue. */
+    setMood({ warm = 0, deep = 0 } = {}) {
+      glassU.uWarmK.value = 1 + warm * 0.9 - deep * 0.2;
+      glassU.uCoolK.value = 1 - deep * 0.28 - warm * 0.1;
+      if (reduced) staticFrame();
     },
     /** Hold (1) or release (0) the portrait over `ms`. */
     faceTo(v, ms = 0) {

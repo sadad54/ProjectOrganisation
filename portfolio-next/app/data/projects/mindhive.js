@@ -4,6 +4,8 @@ export default {
   year: '2025',
   kind: 'RAG + Text2SQL',
   hook: 'Five turns deep and still on topic.',
+  // which field formation sits behind this page (lib/neural/formations.js)
+  field: 2,
   headline: {
     metric: '36',
     label: 'documents in the RAG eval set · 85.0% Hit Rate@1 (MRR 0.8625)',

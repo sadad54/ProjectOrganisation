@@ -5,6 +5,7 @@ import Split from '../site/Split';
 import Magnetic from '../site/Magnetic';
 import { copyText } from '../../lib/toast';
 import { reducedMotionNow } from '../../lib/motion';
+import { daylight } from '../../lib/daylight';
 
 const EMAIL = 'adnanmashrursadad@gmail.com';
 
@@ -25,14 +26,18 @@ const REACH = [
 
 function useKLTime() {
   const [t, setT] = useState('');
+  const [phase, setPhase] = useState('');
   useEffect(() => {
     const f = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Kuala_Lumpur', hour: 'numeric', minute: '2-digit', hour12: true });
-    const paint = () => setT(f.format(new Date()).toLowerCase());
+    const paint = () => {
+      setT(f.format(new Date()).toLowerCase());
+      setPhase(daylight().phase);
+    };
     paint();
     const id = setInterval(paint, 30_000);
     return () => clearInterval(id);
   }, []);
-  return t;
+  return [t, phase];
 }
 
 /* OUT — the page ends where a model's forward pass ends: at an output.
@@ -40,7 +45,7 @@ function useKLTime() {
    the hero headline was generated), then hands the whole thing to the
    visitor's own mail client. Nothing is sent from this page. */
 export default function Contact() {
-  const time = useKLTime();
+  const [time, phase] = useKLTime();
   const [msg, setMsg] = useState('');
   const [subject, setSubject] = useState('Hello from your portfolio');
   const [streaming, setStreaming] = useState(false);
@@ -210,6 +215,11 @@ export default function Contact() {
             <div className="ct-clock rv">
               <span className="dot" aria-hidden="true" />
               Kuala Lumpur <span className="sep">·</span> <time suppressHydrationWarning>{time || '—'}</time> local{' '}
+              {phase && (
+                <>
+                  <span className="sep">·</span> <span suppressHydrationWarning>{phase}, and the sky here follows it</span>{' '}
+                </>
+              )}
               <span className="sep">·</span> GMT+8
             </div>
             <Magnetic className="btn ct-top" href="#top" data-cursor="Top">
