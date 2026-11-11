@@ -1,5 +1,6 @@
 import Split from '../site/Split';
 import { CORPUS } from '../../data/priors';
+import Glyph from './Glyph';
 
 /* Act C — the training corpus: the books, thinkers and off-hours things that
    moved the weights, set as a ledger in the work console's list language.
@@ -45,9 +46,12 @@ export default function Corpus() {
                       <h3 className="bw-name">{it.name}</h3>
                       <p className="bw-by">{it.by}</p>
                     </div>
-                    <p className="bw-k">
-                      <span>{it.k}</span>
-                    </p>
+                    <figure className="bw-fig">
+                      <Glyph name={it.g} />
+                      <figcaption className="bw-k">
+                        <span>{it.k}</span>
+                      </figcaption>
+                    </figure>
                     <p className="bw-says">{it.says}</p>
                   </li>
                 ))}

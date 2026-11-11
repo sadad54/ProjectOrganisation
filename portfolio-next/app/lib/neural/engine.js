@@ -22,6 +22,8 @@ uniform float uHover;
 uniform vec3 uShockO;
 uniform float uShockT;
 uniform float uVel;
+uniform float uFace;
+attribute vec4 aP;
 attribute vec3 aA2;
 attribute vec3 aB;
 attribute vec3 aC;
@@ -107,6 +109,15 @@ void main(){
 
   vec4 wp = modelMatrix * vec4(p, 1.0);
 
+  // the opening: every particle also has a place in a portrait (world space,
+  // sampled from the hero photo). uFace 1 → 0 lets them go, each on its own
+  // delay, arcing out to wherever the page wants them.
+  float fk = clamp(uFace * 1.7 - aR.z * 0.7, 0.0, 1.0);
+  fk = fk * fk * (3.0 - 2.0 * fk);
+  vec3 arc = vec3(sin(aR.x * 37.0 + uTime), cos(aR.x * 23.0 - uTime * 0.7), sin(aR.x * 51.0)) * sin(3.14159265 * fk) * (0.5 + aR.w);
+  wp.xyz = mix(wp.xyz, aP.xyz, fk) + arc;
+  heat = mix(heat, aP.w, fk);
+
   // the pointer is a query ray: nearby neurons move aside and light up
   vec3 v = wp.xyz - uRayO;
   vec3 c = uRayO + uRayD * dot(v, uRayD);
@@ -138,6 +149,7 @@ void main(){
   // in the sky each point stretches into a stroke laid along its orbit
   vDash = clamp(1.0 - abs(m - 8.0) * 1.5, 0.0, 1.0);
   size *= 1.0 + vDash * (1.9 + aR.x * 1.6);
+  size = mix(size, 1.15 + aR.x * 0.35, fk);
   gl_PointSize = uPx * size * (1.0 + hot * 0.8) * (10.0 / -mv.z);
 }
 `;
@@ -274,7 +286,8 @@ const lerp = (a, b, t) => a + (b - a) * t;
 // world x for a staging entry: its own, or (with `fx`) a fraction of the
 // half-width of the view at that depth
 let anchorX = null; // set by the page (data-field-x): overrides a staging entry's own fx
-const offX = (l, cam) => (l.fx == null ? l.off[0] : (anchorX ?? l.fx) * (cam.position.z - l.off[2]) * 0.36397 * cam.aspect);
+let baseZ = 10; // the camera's resting distance (it dollies in during a morph)
+const offX = (l, cam) => (l.fx == null ? l.off[0] : (anchorX ?? l.fx) * (baseZ - l.off[2]) * 0.36397 * cam.aspect);
 
 function lookAt(m, cam) {
   // interpolate the staging table at fractional formation index m
@@ -332,6 +345,8 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
   geo.setAttribute('aFH', new THREE.BufferAttribute(F.FH, 4));
   geo.setAttribute('aH0', new THREE.BufferAttribute(F.H0, 4));
   geo.setAttribute('aR', new THREE.BufferAttribute(F.R, 4));
+  const faceAttr = new THREE.BufferAttribute(new Float32Array(N * 4), 4);
+  geo.setAttribute('aP', faceAttr);
   geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 30);
 
   const uniforms = {
@@ -346,6 +361,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uShockO: { value: new THREE.Vector3(0, 0, 0) },
     uShockT: { value: 1 },
     uVel: { value: 0 },
+    uFace: { value: 0 },
     uCool: { value: new THREE.Color(...unit(PALETTE.cool)) },
     uEmber: { value: new THREE.Color(...unit(PALETTE.ember)) },
     uWhite: { value: new THREE.Color(0.94, 0.97, 1) },
@@ -443,6 +459,14 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
 
   // ---- state ----
   const S = {
+    face: 0, // 1 = particles hold the portrait, 0 = released
+    faceFrom: 0,
+    faceTo: 0,
+    faceT0: 0,
+    faceMs: 0,
+    baseZ: 10,
+    dolly: 0,
+    lastMorph: 0,
     target: 0, // formation index the page asks for
     morph: 0,
     dimMul: 1, // page-level dimming (e.g. behind the work console)
@@ -473,7 +497,8 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     renderer.setSize(w, h, false);
     camera.aspect = w / Math.max(h, 1);
     // keep the formations' horizontal extent on narrow screens
-    camera.position.z = camera.aspect < 1 ? 10 + (1 - camera.aspect) * 9 : 10;
+    S.baseZ = camera.aspect < 1 ? 10 + (1 - camera.aspect) * 9 : 10;
+    camera.position.z = S.baseZ - S.dolly;
     camera.updateProjectionMatrix();
     target.setSize(Math.round(w * dpr), Math.round(h * dpr));
     glassU.uFlutes.value = w / fluteW;
@@ -509,6 +534,23 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     if (Math.abs(S.target - S.morph) < 0.0005) S.morph = S.target;
     S.dimMul += (S.dimTarget - S.dimMul) * (1 - Math.exp(-dt * 3));
 
+    // the portrait's release runs on its own clock
+    if (S.faceMs > 0) {
+      const u = Math.min(1, (now - S.faceT0) / S.faceMs);
+      const e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      S.face = S.faceFrom + (S.faceTo - S.faceFrom) * e;
+      if (u >= 1) S.faceMs = 0;
+    }
+    uniforms.uFace.value = S.face;
+
+    // a morph is also a camera move: push in while the particles travel,
+    // settle back as they land
+    const speed = Math.abs(S.morph - S.lastMorph) / Math.max(dt, 1e-3);
+    S.lastMorph = S.morph;
+    S.dolly += (Math.min(1, speed * 0.55) * 1.25 - S.dolly) * (1 - Math.exp(-dt * 2.6));
+    baseZ = S.baseZ;
+    camera.position.z = S.baseZ - S.dolly;
+
     const look = lookAt(S.morph, camera);
     S.ex += (S.mx - S.ex) * (1 - Math.exp(-dt * 5));
     S.ey += (S.my - S.ey) * (1 - Math.exp(-dt * 5));
@@ -528,10 +570,11 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
 
     uniforms.uTime.value = S.t;
     glassU.uTime.value = S.t;
-    glassU.uGlass.value = S.dimMul * look.glass;
+    // the portrait is read through nearly clear glass, or the flutes smear it
+    glassU.uGlass.value = S.dimMul * look.glass * (1 - 0.75 * S.face);
     uniforms.uMorph.value = S.morph;
     uniforms.uDim.value = look.dim * S.dimMul;
-    synapseU.uA.value = synapseAlpha(S.morph) * look.dim * S.dimMul;
+    synapseU.uA.value = synapseAlpha(S.morph) * look.dim * S.dimMul * (1 - S.face);
     landU.uA.value = landAlpha(S.morph) * look.dim * S.dimMul;
     brainU.uA.value = brainAlpha(S.morph) * look.dim * S.dimMul;
     uniforms.uHover.value = S.hover;
@@ -652,6 +695,38 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     /** where an `fx` formation sits: -1 (left edge) .. 1 (right edge), or null for its default */
     setAnchor(v) {
       anchorX = v == null || Number.isNaN(v) ? null : v;
+    },
+    /** Give every particle a place in a portrait. `samples` is [u, v, lum, warm] per
+     *  point (image space, 0..1); `rect` is where that image sits on screen. */
+    setFace(samples, rect) {
+      const halfH = S.baseZ * 0.36397,
+        halfW = halfH * camera.aspect;
+      const a = faceAttr.array;
+      const n = samples.length / 4;
+      for (let i = 0; i < N; i++) {
+        const k = (i % n) * 4;
+        const x = rect.left + samples[k] * rect.width,
+          y = rect.top + samples[k + 1] * rect.height;
+        a[i * 4] = ((x / window.innerWidth) * 2 - 1) * halfW;
+        a[i * 4 + 1] = -((y / window.innerHeight) * 2 - 1) * halfH;
+        a[i * 4 + 2] = samples[k + 2] * 0.35;
+        // lit skin stays cool and bright by luminance; the rim light runs hot
+        a[i * 4 + 3] = Math.max(0.06 + samples[k + 2] * 0.23, samples[k + 3]);
+      }
+      faceAttr.needsUpdate = true;
+    },
+    /** Hold (1) or release (0) the portrait over `ms`. */
+    faceTo(v, ms = 0) {
+      if (reduced) return;
+      if (ms <= 0) {
+        S.face = S.faceTo = v;
+        S.faceMs = 0;
+        return;
+      }
+      S.faceFrom = S.face;
+      S.faceTo = v;
+      S.faceT0 = performance.now();
+      S.faceMs = ms;
     },
     /** 0..1 page-level dimming multiplier */
     setDim(v) {

@@ -68,7 +68,8 @@ tensor, a brain (two hemispheres; its outline and folds are also drawn as 1px st
 Van Gogh, where each particle is drawn as a brush stroke along its orbit. The vertex shader blends between formations, so a morph costs one uniform write per frame.
 Sections pick a formation with `data-field="<n>"` (and optionally `data-field-dim`, and `data-field-x` to place a
 screen-anchored formation at an exact horizontal position, -1 to 1). The pointer is a
-query ray, and clicks send a shockwave. Frame times are monitored and quality drops once if a device
+query ray, and clicks send a shockwave. On first paint the particles hold a portrait sampled from the hero
+photo (`face.js`), then release into the network; every morph also pushes the camera in slightly. Frame times are monitored and quality drops once if a device
 struggles. The field pauses when the tab is hidden.
 
 ### The work console (`components/work/`)

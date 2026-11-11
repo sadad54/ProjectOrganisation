@@ -79,6 +79,42 @@ export default function Hero() {
     };
   }, []);
 
+  // The opening: the field's particles hold the portrait, then let go into the
+  // network while the photograph itself wipes in over them. Top of the page
+  // only, motion allowed only, and skipped silently if anything is missing.
+  useEffect(() => {
+    if (reducedMotionNow() || window.scrollY > window.innerHeight * 0.4) return;
+    let dead = false,
+      stop = () => {},
+      t = 0;
+    const begin = async () => {
+      const field = window.__field;
+      const box = root.current?.querySelector('.hero-portrait');
+      if (!field?.setFace || !box) return;
+      try {
+        const { sampleFace } = await import('../../lib/neural/face');
+        const pts = await sampleFace('/assets/portrait-hero-rim-light.webp', field.stats.particles);
+        if (dead || window.scrollY > window.innerHeight * 0.4) return;
+        field.setFace(pts, box.getBoundingClientRect());
+        field.faceTo(1);
+        stop = whenStageReady(() => {
+          t = setTimeout(() => field.faceTo(0, 3000), 1100);
+        });
+      } catch {
+        /* no portrait opening: the hero is complete without it */
+      }
+    };
+    if (window.__field) begin();
+    else window.addEventListener('field:ready', begin, { once: true });
+    return () => {
+      dead = true;
+      stop();
+      clearTimeout(t);
+      window.removeEventListener('field:ready', begin);
+      window.__field?.faceTo?.(0);
+    };
+  }, []);
+
   // the italic run's gradient: one sweep per visual line, sliced per token
   useEffect(() => {
     const h = root.current.querySelector('.hero-h');

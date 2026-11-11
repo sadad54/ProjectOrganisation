@@ -50,7 +50,8 @@ export const PAIRS = [
   },
 ];
 
-/* Act C — the training corpus. `k` is the mono tag: the weight it updated. */
+/* Act C — the training corpus. `k` is the mono tag: the weight it updated.
+   `g` names the entry's own mark (components/backward/Glyph.jsx). */
 export const CORPUS = [
   {
     group: 'Books',
@@ -59,18 +60,21 @@ export const CORPUS = [
         name: 'Psycho-Cybernetics',
         by: 'Maxwell Maltz · 1960',
         k: 'objective',
+        g: 'servo',
         says: 'The book that made me treat my own goals as a control problem: set the target, watch the error, correct.',
       },
       {
         name: 'The Power of Your Subconscious Mind',
         by: 'Joseph Murphy · 1963',
         k: 'latent space',
+        g: 'strata',
         says: 'What you repeat is what gets stored. I became careful about what I repeat.',
       },
       {
         name: 'Atomic Habits',
         by: 'James Clear · 2018',
         k: 'learning rate',
+        g: 'steps',
         says: 'Small updates applied every day beat one heroic rewrite. It is the only training schedule I have seen work.',
       },
     ],
@@ -82,30 +86,35 @@ export const CORPUS = [
         name: 'Imam al-Ghazali',
         by: 'Ihya’ ʿUlum al-Din',
         k: 'evaluation',
+        g: 'tally',
         says: 'Knowing something and acting on it are different skills. He is the reason I measure the second one.',
       },
       {
         name: 'Rumi',
         by: 'Masnavi, Book I',
         k: 'denoising',
+        g: 'polish',
         says: 'In his story of the two groups of painters, the winners paint nothing. They polish their wall until it reflects. Taking the noise away is also a way of making something.',
       },
       {
         name: 'Marcus Aurelius',
         by: 'Meditations',
         k: 'logging',
+        g: 'log',
         says: 'A private notebook, never meant for readers: an emperor debugging himself in writing, one entry at a time.',
       },
       {
         name: 'Naval Ravikant',
         by: 'How to Get Rich, 2018',
         k: 'compounding',
+        g: 'chain',
         says: 'Long-term games with long-term people. The curve is the same whether it is skill, trust or money.',
       },
       {
         name: 'Nero Knowledge',
         by: 'YouTube',
         k: 'discipline',
+        g: 'metronome',
         says: 'The channel that got me reading about discipline and the psychology under it in the first place.',
       },
     ],
@@ -117,18 +126,21 @@ export const CORPUS = [
         name: 'Vincent van Gogh',
         by: 'The Starry Night · 1889',
         k: 'this sky',
+        g: 'swirl',
         says: 'He painted the night the way it felt instead of the way it measured. The sky turning behind these cards is my attempt at his brushwork, in particles.',
       },
       {
         name: 'Real Madrid',
         by: 'Football',
         k: 'known bias',
+        g: 'clock',
         says: 'It is not over at ninety minutes. I have watched that be true too many times to stop believing it.',
       },
       {
         name: 'Ezio & Altaïr · Ragnar · Jax Teller',
         by: 'Assassin’s Creed · Vikings · Sons of Anarchy',
         k: 'fiction',
+        g: 'leap',
         says: 'Characters who live by a code and pay what it costs. I notice I only like the ones who keep learning.',
       },
     ],
