@@ -366,8 +366,8 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     uVel: { value: 0 },
     uFace: { value: 0 },
     uCool: { value: new THREE.Color(...unit(PALETTE.cool)) },
-    uEmber: { value: new THREE.Color(...unit(PALETTE.ember)) },
-    uWhite: { value: new THREE.Color(0.94, 0.97, 1) },
+    uEmber: { value: new THREE.Color(...unit(PALETTE.signal)) },
+    uWhite: { value: new THREE.Color(1, 0.97, 0.9) },
     uSun: { value: new THREE.Color(...unit(PALETTE.sun)) },
   };
   const mat = new THREE.ShaderMaterial({
@@ -754,7 +754,7 @@ export function createNeuralField(canvas, { reduced = false } = {}) {
     },
     /** briefly repaint the field's lit particles in another colour ([r,g,b] 0-255) */
     flash(rgb, ms = 2600) {
-      const home = new THREE.Color(...unit(PALETTE.ember));
+      const home = new THREE.Color(...unit(PALETTE.signal));
       uniforms.uEmber.value.setRGB(...unit(rgb));
       clearTimeout(S.flashT);
       S.flashT = setTimeout(() => {

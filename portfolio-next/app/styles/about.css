@@ -15,14 +15,14 @@
 .about-photo:hover img{filter:saturate(1) contrast(1.04) brightness(.97)}
 .scanline{
   position:absolute;left:0;right:0;top:0;height:22%;pointer-events:none;
-  background:linear-gradient(180deg,transparent,rgba(var(--ember-rgb),.08) 70%,rgba(var(--ember-rgb),.5) 99%,transparent);
+  background:linear-gradient(180deg,transparent,rgba(var(--signal-rgb),.08) 70%,rgba(var(--signal-rgb),.5) 99%,transparent);
   transform:translateY(-110%);opacity:0;
 }
 .about-photo[data-in] .scanline{animation:scan 1.5s var(--ease-in-out) .2s both}
 @keyframes scan{0%{transform:translateY(-110%);opacity:1}90%{opacity:1}100%{transform:translateY(480%);opacity:0}}
 .bbox{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .bb rect{fill:none;stroke:var(--cool);stroke-width:2.4;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1}
-.bb.hot rect{stroke:var(--ember)}
+.bb.hot rect{stroke:var(--signal)}
 .about-photo[data-in] .bb rect{animation:drawBox 1s var(--ease-out) both;animation-delay:calc(1.1s + var(--k) * .22s)}
 @keyframes drawBox{to{stroke-dashoffset:0}}
 .bb-tag{
@@ -32,12 +32,12 @@
   opacity:0;
 }
 .bb-tag b{font-weight:500;margin-left:4px}
-.bb-tag.hot{background:var(--ember)}
+.bb-tag.hot{background:var(--signal)}
 .about-photo[data-in] .bb-tag{animation:tagIn .5s var(--ease-out) both;animation-delay:calc(1.55s + var(--k) * .22s)}
 @keyframes tagIn{from{opacity:0;transform:translateY(-60%)}to{opacity:1;transform:translateY(-100%)}}
 .about-cap{
   display:flex;justify-content:space-between;gap:12px;margin-top:12px;
-  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);
 }
 .about-cap span:first-child{color:var(--text-2)}
 
@@ -49,17 +49,17 @@
 }
 .card::after{
   /* indexing sweep when the card first reveals */
-  content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--ember);
-  box-shadow:0 0 18px 2px rgba(var(--ember-rgb),.45);opacity:0;pointer-events:none;
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--signal);
+  box-shadow:0 0 18px 2px rgba(var(--signal-rgb),.45);opacity:0;pointer-events:none;
 }
 .card[data-in]::after{animation:cardSweep 1.6s var(--ease-in-out) .35s both}
 @keyframes cardSweep{0%{opacity:1;transform:translateY(0)}92%{opacity:1}100%{opacity:0;transform:translateY(var(--card-h,620px))}}
 .card-head,.card-foot{
   display:flex;justify-content:space-between;gap:12px;padding:14px 20px;
-  font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);
 }
 .card-head{border-bottom:1px solid var(--hair)}
-.card-head b{font-weight:500;color:var(--ember)}
+.card-head b{font-weight:500;color:var(--signal)}
 .card-foot{border-top:1px solid var(--hair);justify-content:flex-start;gap:8px}
 .card-foot .ok{color:var(--pass)}
 .card-rows{margin:0;padding:6px 0}
@@ -69,10 +69,10 @@
   transition:background-color .25s;
 }
 .card-row:last-child{border-bottom:0}
-.card-row:hover{background:rgba(var(--ember-rgb),.045)}
-.card-row dt{font-family:var(--f-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);padding-top:2px}
+.card-row:hover{background:rgba(var(--signal-rgb),.045)}
+.card-row dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);padding-top:2px}
 .card-row dd{margin:0;font-size:.95rem;line-height:1.45;color:var(--text)}
-.card-row:hover dt{color:var(--ember)}
+.card-row:hover dt{color:var(--signal)}
 .js .card .card-row{opacity:0;transform:translate3d(-8px,0,0)}
 .card[data-in] .card-row{opacity:1;transform:none;transition:opacity .5s var(--ease-soft),transform .7s var(--ease-out),background-color .25s;transition-delay:calc(.45s + var(--r) * 70ms)}
 @media (max-width:560px){.card-row{grid-template-columns:1fr;gap:4px}}

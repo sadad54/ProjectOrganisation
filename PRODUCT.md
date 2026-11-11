@@ -43,7 +43,7 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 ## Brand Commitments
 
 - Name/byline: "ADNAN M. SADAD" / "AI / Data / Full Stack".
-- Visual system: see `DESIGN.md` ("Activation", 2026-09-27) — midnight `#02070A` ground, one ember signal `#FF6A2B`, cool/pass/fail reserved for data, Archivo + Instrument Serif italic + Instrument Sans + Geist Mono.
+- Visual system: see `DESIGN.md` ("Nocturne", 2026-11-11) — ultramarine night `#060A1D` ground, one lamp-yellow signal `#F5B83D`, cool/pass/fail reserved for data, Newsreader (roman and italic) + Source Sans 3 + IBM Plex Mono. The palette is taken from The Starry Night.
 - Contact: adnanmashrursadad@gmail.com, LinkedIn (`adnan-mashrur-sadad-87a45b237`), GitHub (`sadad54`). Phone number removed from the site (2026-08-06).
 
 ## Evidence on Hand

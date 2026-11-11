@@ -23,11 +23,11 @@
 .dec-tab:hover{border-color:var(--hair-3)}
 .dt-n{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--text-3);transition:color .3s}
 .dt-t{font-size:.86rem;font-weight:500;line-height:1.25;color:var(--text-2);transition:color .3s}
-.dt-k{font-family:var(--f-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.dt-k{font-family:var(--f-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
 .dt-bar{position:absolute;left:12px;right:12px;bottom:8px;height:1px;background:var(--hair-2);overflow:hidden}
-.fill{position:absolute;inset:0;background:var(--ember);transform-origin:left;transform:scaleX(0)}
-.dec-tab.on{border-color:rgba(var(--ember-rgb),.55);background:rgba(var(--ember-rgb),.07)}
-.dec-tab.on .dt-n{color:var(--ember)}
+.fill{position:absolute;inset:0;background:var(--signal);transform-origin:left;transform:scaleX(0)}
+.dec-tab.on{border-color:rgba(var(--signal-rgb),.55);background:rgba(var(--signal-rgb),.07)}
+.dec-tab.on .dt-n{color:var(--signal)}
 .dec-tab.on .dt-t,.dec-tab.done .dt-t{color:var(--text)}
 .dec-tab.done .dt-n{color:var(--pass)}
 @media (max-width:1180px){.dec-head{grid-template-columns:1fr}.dec-title{max-width:none}}
@@ -50,12 +50,12 @@
 .scene-copy{min-width:0}
 .scene-eyebrow{
   display:flex;align-items:center;gap:10px;margin:0 0 14px;
-  font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ember);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--signal);
 }
-.scene-eyebrow::before{content:"";width:18px;height:1px;background:var(--ember)}
+.scene-eyebrow::before{content:"";width:18px;height:1px;background:var(--signal)}
 .scene-h{
-  font-family:var(--f-display);font-stretch:106%;font-weight:620;
-  font-size:clamp(1.45rem,2.3vw,2.2rem);line-height:1.08;letter-spacing:-.03em;margin:0 0 14px;max-width:22ch;
+  font-family:var(--f-display);font-weight:500;
+  font-size:clamp(1.45rem,2.3vw,2.2rem);line-height:1.08;letter-spacing:-.022em;margin:0 0 14px;max-width:22ch;
 }
 .scene-body{color:var(--text-2);font-size:.97rem;line-height:1.6;max-width:50ch;margin:0 0 18px}
 .scene-body strong{color:var(--text);font-weight:500}
@@ -65,7 +65,7 @@
   padding:14px 16px;font-family:var(--f-mono);font-size:11px;line-height:1.8;color:var(--text-2);overflow-x:auto;
 }
 .slab .c{color:var(--text-3)}
-.slab .k{color:var(--ember)}
+.slab .k{color:var(--signal)}
 .slab .s{color:var(--cool)}
 .slab .r{color:var(--fail)}
 .scene-slab{margin:0 0 16px}
@@ -89,8 +89,8 @@
 .scene-evidence .scene-svg,.scene-stage .scene-svg[viewBox="0 0 560 400"]{max-height:min(46vh,380px);margin-inline:auto}
 .node rect{fill:var(--s2);stroke:var(--hair-3);stroke-width:1;transition:stroke .45s,fill .45s}
 .node text{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;fill:var(--text-2);text-transform:uppercase;transition:fill .45s}
-.node.act rect{stroke:var(--ember);fill:rgba(var(--ember-rgb),.1)}
-.node.act text{fill:var(--ember)}
+.node.act rect{stroke:var(--signal);fill:rgba(var(--signal-rgb),.1)}
+.node.act text{fill:var(--signal)}
 .node.bad rect{stroke:var(--fail);fill:rgba(var(--fail-rgb),.1)}
 .node.bad text{fill:var(--fail)}
 .node.good rect{stroke:var(--pass);fill:rgba(var(--pass-rgb),.1)}
@@ -98,23 +98,23 @@
 .node.pulsing rect{animation:nodePulse 1.2s ease-in-out infinite}
 @keyframes nodePulse{0%,100%{opacity:.55}50%{opacity:1}}
 .wire{fill:none;stroke:var(--hair-3);stroke-width:1.2}
-.flow{fill:none;stroke:var(--ember);stroke-width:1.8;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(var(--ember-rgb),.6))}
+.flow{fill:none;stroke:var(--signal);stroke-width:1.8;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(var(--signal-rgb),.6))}
 .flow.rep{stroke:var(--fail);filter:drop-shadow(0 0 4px rgba(var(--fail-rgb),.6))}
 .flow.ok{stroke:var(--pass);filter:drop-shadow(0 0 4px rgba(var(--pass-rgb),.6))}
 .wire-lbl{font-family:var(--f-mono);font-size:8.5px;letter-spacing:.14em;fill:var(--text-3);text-transform:uppercase}
-.scene-badge{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase}
+.scene-badge{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase}
 .scene-badge.bad{fill:var(--fail)}
 .scene-progress{margin-top:20px;height:2px;background:var(--hair-2);border-radius:2px;overflow:hidden}
-.scene-progress span{display:block;height:100%;background:var(--ember);transform-origin:left;transform:scaleX(0)}
-.scene-note{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin:14px 0 0}
+.scene-progress span{display:block;height:100%;background:var(--signal);transform-origin:left;transform:scaleX(0)}
+.scene-note{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);margin:14px 0 0}
 .scene-bars{display:flex;align-items:flex-end;gap:6px;height:96px;margin-top:18px}
-.scene-bar{flex:1;background:linear-gradient(180deg,var(--ember),rgba(var(--ember-rgb),.35));border-radius:2px 2px 0 0;min-height:6px}
+.scene-bar{flex:1;background:linear-gradient(180deg,var(--signal),rgba(var(--signal-rgb),.35));border-radius:2px 2px 0 0;min-height:6px}
 .scene-drift-value{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
 .scene-drift-num{
-  font-family:var(--f-display);font-stretch:112%;font-weight:600;font-size:clamp(1.6rem,2.6vw,2.4rem);
-  letter-spacing:-.03em;line-height:1;color:var(--text);font-variant-numeric:tabular-nums;
+  font-family:var(--f-display);font-weight:500;font-size:clamp(1.6rem,2.6vw,2.4rem);
+  letter-spacing:-.022em;line-height:1;color:var(--text);font-variant-numeric:tabular-nums;
 }
-.scene-drift-k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+.scene-drift-k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
 
 @media (max-height:760px){
   .scene-slab{display:none}
@@ -136,7 +136,7 @@
   .scene-stage:has(.scene-svg[viewBox="0 0 900 210"])::after,
   .scene-stage:has(.scene-svg[viewBox="0 0 560 400"])::after{
     content:"swipe the diagram →";display:block;margin-top:10px;
-    font-family:var(--f-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);
+    font-family:var(--f-mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);
     position:sticky;left:0;
   }
 }

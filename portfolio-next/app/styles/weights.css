@@ -13,14 +13,14 @@
 .wt-e{fill:none;stroke:rgba(var(--text-rgb),.085);stroke-width:1;transition:opacity .3s,stroke .3s}
 .wt.is-active .wt-e{opacity:.25}
 .wt-e.hot,.wt-e.cool{opacity:1!important;stroke-width:1.3;stroke-dasharray:1;stroke-dashoffset:1;animation:wtDraw .7s var(--ease-out) forwards}
-.wt-e.hot{stroke:var(--ember);filter:drop-shadow(0 0 3px rgba(var(--ember-rgb),.7))}
+.wt-e.hot{stroke:var(--signal);filter:drop-shadow(0 0 3px rgba(var(--signal-rgb),.7))}
 .wt-e.cool{stroke:var(--cool);filter:drop-shadow(0 0 3px rgba(var(--cool-rgb),.6))}
 @keyframes wtDraw{to{stroke-dashoffset:0}}
 
 .wt-skills{position:relative;z-index:1}
 .wt-group{margin-bottom:22px}
 .wt-group:last-of-type{margin-bottom:14px}
-.wt-gname{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
+.wt-gname{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
 .wt-group ul{display:flex;flex-wrap:wrap;gap:6px}
 .wt-s{
   display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 10px;border-radius:var(--r-xs);
@@ -28,13 +28,13 @@
   transition:border-color .25s,color .25s,background-color .25s,opacity .3s;
 }
 .wt-s i{font-style:normal;font-family:var(--f-mono);font-size:9px;color:var(--text-3)}
-.wt-s:hover,.wt-s.lit{border-color:rgba(var(--ember-rgb),.8);color:var(--text);background:rgba(var(--ember-rgb),.12)}
-.wt-s.lit i{color:var(--ember)}
-.wt-s.pin{box-shadow:0 0 0 3px rgba(var(--ember-rgb),.2)}
+.wt-s:hover,.wt-s.lit{border-color:rgba(var(--signal-rgb),.8);color:var(--text);background:rgba(var(--signal-rgb),.12)}
+.wt-s.lit i{color:var(--signal)}
+.wt-s.pin{box-shadow:0 0 0 3px rgba(var(--signal-rgb),.2)}
 .wt-s.zero{opacity:.5}
 .wt.is-active .wt-s:not(.lit){opacity:.32}
 .wt-also{font-size:.82rem;color:var(--text-3);line-height:1.6;max-width:70ch}
-.wt-also span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;margin-right:8px}
+.wt-also span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;margin-right:8px}
 
 .wt-projects{position:relative;z-index:1;display:flex;flex-direction:column;gap:2px}
 .wt-p{

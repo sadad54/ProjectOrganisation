@@ -12,20 +12,22 @@ import './styles/backward.css';
 import './styles/contact.css';
 import './styles/project.css';
 import './styles/polish.css';
-import { Archivo, Instrument_Sans, Instrument_Serif, Geist_Mono } from 'next/font/google';
+import { Newsreader, Source_Sans_3, IBM_Plex_Mono } from 'next/font/google';
 import Providers from './components/site/Providers';
 
 // Self-hosted at build time: no request to Google at runtime, no render-
 // blocking stylesheet, and size-adjusted fallbacks so text doesn't jump when
 // the real faces arrive. tokens.css reads these variables.
-const archivo = Archivo({ subsets: ['latin'], axes: ['wdth'], display: 'swap', variable: '--font-archivo' });
-const instrumentSans = Instrument_Sans({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap', variable: '--font-instrument-sans' });
-const instrumentSerif = Instrument_Serif({ subsets: ['latin'], weight: '400', style: ['normal', 'italic'], display: 'swap', variable: '--font-instrument-serif' });
-const geistMono = Geist_Mono({ subsets: ['latin'], weight: ['400', '500'], display: 'swap', variable: '--font-geist-mono' });
-const FONTS = [archivo, instrumentSans, instrumentSerif, geistMono].map((f) => f.variable).join(' ');
+//   Newsreader     — headlines, and their emphasis in its own italic
+//   Source Sans 3  — everything meant to be read
+//   IBM Plex Mono  — data, code and measurements only
+const newsreader = Newsreader({ subsets: ['latin'], axes: ['opsz'], style: ['normal', 'italic'], display: 'swap', variable: '--font-newsreader' });
+const sourceSans = Source_Sans_3({ subsets: ['latin'], display: 'swap', variable: '--font-source-sans' });
+const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], display: 'swap', variable: '--font-plex-mono' });
+const FONTS = [newsreader, sourceSans, plexMono].map((f) => f.variable).join(' ');
 
 export const viewport = {
-  themeColor: '#02070A',
+  themeColor: '#060A1D',
 };
 
 // Share previews need absolute image URLs. Vercel supplies its own deployment
@@ -44,7 +46,7 @@ export const metadata = {
     type: 'website',
   },
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2302070A'/><path d='M14 44 L32 18 L50 44 M14 44 H50' stroke='%23FF6A2B' stroke-width='3' fill='none'/><circle cx='14' cy='44' r='5' fill='%23FF6A2B'/><circle cx='32' cy='18' r='5' fill='%23EAF1F6'/><circle cx='50' cy='44' r='5' fill='%23FF6A2B'/></svg>",
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23060A1D'/><path d='M14 44 L32 18 L50 44 M14 44 H50' stroke='%23F5B83D' stroke-width='3' fill='none'/><circle cx='14' cy='44' r='5' fill='%23F5B83D'/><circle cx='32' cy='18' r='5' fill='%23F3EEE1'/><circle cx='50' cy='44' r='5' fill='%23F5B83D'/></svg>",
   },
 };
 

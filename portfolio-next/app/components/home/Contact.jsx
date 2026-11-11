@@ -217,7 +217,7 @@ export default function Contact() {
               Kuala Lumpur <span className="sep">·</span> <time suppressHydrationWarning>{time || '—'}</time> local{' '}
               {phase && (
                 <>
-                  <span className="sep">·</span> <span suppressHydrationWarning>{phase}, and the sky here follows it</span>{' '}
+                  <span className="sep">·</span> <span suppressHydrationWarning title="The background follows the time of day here">{phase}</span>{' '}
                 </>
               )}
               <span className="sep">·</span> GMT+8

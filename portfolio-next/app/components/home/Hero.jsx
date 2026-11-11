@@ -112,6 +112,7 @@ export default function Hero() {
     if (reducedMotionNow() || window.scrollY > window.innerHeight * 0.4) return;
     let dead = false,
       stop = () => {},
+      bail = () => {},
       t = 0;
     const begin = async () => {
       const field = window.__field;
@@ -123,6 +124,16 @@ export default function Hero() {
         if (dead || window.scrollY > window.innerHeight * 0.4) return;
         field.setFace(pts, box.getBoundingClientRect());
         field.faceTo(1);
+        // the portrait is pinned to the screen, not the page: if the reader
+        // scrolls on before it has let go, release it at once
+        bail = () => {
+          if (window.scrollY > window.innerHeight * 0.35) {
+            clearTimeout(t);
+            field.faceTo(0, 500);
+            window.removeEventListener('scroll', bail);
+          }
+        };
+        window.addEventListener('scroll', bail, { passive: true });
         stop = whenStageReady(() => {
           t = setTimeout(() => {
             field.faceTo(0, 3000);
@@ -139,6 +150,7 @@ export default function Hero() {
       dead = true;
       stop();
       clearTimeout(t);
+      window.removeEventListener('scroll', bail);
       window.removeEventListener('field:ready', begin);
       window.__field?.faceTo?.(0);
     };

@@ -1,11 +1,11 @@
 /* =========================================================================
-   TOKENS — "Activation"
-   Midnight ground, electric-blue atmosphere, one warm signal. The palette
-   borrows its logic from an activation map: almost everything sits cold
-   and blue, and the few things that are live (hovered, selected, firing,
-   the number that matters) run hot. Ember is the only UI accent and should
-   stay rare — blue owns the room. Cool is data-only (the neural field,
-   diagram structure). Pass / fail are diagram semantics, never chrome.
+   TOKENS — "Nocturne"
+   The palette is taken from one painting, The Starry Night: a deep
+   ultramarine night for the ground, lamp yellow for the one signal, warm
+   paper white for text, cerulean for data. The logic is unchanged from the
+   system it replaces: almost everything sits in the cold night, and the few
+   things that are live (hovered, selected, firing, the number that matters)
+   are lit. The signal stays rare.
 
    The JS-driven layers (neural field, denoise stage) read the same values
    from app/lib/palette.js — keep the two in step.
@@ -13,64 +13,65 @@
 :root{
   color-scheme:dark;
 
-  /* ground + surfaces (midnight steps, faintly blue) */
-  --void:#02070A;
-  --void-rgb:2,7,10;
-  --s1:#08111A;
-  --s1-rgb:8,17,26;
-  --s2:#0D1722;
-  --s2-rgb:13,23,34;
-  --s3:#131F2B;
-  --s4:#1A2734;
+  /* ground + surfaces (steps of ultramarine night) */
+  --void:#060A1D;
+  --void-rgb:6,10,29;
+  --s1:#0A102A;
+  --s1-rgb:10,16,42;
+  --s2:#0F1735;
+  --s2-rgb:15,23,53;
+  --s3:#151F42;
+  --s4:#1C2850;
   /* translucent panel fill over the field (cards, consoles, composer) */
-  --panel-rgb:5,12,18;
+  --panel-rgb:7,11,30;
 
-  /* text (cool white — no warm cream) */
-  --text:#EAF1F6;
-  --text-rgb:234,241,246;
-  --text-2:#9DA9B4;   /* ~8:1 on --void */
-  --text-3:#7C8894;   /* ~5.3:1 on --void — the floor for small mono labels */
+  /* text (warm paper white, as if read by lamplight) */
+  --text:#F3EEE1;
+  --text-rgb:243,238,225;
+  --text-2:#B0B3C6;   /* 9.5:1 on --void; tinted from the ground's blue, not grey */
+  --text-3:#8A8EAB;   /* 6.1:1 on --void, 5.5:1 on --s2 — the floor for small labels */
 
   /* hairlines are neutral, never tinted */
-  --hair:rgba(234,241,246,.08);
-  --hair-2:rgba(234,241,246,.14);
-  --hair-3:rgba(234,241,246,.22);
+  --hair:rgba(243,238,225,.08);
+  --hair-2:rgba(243,238,225,.14);
+  --hair-3:rgba(243,238,225,.22);
 
-  /* the signal (ignition orange): a true orange, not coral, so it holds
-     its own against the electric blue. The lit pair is for the two places
-     that glow: the headline's italic and the active rail node. */
-  --ember:#FF6A2B;
-  --ember-rgb:255,106,43;
-  --ember-hi:#FF8A4C;
-  --ember-lo:#E5521A;
-  --ember-lit-a:#FF5A1F;
-  --ember-lit-b:#FFB25C;
+  /* the signal (lamp yellow): the lit windows and stars against the night.
+     The lit pair is for the one place that glows, the active rail node. */
+  --signal:#F5B83D;
+  --signal-rgb:245,184,61;
+  --signal-hi:#FBD068;
+  --signal-lo:#D9982A;
+  --signal-lit-a:#EE9F36;
+  --signal-lit-b:#FBE08A;
 
   /* data-only hues */
-  --cool:#0297DE;
-  --cool-rgb:2,151,222;
-  --pass:#52E3A8;
-  --pass-rgb:82,227,168;
-  --sun:#F2C14E;      /* client web domain */
-  --sun-rgb:242,193,78;
-  --fail:#FF5470;
-  --fail-rgb:255,84,112;
+  --cool:#4F9BE6;
+  --cool-rgb:79,155,230;
+  --pass:#63DBA6;
+  --pass-rgb:99,219,166;
+  --sun:#F6DF9A;      /* starlight: the corpus sky and its tags */
+  --sun-rgb:246,223,154;
+  --rose:#E08A9B;     /* client web domain */
+  --rose-rgb:224,138,155;
+  --fail:#FF6B7A;
+  --fail-rgb:255,107,122;
 
   /* type */
-  --f-display:var(--font-archivo),"Archivo","Helvetica Neue",Arial,sans-serif;
-  --f-serif:var(--font-instrument-serif),"Instrument Serif",Georgia,"Times New Roman",serif;
-  --f-body:var(--font-instrument-sans),"Instrument Sans","Helvetica Neue",Arial,sans-serif;
-  --f-mono:var(--font-geist-mono),"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-display:var(--font-newsreader),"Newsreader","Iowan Old Style",Georgia,serif;
+  --f-serif:var(--font-newsreader),"Newsreader","Iowan Old Style",Georgia,serif;
+  --f-body:var(--font-source-sans),"Source Sans 3","Helvetica Neue",Arial,sans-serif;
+  --f-mono:var(--font-plex-mono),"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
 
-  --fs-hero:clamp(2.55rem,5.7vw,6.5rem);
+  --fs-hero:clamp(2.7rem,6vw,6rem);
   --fs-display:clamp(2.1rem,4.6vw,4.4rem);
   --fs-h2:clamp(1.7rem,3vw,2.7rem);
   --fs-h3:clamp(1.25rem,1.9vw,1.7rem);
   --fs-lede:clamp(1.02rem,1.3vw,1.18rem);
-  --fs-body:clamp(15px,1.02vw,16.5px);
+  --fs-body:clamp(16px,1.08vw,17.5px);
   --fs-small:.9rem;
-  --fs-label:10.5px;
-  --fs-micro:9.5px;
+  --fs-label:11.5px;
+  --fs-micro:10.5px;
 
   /* layout */
   --gut:clamp(18px,4.6vw,68px);

@@ -2,17 +2,17 @@
    generative fingerprints). CSS owns the same values as custom properties in
    app/styles/tokens.css — keep the two in step. */
 export const PALETTE = {
-  void: [2, 7, 10],
-  s1: [8, 17, 26],
-  s2: [13, 23, 34],
-  s3: [19, 31, 43],
-  text: [234, 241, 246],
-  ember: [255, 106, 43],
-  emberHi: [255, 138, 76],
-  cool: [2, 151, 222],
-  pass: [82, 227, 168],
-  sun: [242, 193, 78],
-  fail: [255, 84, 112],
+  void: [6, 10, 29],
+  s1: [10, 16, 42],
+  s2: [15, 23, 53],
+  s3: [21, 31, 66],
+  text: [243, 238, 225],
+  signal: [245, 184, 61],
+  signalHi: [251, 208, 104],
+  cool: [79, 155, 230],
+  pass: [99, 219, 166],
+  sun: [246, 223, 154],
+  fail: [255, 107, 122],
 };
 
 /** [r,g,b] 0-255 → [r,g,b] 0-1, for shader uniforms. */

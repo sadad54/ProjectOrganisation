@@ -147,7 +147,7 @@ function fingerprint(ctx, slug, W, H, u) {
       layers[l + 1].forEach((b) => {
         if (rnd() < 0.45) return;
         const hot = a.hot && b.hot;
-        ctx.strokeStyle = hot ? rgba(PALETTE.ember, 0.55) : rgba(PALETTE.cool, 0.12 + rnd() * 0.12);
+        ctx.strokeStyle = hot ? rgba(PALETTE.signal, 0.55) : rgba(PALETTE.cool, 0.12 + rnd() * 0.12);
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
         const mx = (a.x + b.x) / 2;
@@ -159,13 +159,13 @@ function fingerprint(ctx, slug, W, H, u) {
     const r = (nd.hot ? 5.5 : 4) * u;
     if (nd.hot) {
       const g = ctx.createRadialGradient(nd.x, nd.y, 0, nd.x, nd.y, r * 5);
-      g.addColorStop(0, rgba(PALETTE.ember, 0.35));
-      g.addColorStop(1, rgba(PALETTE.ember, 0));
+      g.addColorStop(0, rgba(PALETTE.signal, 0.35));
+      g.addColorStop(1, rgba(PALETTE.signal, 0));
       ctx.fillStyle = g;
       ctx.fillRect(nd.x - r * 5, nd.y - r * 5, r * 10, r * 10);
     }
-    ctx.fillStyle = nd.hot ? rgba(PALETTE.ember, 1) : rgba(PALETTE.s1, 1);
-    ctx.strokeStyle = nd.hot ? rgba(PALETTE.ember, 1) : rgba(PALETTE.cool, 0.7);
+    ctx.fillStyle = nd.hot ? rgba(PALETTE.signal, 1) : rgba(PALETTE.s1, 1);
+    ctx.strokeStyle = nd.hot ? rgba(PALETTE.signal, 1) : rgba(PALETTE.cool, 0.7);
     ctx.lineWidth = 1.4 * u;
     ctx.beginPath();
     ctx.arc(nd.x, nd.y, r, 0, Math.PI * 2);
