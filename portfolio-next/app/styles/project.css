@@ -43,15 +43,15 @@ html.rm .cs-hero .cs-ch>span,html.rm .cs-hero .cs-hook,html.rm .cs-hero .cs-meta
 @media (max-width:960px){.cs-body{grid-template-columns:1fr}}
 .cs-toc{position:sticky;top:calc(var(--nav-h) + 30px)}
 @media (max-width:960px){.cs-toc{display:none}}
-.cs-toc-k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:14px}
+.cs-toc-k{font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);margin-bottom:14px}
 .cs-toc ol{display:flex;flex-direction:column;gap:2px;border-left:1px solid var(--hair-2)}
 .cs-toc a{
   position:relative;display:flex;gap:10px;padding:7px 0 7px 14px;font-size:.88rem;color:var(--text-3);
   transition:color .25s;
 }
-.cs-toc a span{font-family:var(--f-mono);font-size:10px;color:var(--text-3);padding-top:2px}
-.cs-toc a::before{content:"";position:absolute;left:-1px;top:6px;bottom:6px;width:1px;background:var(--signal);transform:scaleY(0);transition:transform .4s var(--ease-out)}
-.cs-toc a:hover{color:var(--text-2)}
+.cs-toc a span{font-family:var(--f-mono);font-size:11px;color:var(--text-3);padding-top:2px}
+.cs-toc a::before{content:"";position:absolute;left:-1px;top:6px;bottom:6px;width:1px;background:var(--signal);transform:scaleY(0);transition:transform 250ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.cs-toc a:hover{color:var(--text-2)}}
 .cs-toc a.on{color:var(--text)}
 .cs-toc a.on span{color:var(--signal)}
 .cs-toc a.on::before{transform:none}
@@ -139,12 +139,12 @@ html:not(.js) .diagram-frame svg>g{opacity:1;transform:none}
 }
 .cs-nx.next{text-align:right;align-items:flex-end}
 .cs-nx.next::before{background:radial-gradient(120% 140% at 100% 100%,rgba(var(--signal-rgb),.16),transparent 60%)}
-.cs-nx:hover{border-color:rgba(var(--signal-rgb),.5)}
-.cs-nx:hover::before{opacity:1}
+@media (hover:hover) and (pointer:fine){.cs-nx:hover{border-color:rgba(var(--signal-rgb),.5)}}
+@media (hover:hover) and (pointer:fine){.cs-nx:hover::before{opacity:1}}
 .cs-nx .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
-.cs-nx .n{font-family:var(--f-display);font-weight:500;font-size:clamp(1.8rem,3.4vw,3rem);letter-spacing:-.022em;line-height:1;transition:transform .6s var(--ease-out)}
-.cs-nx.prev:hover .n{transform:translateX(8px)}
-.cs-nx.next:hover .n{transform:translateX(-8px)}
+.cs-nx .n{font-family:var(--f-display);font-weight:500;font-size:clamp(1.8rem,3.4vw,3rem);letter-spacing:-.022em;line-height:1;transition:transform 300ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.cs-nx.prev:hover .n{transform:translateX(4px)}}
+@media (hover:hover) and (pointer:fine){.cs-nx.next:hover .n{transform:translateX(-4px)}}
 .cs-nx .h{font-family:var(--f-serif);font-style:italic;font-size:1.1rem;color:var(--text-2);max-width:36ch}
 
 /* ---- reading progress, pinned metric, read marks ---- */
@@ -170,9 +170,9 @@ html:not(.js) .diagram-frame svg>g{opacity:1;transform:none}
 /* ---- screens: thumbnails and the full-size view ---- */
 .cs-thumbs{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
 .cs-thumbs button{display:block;width:100%;aspect-ratio:16/10;border:1px solid var(--hair-2);border-radius:var(--r-sm);overflow:hidden;background:var(--s2);transition:border-color .25s,transform .4s var(--ease-out)}
-.cs-thumbs button:hover{border-color:var(--signal);transform:translateY(-2px)}
+@media (hover:hover) and (pointer:fine){.cs-thumbs button:hover{border-color:var(--signal);transform:translateY(-2px)}}
 .cs-thumbs img{width:100%;height:100%;object-fit:cover;object-position:top;opacity:.82;transition:opacity .25s}
-.cs-thumbs button:hover img{opacity:1}
+@media (hover:hover) and (pointer:fine){.cs-thumbs button:hover img{opacity:1}}
 dialog.cs-light{border:0;padding:0;background:transparent;max-width:none;max-height:none;width:100vw;height:100vh;display:none;place-items:center}
 dialog.cs-light[open]{display:grid}
 .cs-light figure{margin:0;display:grid;gap:14px;justify-items:center;max-width:min(1500px,94vw)}
@@ -189,14 +189,14 @@ dialog.cs-light[open]{display:grid}
   content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .6s var(--ease-soft);
   background:radial-gradient(90% 140% at 100% 100%,rgba(var(--signal-rgb),.2),transparent 62%);
 }
-.cs-handoff:hover{border-color:rgba(var(--signal-rgb),.55)}
-.cs-handoff:hover::before{opacity:1}
+@media (hover:hover) and (pointer:fine){.cs-handoff:hover{border-color:rgba(var(--signal-rgb),.55)}}
+@media (hover:hover) and (pointer:fine){.cs-handoff:hover::before{opacity:1}}
 .cs-handoff .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
 .cs-handoff .n{font-family:var(--f-display);font-weight:500;font-size:clamp(2.4rem,7vw,6rem);letter-spacing:-.022em;line-height:.95;transition:transform .7s var(--ease-out)}
-.cs-handoff:hover .n{transform:translateX(12px)}
+@media (hover:hover) and (pointer:fine){.cs-handoff:hover .n{transform:translateX(12px)}}
 .cs-handoff .h{font-family:var(--f-serif);font-style:italic;font-size:clamp(1.1rem,1.8vw,1.5rem);color:var(--signal);max-width:40ch;line-height:1.25}
 .cs-handoff .m{margin-top:10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
 .cs-handoff .m b{font-family:var(--f-display);font-weight:500;font-size:1.3rem;letter-spacing:-.02em;color:var(--text);margin-right:10px;text-transform:none}
 .cs-handoff .go{position:absolute;right:clamp(22px,4vw,56px);bottom:clamp(22px,4vw,52px);font-size:clamp(1.6rem,3vw,2.6rem);color:var(--signal);transition:transform .6s var(--ease-out)}
-.cs-handoff:hover .go{transform:translateX(10px)}
+@media (hover:hover) and (pointer:fine){.cs-handoff:hover .go{transform:translateX(10px)}}
 .cs-end-row{display:flex;justify-content:space-between;margin-top:18px}

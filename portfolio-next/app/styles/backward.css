@@ -62,7 +62,7 @@
   transition:color .3s,border-color .3s,background-color .3s;
 }
 .bw-step span{color:var(--text-3);transition:color .3s}
-.bw-step:hover{border-color:var(--hair-3);color:var(--text-2)}
+@media (hover:hover) and (pointer:fine){.bw-step:hover{border-color:var(--hair-3);color:var(--text-2)}}
 .bw-step.done{color:var(--text-2)}
 .bw-step.done span{color:var(--pass)}
 .bw-step.on{color:var(--text);border-color:rgba(var(--signal-rgb),.55);background:rgba(var(--signal-rgb),.08)}
@@ -102,7 +102,7 @@
 .bw-chart-top .r{margin-left:auto;color:var(--text-3)}
 .bw-chart svg{display:block;width:100%;height:auto;touch-action:pan-y;cursor:ew-resize;overflow:visible}
 .bw-grid line{stroke:var(--hair);stroke-width:1}
-.bw-grid text,.bw-tick{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;fill:var(--text-3)}
+.bw-grid text,.bw-tick{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;fill:var(--text-3)}
 .bw-axis{stroke:var(--hair-3);stroke-width:1}
 .bw-curve{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .bw-curve.hot{stroke:var(--signal);filter:drop-shadow(0 0 6px rgba(var(--signal-rgb),.55))}
@@ -112,7 +112,7 @@
 .js .bw-chart .bw-area{opacity:0;transition:opacity 1.4s var(--ease-soft) 1.9s}
 .js .bw-chart[data-in] .bw-area{opacity:1}
 .bw-flatline path{fill:none;stroke:var(--hair-3);stroke-width:1}
-.bw-flatline text,.bw-ms text{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;fill:var(--text-3)}
+.bw-flatline text,.bw-ms text{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;fill:var(--text-3)}
 .bw-ms line{stroke:var(--hair-2);stroke-width:1;stroke-dasharray:2 4}
 .bw-ms circle{fill:var(--void);stroke:var(--text-3);stroke-width:1.2;transition:stroke .35s,fill .35s}
 .bw-ms text{transition:fill .35s}
@@ -133,7 +133,7 @@
 @media (max-width:900px){.bw-cmp{grid-template-columns:1fr}}
 
 /* ---- Act C: the corpus, a ledger under a turning sky ---- */
-.bw-corpus{position:relative;padding-bottom:clamp(96px,15vh,180px)}
+.bw-corpus{position:relative;padding-bottom:clamp(96px,15vh,180px);overflow-x:clip}
 .bw-sky{position:relative;min-height:min(92vh,900px);display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(40px,7vh,72px)}
 .bw-sky-cap{
   position:absolute;top:calc(var(--nav-h) + 22px);right:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;
@@ -166,15 +166,15 @@
   transform:scaleX(0);transform-origin:left;transition:transform .65s var(--ease-out);
 }
 .bw-row::after{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--sun);transform:scaleY(0);transform-origin:top;transition:transform .5s var(--ease-out)}
-.bw-row:hover::before{transform:none}
-.bw-row:hover::after{transform:none}
-.bw-n{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--text-3);font-variant-numeric:tabular-nums;transition:color .3s}
-.bw-row:hover .bw-n{color:var(--sun)}
+@media (hover:hover) and (pointer:fine){.bw-row:hover::before{transform:none}}
+@media (hover:hover) and (pointer:fine){.bw-row:hover::after{transform:none}}
+.bw-n{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;color:var(--text-3);font-variant-numeric:tabular-nums;transition:color .3s}
+@media (hover:hover) and (pointer:fine){.bw-row:hover .bw-n{color:var(--sun)}}
 .bw-name{
   font-family:var(--f-display);font-weight:500;font-size:var(--fs-h3);line-height:1.08;letter-spacing:-.022em;
   transition:transform .6s var(--ease-out);
 }
-.bw-row:hover .bw-name{transform:translateX(8px)}
+@media (hover:hover) and (pointer:fine){.bw-row:hover .bw-name{transform:translateX(8px)}}
 .bw-by{margin-top:7px;font-family:var(--f-mono);font-size:var(--fs-micro);letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
 .bw-fig{margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
 .bw-k span{
@@ -184,7 +184,7 @@
 
 /* ---- the marks: one drawing per entry (components/backward/Glyph.jsx) ---- */
 .bw-glyph{display:block;width:132px;height:72px;overflow:visible;opacity:.72;transition:opacity .4s}
-.bw-row:hover .bw-glyph{opacity:1}
+@media (hover:hover) and (pointer:fine){.bw-row:hover .bw-glyph{opacity:1}}
 .bw-glyph *{vector-effect:non-scaling-stroke}
 .g-line{fill:none;stroke:var(--sun);stroke-width:1.4;stroke-linecap:round}
 .g-stroke{fill:none;stroke:var(--cool);stroke-width:1.4;stroke-linecap:round}
@@ -236,7 +236,7 @@
 @media (prefers-reduced-motion:reduce){.bw-glyph *{animation:none!important}}
 html.rm .bw-glyph *{animation:none!important}
 .bw-says{font-size:.98rem;line-height:1.55;color:var(--text-2);max-width:52ch;transition:color .3s}
-.bw-row:hover .bw-says{color:var(--text)}
+@media (hover:hover) and (pointer:fine){.bw-row:hover .bw-says{color:var(--text)}}
 @media (max-width:900px){
   .bw-row{grid-template-columns:32px minmax(0,1fr) 132px;padding-inline:4px;align-items:start}
   .bw-says{grid-column:2/-1}
@@ -262,3 +262,25 @@ html.rm .bw-chart .bw-area{opacity:1!important}
 .foot-by{display:inline-flex;gap:6px;white-space:nowrap}
 .foot-by b{display:inline-block;animation:footBy .5s var(--ease-out)}
 @keyframes footBy{from{opacity:0;transform:translateY(5px)}}
+
+/* ---- the corpus, folded ---- */
+.bw-fold{margin-top:clamp(20px,4vh,40px)}
+.bw-fold-sum{
+  list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px 20px;
+  min-height:64px;padding:14px 20px;border:1px solid var(--hair-2);border-radius:var(--r-md);
+  background:rgba(var(--panel-rgb),.72);transition:border-color var(--d-quick),background-color var(--d-quick),transform 160ms var(--ease-out);
+}
+.bw-fold-sum::-webkit-details-marker{display:none}
+.bw-fold-t{font-family:var(--f-display);font-size:clamp(1.15rem,1.6vw,1.4rem);color:var(--text)}
+.bw-fold-n{font-size:.92rem;color:var(--text-3)}
+.bw-fold-ic{width:12px;height:12px;border-right:1.5px solid var(--text-2);border-bottom:1.5px solid var(--text-2);transform:translateY(-3px) rotate(45deg);transition:transform 250ms var(--ease-out)}
+.bw-fold[open] .bw-fold-ic{transform:translateY(3px) rotate(225deg)}
+.bw-fold[open] .bw-fold-t::after{content:" · close";color:var(--text-3)}
+.bw-fold-sum:active{transform:scale(.99)}
+@media (hover:hover) and (pointer:fine){.bw-fold-sum:hover{border-color:rgba(var(--signal-rgb),.5);background:rgba(var(--panel-rgb),.86)}}
+.bw-fold-sum:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+/* opening: the ledger rises in place (opacity + transform, no height tween) */
+.bw-fold[open] .bw-ledger{transition:opacity 320ms var(--ease-out),transform 420ms var(--ease-out);
+  @starting-style{opacity:0;transform:translate3d(0,10px,0)}}
+@media (max-width:760px){.bw-fold-sum{grid-template-columns:1fr auto}.bw-fold-n{grid-row:2;grid-column:1}}
+@media (prefers-reduced-motion:reduce){.bw-fold[open] .bw-ledger{transition:none}}

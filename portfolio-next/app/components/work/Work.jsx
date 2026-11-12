@@ -206,7 +206,7 @@ export default function Work() {
   }, [sheet]);
 
   return (
-    <section className="work band" id="work" ref={sec} data-field="4" data-field-dim="0.7" aria-labelledby="work-h">
+    <section className="work band" id="work" ref={sec} data-field="1" data-field-dim="0.7" aria-labelledby="work-h">
       <div className="wrap">
         <header className="work-head">
           <div className="work-title">
@@ -216,7 +216,7 @@ export default function Work() {
                 <i />
                 <i />
               </span>
-              <b>L4</b> Retrieval <span className="rule" aria-hidden="true" /> selected work
+              <b>L1</b> Retrieval <span className="rule" aria-hidden="true" /> selected work
             </p>
             <Split as="h2" id="work-h" className="display" text={['Every project, ', { t: 'one query away.', em: true }]} />
             <p className="lede rv" style={{ '--d': 120 }}>

@@ -43,25 +43,6 @@ const shots = (dir, n) => Array.from({ length: n }, (_, i) => `/assets/screensho
 
 export const WORK = [
   {
-    slug: 'proofhire',
-    name: 'ProofHire',
-    year: '2026',
-    kind: 'AI engineering / Full stack',
-    domain: 'llm',
-    tier: 'case',
-    hook: 'Your code is the evidence. Every application claim has to earn its place.',
-    metric: { value: '5 ms', label: 'retrieval p50 · 20k rows · local benchmark' },
-    media: { type: 'video', slug: 'proofhire' },
-    notes: [
-      'Turns authorized GitHub repositories into a <b>provenance-aware evidence graph</b>, tracing technical claims to source files and commits.',
-      '<b>Hybrid retrieval + LLM reranking</b> map job requirements to Strong / Partial / Gap / Unknown coverage. Indexed candidate generation took vector-plus-lexical p50 from 399 ms to 5 ms.',
-      'Claim-level citations, <b>deterministic fact guards and bounded repair</b> — unsupported claims are blocked from export.',
-    ],
-    stack: ['Python', 'FastAPI', 'Next.js', 'React', 'TypeScript', 'PostgreSQL', 'pgvector', 'Redis', 'RAG', 'Docker', 'Playwright'],
-    links: [{ label: 'Repository', href: 'https://github.com/sadad54/ResumeGitProject' }],
-    page: true,
-  },
-  {
     slug: 'driftline',
     name: 'Driftline',
     year: '2026',
@@ -78,6 +59,25 @@ export const WORK = [
     ],
     stack: ['Python', 'Redpanda', 'PyFlink', 'Feast', 'XGBoost', 'PyTorch Geometric', 'FastAPI', 'ONNX Runtime', 'MLflow', 'Kubernetes', 'Prometheus / Grafana', 'Google Cloud'],
     links: [{ label: 'Repository', href: 'https://github.com/sadad54/driftline' }],
+    page: true,
+  },
+  {
+    slug: 'proofhire',
+    name: 'ProofHire',
+    year: '2026',
+    kind: 'AI engineering / Full stack',
+    domain: 'llm',
+    tier: 'case',
+    hook: 'Your code is the evidence. Every application claim has to earn its place.',
+    metric: { value: '5 ms', label: 'retrieval p50 · 20k rows · local benchmark' },
+    media: { type: 'video', slug: 'proofhire' },
+    notes: [
+      'Turns authorized GitHub repositories into a <b>provenance-aware evidence graph</b>, tracing technical claims to source files and commits.',
+      '<b>Hybrid retrieval + LLM reranking</b> map job requirements to Strong / Partial / Gap / Unknown coverage. Indexed candidate generation took vector-plus-lexical p50 from 399 ms to 5 ms.',
+      'Claim-level citations, <b>deterministic fact guards and bounded repair</b> — unsupported claims are blocked from export.',
+    ],
+    stack: ['Python', 'FastAPI', 'Next.js', 'React', 'TypeScript', 'PostgreSQL', 'pgvector', 'Redis', 'RAG', 'Docker', 'Playwright'],
+    links: [{ label: 'Repository', href: 'https://github.com/sadad54/ResumeGitProject' }],
     page: true,
   },
   {

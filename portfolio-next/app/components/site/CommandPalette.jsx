@@ -77,7 +77,10 @@ export default function CommandPalette() {
 
   const goSection = useCallback(
     (id) => {
-      if (onHome) scrollToEl(document.getElementById(id));
+      if (onHome) {
+        window.dispatchEvent(new Event('reveal:jump'));
+        scrollToEl(document.getElementById(id));
+      }
       else if (window.__ptGo) window.__ptGo(`/#${id}`, 'the index');
       else router.push(`/#${id}`);
     },
@@ -88,9 +91,9 @@ export default function CommandPalette() {
     const A = [];
     [
       ['work', 'Selected work'],
+      ['decisions', 'The decisions I’d defend'],
       ['research', 'Research'],
       ['about', 'About — the model card'],
-      ['decisions', 'The decisions I’d defend'],
       ['toolkit', 'Toolkit — skills graph'],
       ['backward', 'Backward pass — what trained the weights'],
       ['contact', 'Contact'],
@@ -126,8 +129,8 @@ export default function CommandPalette() {
         h: 'External',
         go: () => window.open('https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237', '_blank', 'noopener'),
       },
-      { g: 'Contact', n: 'Résumé — AI / ML', h: 'PDF', go: () => window.open('/Adnan_Sadad_AI_ML_Resume_LaTeX.pdf', '_blank', 'noopener') },
-      { g: 'Contact', n: 'Résumé — Full-stack', h: 'PDF', go: () => window.open('/Adnan_Sadad_SWE_Resume_LaTeX.pdf', '_blank', 'noopener') },
+      { g: 'Contact', n: 'Résumé — AI / ML', h: 'PDF', k: 'resume cv download machine learning', go: () => window.open('/Adnan_Sadad_AI_ML_Resume_LaTeX.pdf', '_blank', 'noopener') },
+      { g: 'Contact', n: 'Résumé — Full-stack', h: 'PDF', k: 'resume cv download swe software engineer', go: () => window.open('/Adnan_Sadad_SWE_Resume_LaTeX.pdf', '_blank', 'noopener') },
       { g: 'Site', n: 'The short version — one screen', h: 'B', go: () => window.dispatchEvent(new Event('brief:open')) },
       { g: 'Site', n: 'Keyboard shortcuts', h: '?', go: () => window.dispatchEvent(new Event('shortcuts:open')) },
       {
@@ -162,7 +165,10 @@ export default function CommandPalette() {
     // two unlisted commands: they only appear once you type them
     const egg = EGGS.find((e) => q.length > 3 && e.key.startsWith(q.replace(/\s+/g, ' ')));
     if (egg) return [{ g: 'Unlisted', n: egg.n, h: egg.h, go: egg.go }];
-    const hits = actions.filter((a) => `${a.n} ${a.h} ${a.g}`.toLowerCase().includes(q));
+    // accent-blind, so "resume" finds Résumé; `k` carries extra search words
+    const fold = (s) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+    const fq = fold(q);
+    const hits = actions.filter((a) => fold(`${a.n} ${a.h} ${a.g} ${a.k || ''}`).includes(fq));
     // a question goes to the model: first when it reads like one, last otherwise
     const ask = raw.length > 3 && { g: 'Ask the model', n: `Ask: “${raw}”`, h: 'Answers from this site', ask: raw };
     if (!ask) return hits;
@@ -381,19 +387,13 @@ export default function CommandPalette() {
             aria-modal="true"
             aria-label={mode === 'ask' ? 'Ask the model' : 'Command menu'}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 * dur }}
+            animate={{ opacity: 1, transition: { duration: 0.12 * dur, ease: EASE_OUT } }}
+            exit={{ opacity: 0, transition: { duration: 0.08 * dur, ease: EASE_OUT } }}
           >
             <div className="cmdk-bg" onClick={hide} />
-            <motion.div
-              ref={boxRef}
-              className={`cmdk-box${mode === 'ask' ? ' is-ask' : ''}`}
-              initial={{ opacity: 0, y: -12, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.98 }}
-              transition={{ duration: 0.28 * dur, ease: EASE_OUT }}
-            >
+            {/* Opened from Ctrl/⌘ K many times a day: no travel, no scale.
+                The overlay's 120ms fade is all the motion it gets. */}
+            <div ref={boxRef} className={`cmdk-box${mode === 'ask' ? ' is-ask' : ''}`}>
               {mode === 'ask' ? (
                 <AskPanel key={askQ?.k || 'ask'} initial={askQ?.q} inputRef={inputRef} onCommands={() => setMode('cmd')} onContact={toContact} />
               ) : (
@@ -455,7 +455,7 @@ export default function CommandPalette() {
               </div>
               </>
               )}
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

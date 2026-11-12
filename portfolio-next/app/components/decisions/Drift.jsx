@@ -118,7 +118,7 @@ function SceneInner({ p }) {
                     x={pt.x}
                     y={yOf(pt.v) + (i === 2 ? -16 : 26)}
                     textAnchor="middle"
-                    style={{ opacity: lit ? 1 : 0.3 }}
+                    style={{ opacity: lit ? 1 : 0.62 }}
                   >
                     {pt.v.toFixed(4)}
                   </text>

@@ -10,12 +10,12 @@
 .composer{
   border:1px solid var(--hair-2);border-radius:var(--r-lg);overflow:hidden;
   background:rgba(var(--panel-rgb),.85);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  transition:border-color .3s,box-shadow .3s;
+  transition:border-color var(--d-quick),box-shadow var(--d-quick);
 }
 .composer:focus-within{border-color:rgba(var(--signal-rgb),.6);box-shadow:0 0 0 4px rgba(var(--signal-rgb),.08),0 30px 80px rgba(0,0,0,.4)}
 .cp-top{
   display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 18px;padding:12px 18px;border-bottom:1px solid var(--hair);
-  font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;color:var(--text-3);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;color:var(--text-3);
 }
 .cp-top b{font-weight:400;color:var(--text-2)}
 .cp-body{display:flex;gap:12px;padding:16px 18px 6px;cursor:text}
@@ -31,11 +31,11 @@
 .cp-starters button{
   height:30px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--hair-2);
   font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-2);
-  transition:border-color .2s,color .2s,background-color .2s;
+  transition:border-color .2s,color .2s,background-color .2s,transform 160ms var(--ease-out);
 }
-.cp-starters button:hover{border-color:var(--signal);color:var(--text);background:rgba(var(--signal-rgb),.08)}
+@media (hover:hover) and (pointer:fine){.cp-starters button:hover{border-color:var(--signal);color:var(--text);background:rgba(var(--signal-rgb),.08)}}
 .cp-send{height:42px;padding:0 18px}
-.cp-note{margin-top:12px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
+.cp-note{margin-top:12px;font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
 
 .reach{border-top:1px solid var(--hair-2)}
 .reach li{border-bottom:1px solid var(--hair-2)}
@@ -47,10 +47,10 @@
   content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(var(--signal-rgb),.12),transparent 80%);
   transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease-out);
 }
-.reach a:hover::before{transform:none}
+@media (hover:hover) and (pointer:fine){.reach a:hover::before{transform:none}}
 .rc-k{font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3)}
-.rc-v{font-size:1.02rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .5s var(--ease-out),color .3s}
-.reach a:hover .rc-v{transform:translateX(6px);color:var(--signal)}
+.rc-v{font-size:1.02rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform 250ms var(--ease-out),color var(--d-quick)}
+@media (hover:hover) and (pointer:fine){.reach a:hover .rc-v{transform:translateX(3px);color:var(--signal)}}
 .rc-a{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-2)}
 .ct-clock{
   display:flex;align-items:center;gap:8px;margin:22px 0 28px;

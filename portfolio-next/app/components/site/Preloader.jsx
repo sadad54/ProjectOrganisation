@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Cells } from './PageTransition';
 
 const STEPS = ['tokenizer', 'weights', 'shaders', 'attention'];
-const MIN_MS = 1100;
-const MAX_MS = 2400;
+const MIN_MS = 700;
+const MAX_MS = 1500;
 
 function announceDone() {
   window.__bootDone = true;

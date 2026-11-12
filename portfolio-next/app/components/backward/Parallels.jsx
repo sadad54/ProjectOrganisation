@@ -7,7 +7,7 @@ import { PAIRS } from '../../data/priors';
 import { reducedMotionNow, useMedia } from '../../lib/motion';
 import { play } from '../../lib/sound';
 
-const PER = 82; // vh of scroll per pair
+const PER = 60; // vh of scroll per pair (was 82)
 const REWIRE = 3; // from this pair on, the brain behind the copy has become a network
 const pad = (n) => String(n).padStart(2, '0');
 

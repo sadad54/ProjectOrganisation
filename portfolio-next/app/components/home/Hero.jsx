@@ -237,12 +237,12 @@ export default function Hero() {
             <Magnetic className="btn btn-solid" href="#work" data-cursor="Explore">
               See the work <span className="arw">→</span>
             </Magnetic>
-            <Magnetic className="btn" href="#research">
-              Research <span className="arw down">↓</span>
+            <Magnetic as="button" type="button" className="btn" data-brief data-cursor="1 min">
+              The short version <span className="hb-t">1 min</span>
             </Magnetic>
-            <button type="button" className="lnk hero-brief" data-brief data-cursor="1 min">
-              The short version
-            </button>
+            <a className="lnk hero-research" href="#research">
+              Research ↓
+            </a>
           </div>
         </div>
         <HeroAsk />
@@ -271,12 +271,12 @@ export default function Hero() {
         {PROOF.map(([n, label]) => (
           <div key={label}>
             <dt>{label}</dt>
-            <dd>{proof ? <Odometer value={String(n).padStart(2, '0')} /> : '00'}</dd>
+            <dd>{proof ? <Odometer value={String(n).padStart(2, '0')} /> : String(n).padStart(2, '0')}</dd>
           </div>
         ))}
       </dl>
 
-      <a className="hero-scroll" href="#thesis">
+      <a className="hero-scroll" href="#work">
         <span className="hs-line" aria-hidden="true" />
         Scroll <span className="sep">·</span> run the forward pass
       </a>

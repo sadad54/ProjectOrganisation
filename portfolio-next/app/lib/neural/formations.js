@@ -4,11 +4,15 @@
    as the page scrolls, so a morph costs one uniform write per frame.
 
      0  NETWORK    hero        a 7-layer net; data flows left → right
-     1  ATTENTION  thesis      token blocks, attention arcs, embeddings
-     2  SPHERE     model card  a clustered hypersphere (normalised embeddings)
+     1  CLUSTERS   work        four semantic clusters and the bridges between
+     2  ATTENTION  thesis      token blocks, attention arcs, embeddings
      3  LANDSCAPE  decisions   a loss surface with a real gradient-descent path
-     4  CLUSTERS   work        four semantic clusters and the bridges between
-     5  MATRIX     research    a weight matrix rendered as a heatmap
+     4  MATRIX     research    a weight matrix rendered as a heatmap
+     5  SPHERE     model card  a clustered hypersphere (normalised embeddings)
+
+   Slot numbers follow the page order, so a morph between neighbouring
+   sections never flies through a third shape. The arrays below are still
+   built in the original order; engine.js maps slot → array.
      6  BRAIN      backward    the wetware: two hemispheres, gyri drawn as lines
      7  NETWORK    backward    …rewired into the software (shares slot 0)
      8  STARRY     corpus      a turning night sky of vortices, after Van Gogh
@@ -653,11 +657,11 @@ export function buildFormations(N) {
    data-field-x (see NeuralField.jsx). */
 export const LOOKS = [
   { off: [0.35, 0.45, 0], spin: 1, follow: 1, dim: 1.0 }, // 0 network
-  { off: [0, 0.35, 0], spin: 0.18, follow: 0.5, dim: 0.72 }, // 1 attention
-  { off: [3.1, 0.1, -1], spin: 1, follow: 0.7, dim: 0.85 }, // 2 sphere
+  { off: [0, 0, -1.2], spin: 0.35, follow: 0.6, dim: 0.5 }, // 1 clusters
+  { off: [0, 0.35, 0], fx: 0.22, spin: 0.18, follow: 0.5, dim: 0.72 }, // 2 attention (beside the thesis copy, not under it)
   { off: [0, 0, 0], spin: 0.12, follow: 0.35, dim: 0.85 }, // 3 landscape
-  { off: [0, 0, -1.2], spin: 0.35, follow: 0.6, dim: 0.5 }, // 4 clusters
-  { off: [0.9, 0.2, 0.2], spin: 0.22, follow: 0.5, dim: 0.8 }, // 5 matrix
+  { off: [0.9, 0.2, 0.2], spin: 0.22, follow: 0.5, dim: 0.8 }, // 4 matrix
+  { off: [3.1, 0.1, -1], spin: 1, follow: 0.7, dim: 0.85 }, // 5 sphere
   { off: [2.9, -0.35, 0], fx: 0.34, spin: 0.42, follow: 0.5, dim: 1.05, glass: 0.4 }, // 6 brain
   { off: [2.9, -0.2, -3.6], fx: 0.34, spin: 0.8, follow: 0.6, dim: 1.05, glass: 0.4 }, // 7 network
   { off: [0, 0.2, 0], spin: 0.04, follow: 0.18, dim: 0.9, glass: 0.3 }, // 8 starry

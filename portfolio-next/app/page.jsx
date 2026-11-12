@@ -26,9 +26,10 @@ const PERSON = {
   sameAs: ['https://github.com/sadad54', 'https://www.linkedin.com/in/adnan-mashrur-sadad-87a45b237'],
 };
 
-/* The page is a forward pass: input → thesis → model card → attention (the
-   decisions) → retrieval (the work) → evaluation (research) → weights (the
-   toolkit) → the backward pass (what trained it) → output. Each section declares the neural-field formation it
+/* The page is a forward pass: input → retrieval (the work, first, so the
+   proof is one scroll away) → thesis → attention (the decisions) →
+   evaluation (research) → model card → weights (the toolkit) → the backward
+   pass (what trained it) → output. Each section declares the neural-field formation it
    wants behind it with data-field. */
 export default function Page() {
   return (
@@ -36,11 +37,11 @@ export default function Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON).replace(/</g, '\\u003c') }} />
       <main id="main">
         <Hero />
-        <Thesis />
-        <About />
-        <Decisions />
         <Work />
+        <Thesis />
+        <Decisions />
         <Research />
+        <About />
         <Weights />
         <Backward />
         <Contact />

@@ -10,7 +10,7 @@ web
 
 Primary audience is a general professional/technical one: collaborators, potential employers, community/conference contacts, and anyone encountering the site via a shared link, LinkedIn, or conference follow-up. The site is a showcase of Adnan's work and thinking first, not a job-search landing page — copy should read as an open, relaxed invitation to connect over shared interests, not as an active candidate pitch.
 
-Adnan Mashrur Sadad: BSc Software Engineering (MJIIT, Universiti Teknologi Malaysia, Kuala Lumpur), CGPA 3.50, Dean's List. Bangladeshi national living in Malaysia. Currently researching self-correcting agentic RAG (SAFE-RAG) alongside two other papers spanning GenAI, computer vision, and human-in-the-loop agentic systems, and building FinScout on the side.
+Adnan Mashrur Sadad: BSc Software Engineering (MJIIT, Universiti Teknologi Malaysia, Kuala Lumpur), CGPA 3.43, Dean's List. Bangladeshi national living in Malaysia. Currently researching self-correcting agentic RAG (SAFE-RAG) alongside two other papers spanning GenAI, computer vision, and human-in-the-loop agentic systems, and building FinScout on the side.
 
 ## Product Purpose
 
@@ -50,7 +50,7 @@ Leads with production-grade AI engineering: the mechanism a portfolio full of "I
 
 - Real, shipped project detail for all 7 case studies (architecture, metrics, stack, decisions) already written into the site — not placeholder copy.
 - Real metrics quoted: 0.98 ROC-AUC / 0.89 PR-AUC on Fraud Detection (284,807 transactions, 0.17% positive rate); 85% categorisation precision / 500+ receipts/month on ExpenSense; Gold Medal & Best Video at the myHCI-UX Student Design Challenge (national, Malaysia); Secretary Treasurer, SOFEA Society, workshops for 200+ students.
-- Research (from the résumé, shown in the L5 section): SAFE-RAG — first author, short paper under review at ALTA 2026, 8.6% wrong-scope grounding rate across 200 annotated items; Text-to-SQL answerability under schema evolution — first author, manuscript complete (not yet submitted), 1,382-instance benchmark across 20 databases, 27,384 generations, 79.5% of structurally invisible drift detected at a 13.0% false-alarm rate over 5,627 benign updates.
+- Research (from the résumé, shown in the L5 section): SAFE-RAG — first author, manuscript complete (an ALTA 2026 submission was not accepted), 8.6% wrong-scope grounding rate across 200 annotated items; Text-to-SQL answerability under schema evolution — first author, manuscript complete (not yet submitted), 1,382-instance benchmark across 20 databases, 27,384 generations, 79.5% of structurally invisible drift detected at a 13.0% false-alarm rate over 5,627 benign updates.
 - Education per the résumé: B.Sc. Computer Science (Software Engineering) with Honours, MJIIT UTM, 2021–2026, CGPA 3.43/4.00, Dean's List 2022/23 and 2025/26.
 - Two résumé variants, both in `portfolio-next/public/`: `Adnan_Sadad_AI_ML_Resume_LaTeX.pdf` (AI/ML, leads) and `Adnan_Sadad_SWE_Resume_LaTeX.pdf` (Full-Stack), each served by its own row in the Contact "reach" list and its own ⌘K "Download résumé" action (2026-09-19). Superseded single-résumé PDFs live outside the served folder at `portfolio-next/old_resumes/` for archival only — never link to that path from the site.
 - Assets on hand: `assets/portrait.jpeg` (real photo, used in About section), `assets/hero.png` (source headshot, unprocessed), `assets/adnan-headshot.webp` (processed/graded headshot, produced but not currently wired in), `assets/bobblehead.webp` (current hero visual).

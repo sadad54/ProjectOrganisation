@@ -8,15 +8,16 @@ import { onSoundChange, play, setSound, soundOn } from '../../lib/sound';
    carries the few links people actually use; the right-edge rail shows the
    whole network — one node per layer, the active one firing. */
 export const LAYERS = [
-  { id: 'top', n: 'L0', name: 'Input' },
-  { id: 'thesis', n: 'L1', name: 'Thesis' },
-  { id: 'about', n: 'L2', name: 'Model card' },
-  { id: 'decisions', n: 'L3', name: 'Attention' },
-  { id: 'work', n: 'L4', name: 'Retrieval' },
-  { id: 'research', n: 'L5', name: 'Evaluation' },
-  { id: 'toolkit', n: 'L6', name: 'Weights' },
-  { id: 'backward', n: '∇', name: 'Backward pass' },
-  { id: 'contact', n: 'Out', name: 'Output' },
+  // `name` is the layer, `plain` what a skimmer is looking for
+  { id: 'top', n: 'L0', name: 'Input', plain: 'Intro' },
+  { id: 'work', n: 'L1', name: 'Retrieval', plain: 'Work' },
+  { id: 'thesis', n: 'L2', name: 'Thesis', plain: 'Approach' },
+  { id: 'decisions', n: 'L3', name: 'Attention', plain: 'Decisions' },
+  { id: 'research', n: 'L4', name: 'Evaluation', plain: 'Research' },
+  { id: 'about', n: 'L5', name: 'Model card', plain: 'About' },
+  { id: 'toolkit', n: 'L6', name: 'Weights', plain: 'Skills' },
+  { id: 'backward', n: '∇', name: 'Backward pass', plain: 'Personal' },
+  { id: 'contact', n: 'Out', name: 'Output', plain: 'Contact' },
 ];
 
 const LINKS = [
@@ -127,6 +128,27 @@ export default function Nav() {
               {label}
             </a>
           ))}
+          {/* the highest-intent action on the site gets a place in the bar on
+              every width; native popover = Esc, light dismiss and focus for free */}
+          <button
+            className="nav-kbd nav-cv"
+            type="button"
+            // React 18 has no popoverTarget prop; set the native attribute directly
+            ref={(el) => el?.setAttribute('popovertarget', 'cv-menu')}
+            aria-haspopup="true"
+            aria-label="Résumé"
+          >
+            <span className="cv-long">Résumé</span>
+            <span className="cv-short" aria-hidden="true">CV</span>
+          </button>
+          <div id="cv-menu" className="cv-menu" popover="auto" role="menu" aria-label="Download résumé">
+            <a role="menuitem" href="/Adnan_Sadad_AI_ML_Resume_LaTeX.pdf" download>
+              <span>AI / ML</span> <i>PDF ↓</i>
+            </a>
+            <a role="menuitem" href="/Adnan_Sadad_SWE_Resume_LaTeX.pdf" download>
+              <span>Full-stack</span> <i>PDF ↓</i>
+            </a>
+          </div>
           <button className="nav-kbd nav-ask" type="button" data-ask="" aria-label="Ask the model about Adnan's work" data-cursor="Ask">
             <span className="nav-ask-dot" aria-hidden="true" />
             <span>Ask</span>
@@ -171,10 +193,11 @@ export default function Nav() {
               href={`#${l.id}`}
               className={`rail-node${i === activeIdx ? ' on' : ''}${i < activeIdx ? ' past' : ''}`}
               aria-current={i === activeIdx ? 'true' : undefined}
-              aria-label={`${l.n} ${l.name}`}
+              aria-label={`${l.plain} (${l.n} ${l.name})`}
             >
               <span className="rail-lbl">
                 <b>{l.n}</b> {l.name}
+                {l.plain !== l.name && <i className="rail-plain"> · {l.plain}</i>}
               </span>
               <span className="rail-dot" aria-hidden="true" />
             </a>

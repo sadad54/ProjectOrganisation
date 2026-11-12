@@ -16,7 +16,7 @@ const BOXES = [
 
 export default function About() {
   return (
-    <section className="about band" id="about" data-field="2" aria-labelledby="about-h">
+    <section className="about band" id="about" data-field="5" aria-labelledby="about-h">
       <div className="wrap">
         <p className="layer rv">
           <span className="bars" aria-hidden="true">
@@ -24,7 +24,7 @@ export default function About() {
             <i />
             <i />
           </span>
-          <b>L2</b> Model card <span className="rule" aria-hidden="true" /> about me
+          <b>L5</b> Model card <span className="rule" aria-hidden="true" /> about me
         </p>
         <Split
           as="h2"

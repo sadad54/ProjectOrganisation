@@ -18,6 +18,9 @@ function readPage() {
   let nearest = null;
   let best = Infinity;
   for (const el of els) {
+    // a closed <details> still lays its content out (content-visibility:
+    // hidden), so a folded section would claim the screen it isn't on
+    if (el.checkVisibility && !el.checkVisibility()) continue;
     const r = el.getBoundingClientRect();
     if (r.top <= c && r.bottom > c) {
       pick = el;

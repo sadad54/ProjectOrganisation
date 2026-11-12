@@ -74,7 +74,7 @@ export default function ProjectPage({ project: p, entry, shots, prev, next, num,
     : null;
 
   return (
-    <main id="main" className="cs" data-field={p.field ?? 2} data-field-dim="0.42">
+    <main id="main" className="cs" data-field={p.field ?? 5} data-field-dim="0.42">
       <span className="cs-progress" aria-hidden="true" />
       <div className={`cs-pin${pinned ? ' on' : ''}`} aria-hidden={!pinned}>
         <div className="wrap cs-pin-in">

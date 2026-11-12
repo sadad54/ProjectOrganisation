@@ -103,7 +103,7 @@ export default function Research() {
   const [r1, s1] = useSeen();
   const [r2, s2] = useSeen();
   return (
-    <section className="research band" id="research" data-field="5" data-field-dim="0.55" aria-labelledby="research-h">
+    <section className="research band" id="research" data-field="4" data-field-dim="0.55" aria-labelledby="research-h">
       <div className="wrap">
         <p className="layer rv">
           <span className="bars" aria-hidden="true">
@@ -111,7 +111,7 @@ export default function Research() {
             <i />
             <i />
           </span>
-          <b>L5</b> Evaluation <span className="rule" aria-hidden="true" /> research
+          <b>L4</b> Evaluation <span className="rule" aria-hidden="true" /> research
         </p>
         <div className="rs-head">
           <Split as="h2" id="research-h" className="display" text={['Research on knowing when an answer ', { t: 'shouldn’t be trusted.', em: true }]} />

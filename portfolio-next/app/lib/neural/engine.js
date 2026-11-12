@@ -45,11 +45,12 @@ vec3 pSky;
 
 vec3 formation(float k, vec3 pNet){
   if (k < 0.5) return pNet;
-  if (k < 1.5) return aB;
-  if (k < 2.5) return aC;
+  // slots follow the page order (formations.js keeps the build order)
+  if (k < 1.5) return aE;
+  if (k < 2.5) return aB;
   if (k < 3.5) return aD;
-  if (k < 4.5) return aE;
-  if (k < 5.5) return aG;
+  if (k < 4.5) return aG;
+  if (k < 5.5) return aC;
   if (k < 6.5) return aI;
   if (k < 7.5) return pNet;
   if (k < 8.5) return pSky;
@@ -57,11 +58,11 @@ vec3 formation(float k, vec3 pNet){
 }
 float heatOf(float k){
   if (k < 0.5) return aH0.x;
-  if (k < 1.5) return aH0.y;
-  if (k < 2.5) return aH0.z;
+  if (k < 1.5) return aFH.z;
+  if (k < 2.5) return aH0.y;
   if (k < 3.5) return aH0.w;
-  if (k < 4.5) return aFH.z;
-  if (k < 5.5) return aFH.w;
+  if (k < 4.5) return aFH.w;
+  if (k < 5.5) return aH0.z;
   if (k < 6.5) return aH1.x;
   if (k < 7.5) return aH0.x;
   if (k < 8.5) return aH1.y;
@@ -143,7 +144,7 @@ void main(){
   // every other formation uses an even, slightly randomised dot
   float netW = clamp(max(0.0, 1.0 - m * 1.6) + max(0.0, 1.0 - abs(m - 7.0) * 1.6) + max(0.0, 1.0 - (9.0 - m) * 1.6), 0.0, 1.0);
   float size = mix(0.95 + aR.x * 0.55, aR.y, netW);
-  size *= 1.0 + clamp(1.0 - abs(m - 5.0), 0.0, 1.0) * 1.1;
+  size *= 1.0 + clamp(1.0 - abs(m - 4.0), 0.0, 1.0) * 1.1;
   // the brain's folds are fine lines: a slightly heavier point holds them
   size *= 1.0 + clamp(1.0 - abs(m - 6.0), 0.0, 1.0) * 0.3;
   // in the sky each point stretches into a stroke laid along its orbit

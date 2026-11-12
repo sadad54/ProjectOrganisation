@@ -19,7 +19,7 @@ const CHAPTERS = [
   { C: Draft, t: 'Let the model draft, never decide', k: 'Learn2Unlock' },
 ];
 const COUNT = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'][CHAPTERS.length];
-const PER = 125; // vh of scroll per chapter
+const PER = 70; // vh of scroll per chapter (was 125: the stage held a skimmer for ~7 screens)
 
 /* L3 — real engineering decisions in one pinned stage. Scroll drives a
    single progress value; each chapter gets its own slice of it, so its

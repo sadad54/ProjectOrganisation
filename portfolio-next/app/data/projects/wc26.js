@@ -5,7 +5,7 @@ export default {
   kind: 'ML + simulation',
   hook: 'Every path to the trophy, simulated ten thousand times.',
   // which field formation sits behind this page (lib/neural/formations.js)
-  field: 4,
+  field: 1,
   headline: {
     metric: '10,000',
     label: 'tournaments simulated per forecast',

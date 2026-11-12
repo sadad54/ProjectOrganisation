@@ -70,7 +70,7 @@ export default function Thesis() {
   const full = TEXT.map((s) => s.t).join(' ');
 
   return (
-    <section className="thesis" id="thesis" ref={sec} data-field="1" data-field-dim="0.85" aria-label="Thesis">
+    <section className="thesis" id="thesis" ref={sec} data-field="2" data-field-dim="0.7" aria-label="Thesis">
       <div className="thesis-pin">
         <div className="wrap thesis-in" ref={txt} style={{ '--n': N }}>
           <p className="layer rv">
@@ -79,7 +79,7 @@ export default function Thesis() {
               <i />
               <i />
             </span>
-            <b>L1</b> Thesis <span className="rule" aria-hidden="true" /> what every project below has in common
+            <b>L2</b> Thesis <span className="rule" aria-hidden="true" /> what every project above has in common
           </p>
           <p className="thesis-text">
             <span className="sr-only">{full}</span>

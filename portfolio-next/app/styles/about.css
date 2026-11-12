@@ -12,7 +12,7 @@
 .about-photo-in{position:relative;aspect-ratio:1/1;border-radius:var(--r-md);overflow:hidden;border:1px solid var(--hair-2);background:var(--s1)}
 .about-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(1.04) brightness(.9);transform:scale(1.04);transition:transform 1.6s var(--ease-out),filter 1s}
 .about-photo[data-in] img{transform:none}
-.about-photo:hover img{filter:saturate(1) contrast(1.04) brightness(.97)}
+@media (hover:hover) and (pointer:fine){.about-photo:hover img{filter:saturate(1) contrast(1.04) brightness(.97)}}
 .scanline{
   position:absolute;left:0;right:0;top:0;height:22%;pointer-events:none;
   background:linear-gradient(180deg,transparent,rgba(var(--signal-rgb),.08) 70%,rgba(var(--signal-rgb),.5) 99%,transparent);
@@ -27,7 +27,7 @@
 @keyframes drawBox{to{stroke-dashoffset:0}}
 .bb-tag{
   position:absolute;transform:translateY(-100%);white-space:nowrap;
-  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;text-transform:lowercase;
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:lowercase;
   background:var(--cool);color:var(--void);padding:2px 6px;border-radius:2px 2px 0 0;
   opacity:0;
 }
@@ -37,7 +37,7 @@
 @keyframes tagIn{from{opacity:0;transform:translateY(-60%)}to{opacity:1;transform:translateY(-100%)}}
 .about-cap{
   display:flex;justify-content:space-between;gap:12px;margin-top:12px;
-  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--text-3);
 }
 .about-cap span:first-child{color:var(--text-2)}
 
@@ -69,10 +69,10 @@
   transition:background-color .25s;
 }
 .card-row:last-child{border-bottom:0}
-.card-row:hover{background:rgba(var(--signal-rgb),.045)}
+@media (hover:hover) and (pointer:fine){.card-row:hover{background:rgba(var(--signal-rgb),.045)}}
 .card-row dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3);padding-top:2px}
 .card-row dd{margin:0;font-size:.95rem;line-height:1.45;color:var(--text)}
-.card-row:hover dt{color:var(--signal)}
+@media (hover:hover) and (pointer:fine){.card-row:hover dt{color:var(--signal)}}
 .js .card .card-row{opacity:0;transform:translate3d(-8px,0,0)}
 .card[data-in] .card-row{opacity:1;transform:none;transition:opacity .5s var(--ease-soft),transform .7s var(--ease-out),background-color .25s;transition-delay:calc(.45s + var(--r) * 70ms)}
 @media (max-width:560px){.card-row{grid-template-columns:1fr;gap:4px}}
